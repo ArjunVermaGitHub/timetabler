@@ -66,7 +66,11 @@ export function TeacherTimetableGrid({
       }
     }
 
-    if (result.reason === 'teacher' || result.reason === 'subject') {
+    if (
+      result.reason === 'teacher' ||
+      result.reason === 'subject' ||
+      result.reason === 'pe'
+    ) {
       return {
         teacher: hoverTarget.teacher,
         day: hoverTarget.day,
@@ -371,7 +375,9 @@ function renderDaySlots({
             ? ` · ${dragLesson.teacher} already teaching then`
             : blockReason === 'break'
               ? ` · break for ${dragLesson.classroom}`
-              : ` · can’t place here`
+              : blockReason === 'pe'
+                ? ' · PE only before lunch'
+                : ` · can’t place here`
       : ''
 
     cells.push(
@@ -415,7 +421,8 @@ function takenSlotReason(
     result.reason === 'subject' ||
     result.reason === 'teacher' ||
     result.reason === 'break' ||
-    result.reason === 'span'
+    result.reason === 'span' ||
+    result.reason === 'pe'
   ) {
     return result.reason
   }

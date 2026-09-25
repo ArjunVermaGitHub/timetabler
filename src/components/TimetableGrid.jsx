@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { DAYS, WEEKEND_DAYS, slotsForClassroom } from '../data/schedule'
 import {
   evaluatePlacement,
-  lessonAt,
+  lessonsAt,
   occupiedSlots,
 } from '../data/placement'
-import { LessonCard, LESSON_MIME } from './LessonCard'
+import { LessonCard, LESSON_MIME, CoteachCard } from './LessonCard'
 import { SlotHead } from './SlotHead'
 
 export function TimetableGrid({
@@ -58,8 +58,12 @@ export function TimetableGrid({
       }
     }
 
-    // Red for teacher or same-subject-same-day clashes
-    if (result.reason === 'teacher' || result.reason === 'subject') {
+    // Red for teacher / subject / PE-after-lunch clashes
+    if (
+      result.reason === 'teacher' ||
+      result.reason === 'subject' ||
+      result.reason === 'pe'
+    ) {
       return {
         classroom: hoverTarget.classroom,
         day: hoverTarget.day,
@@ -255,6 +259,7 @@ function DayRow({
         slots,
         lessons,
         placements,
+        dragLesson,
         hoverPreview,
         onDragStartLesson,
         onDragEndLesson,
@@ -269,6 +274,7 @@ function renderDaySlots({
   slots,
   lessons,
   placements,
+  dragLesson,
   hoverPreview,
   onDragStartLesson,
   onDragEndLesson,
@@ -309,27 +315,75 @@ function renderDaySlots({
       continue
     }
 
-    const at = lessonAt(classroom, day, slot.id, lessons, placements)
-    if (at?.covered) {
+    const atList = lessonsAt(classroom, day, slot.id, lessons, placements)
+    const starters = atList.filter((item) => !item.covered)
+    if (starters.length === 0 && atList.some((item) => item.covered)) {
       index += 1
       continue
     }
 
-    if (at && !at.covered) {
-      const colSpan = at.lesson.span === 2 ? 2 : 1
+    if (starters.length > 0) {
+      const colSpan = Math.max(...starters.map((item) => item.lesson.span))
+      const stream =
+        starters.find((item) => item.lesson.stream)?.lesson.stream ?? null
+      const syncId = starters[0]?.lesson.syncGroupId
+      const isBundle =
+        starters.length > 1 &&
+        (Boolean(stream) ||
+          starters.every(
+            (item) =>
+              item.lesson.syncGroupId && item.lesson.syncGroupId === syncId,
+          ))
+      const sameSubject =
+        isBundle &&
+        starters.every(
+          (item) => item.lesson.subject === starters[0].lesson.subject,
+        )
+
       cells.push(
         <td
           key={`${classroom}-${day}-${slot.id}`}
-          className="slot has-lesson"
+          className={
+            starters.length > 1
+              ? `slot has-lesson is-stack${isBundle ? ' is-elective-bundle' : ''}${sameSubject ? ' is-coteach' : ''}`
+              : 'slot has-lesson'
+          }
           colSpan={colSpan}
           data-slot-id={slot.id}
         >
-          <LessonCard
-            lesson={at.lesson}
-            variant="grid"
-            onDragStartLesson={onDragStartLesson}
-            onDragEndLesson={onDragEndLesson}
-          />
+          {sameSubject ? (
+            <CoteachCard
+              lessons={starters.map((item) => item.lesson)}
+              onDragStartLesson={onDragStartLesson}
+              onDragEndLesson={onDragEndLesson}
+            />
+          ) : (
+            <div
+              className={
+                starters.length > 1
+                  ? isBundle
+                    ? 'lesson-stack is-elective'
+                    : 'lesson-stack'
+                  : undefined
+              }
+            >
+              {isBundle && stream ? (
+                <div className="elective-bundle-label" title={stream}>
+                  {stream}
+                </div>
+              ) : null}
+              {starters.map(({ lesson }) => (
+                <LessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  variant="grid"
+                  compact={isBundle}
+                  onDragStartLesson={onDragStartLesson}
+                  onDragEndLesson={onDragEndLesson}
+                />
+              ))}
+            </div>
+          )}
         </td>,
       )
       index += colSpan
@@ -342,17 +396,44 @@ function renderDaySlots({
       hoverPreview.day === day &&
       hoverPreview.slotIds.has(slot.id)
 
-    const hoverClass = isHoverSlot
+    const blockReason = takenSlotReason(
+      dragLesson,
+      classroom,
+      day,
+      slot.id,
+      lessons,
+      placements,
+    )
+
+    const stateClass = isHoverSlot
       ? hoverPreview.tone === 'conflict'
         ? 'is-drop-conflict'
         : 'is-drop-hover'
+      : blockReason
+        ? 'is-slot-taken'
+        : ''
+
+    const titleExtra = blockReason
+      ? blockReason === 'occupied'
+        ? ' · already has a class here'
+        : blockReason === 'subject'
+          ? ` · ${dragLesson.subject} already on ${day}`
+          : blockReason === 'teacher'
+            ? ` · ${dragLesson.teacher} already teaching then`
+            : blockReason === 'break'
+              ? ' · break for this class'
+              : blockReason === 'span'
+                ? ' · double can’t fit here'
+                : blockReason === 'pe'
+                  ? ' · PE only before lunch'
+                  : ' · can’t place here'
       : ''
 
     cells.push(
       <td
         key={`${classroom}-${day}-${slot.id}`}
-        className={['slot', hoverClass].filter(Boolean).join(' ')}
-        title={`${classroom} · ${day} · ${slot.label} (${slot.start}–${slot.end})`}
+        className={['slot', stateClass].filter(Boolean).join(' ')}
+        title={`${classroom} · ${day} · ${slot.label} (${slot.start}–${slot.end})${titleExtra}`}
         data-slot-id={slot.id}
         data-empty="true"
       >
@@ -363,6 +444,38 @@ function renderDaySlots({
   }
 
   return cells
+}
+
+/** Empty slots that can’t take this drag (teacher clash, subject-once, span, …). */
+function takenSlotReason(
+  dragLesson,
+  classroom,
+  day,
+  slotId,
+  lessons,
+  placements,
+) {
+  if (!dragLesson || dragLesson.classroom !== classroom) return null
+  const result = evaluatePlacement(
+    dragLesson,
+    classroom,
+    day,
+    slotId,
+    lessons,
+    placements,
+  )
+  if (result.ok) return null
+  if (
+    result.reason === 'occupied' ||
+    result.reason === 'subject' ||
+    result.reason === 'teacher' ||
+    result.reason === 'break' ||
+    result.reason === 'span' ||
+    result.reason === 'pe'
+  ) {
+    return result.reason
+  }
+  return null
 }
 
 function nearestPeriodSlotId(rowEl, clientX, slots) {

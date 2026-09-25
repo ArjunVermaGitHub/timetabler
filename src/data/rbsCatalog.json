@@ -1,0 +1,6496 @@
+{
+  "classrooms": [
+    "Kopal",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8A",
+    "8B",
+    "9A",
+    "9B",
+    "10A",
+    "10B",
+    "11",
+    "12"
+  ],
+  "classTeachers": {
+    "Kopal": "Nitya Pandey",
+    "3": "Madhavi Talwalkar",
+    "4": "Madhavi Talwalkar",
+    "5": "Dwarithi Sinha Roy",
+    "6": "Seema Mehrotra",
+    "7": "Vivek Mishra",
+    "8A": "Bankey Bihari Agarwal",
+    "8B": "Karuna Jaithirtha",
+    "9A": "Ritu Srivastava",
+    "9B": "Danish Raza",
+    "10A": "Medhna Kashyap",
+    "10B": "Srajan",
+    "11": "Ananya Pathak",
+    "12": "Anjali Bhagchandani"
+  },
+  "teachers": [
+    "Aarti Pathak",
+    "Aaysha",
+    "Aishwarya Kirti",
+    "Ananya Pathak",
+    "Anil Chary",
+    "Anjali Bhagchandani",
+    "Anjali Krishna",
+    "Anurag Sharma",
+    "Anurag Tiwari",
+    "Arjun",
+    "Atul Vij",
+    "Bankey Bihari Agarwal",
+    "Bijay Sahu",
+    "Chhaya Rani Singh",
+    "Danish Raza",
+    "Dwarithi Sinha Roy",
+    "Jaishree Vij",
+    "Juli Singh",
+    "Kalpana Sharma",
+    "Karuna Jaithirtha",
+    "Komal",
+    "Madhavi Talwalkar",
+    "Manohar Srivastava",
+    "Medhna Kashyap",
+    "Neha Tripathi",
+    "Nitya Pandey",
+    "Papya",
+    "Partha",
+    "Prabha",
+    "Ritu Srivastava",
+    "Saptarshi Bhattacharya",
+    "Seema Mehrotra",
+    "Shahnaz Ali",
+    "Shivangi Vats",
+    "Shreshtha Singh",
+    "Srajan",
+    "Sudeshna Banerjee",
+    "Sweta Singh",
+    "Urshia Akhtar",
+    "Vani",
+    "Vikas Sharma",
+    "Vivek Mishra",
+    "bharati ghosh"
+  ],
+  "lessons": [
+    {
+      "id": "L0001",
+      "classroom": "9A",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0002",
+      "classroom": "9A",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0003",
+      "classroom": "9A",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0004",
+      "classroom": "9B",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0005",
+      "classroom": "9B",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0006",
+      "classroom": "9B",
+      "subject": "Biology",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0007",
+      "classroom": "8B",
+      "subject": "Computer Lab",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0008",
+      "classroom": "7",
+      "subject": "Computer Lab",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0009",
+      "classroom": "8A",
+      "subject": "Computer Lab",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0010",
+      "classroom": "6",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0011",
+      "classroom": "6",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0012",
+      "classroom": "6",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0013",
+      "classroom": "6",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0014",
+      "classroom": "6",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0015",
+      "classroom": "9B",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0016",
+      "classroom": "9B",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0017",
+      "classroom": "9B",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0018",
+      "classroom": "9B",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0019",
+      "classroom": "9B",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0020",
+      "classroom": "9A",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0021",
+      "classroom": "9A",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0022",
+      "classroom": "9A",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0023",
+      "classroom": "9A",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0024",
+      "classroom": "9A",
+      "subject": "English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0025",
+      "classroom": "6",
+      "subject": "Remedial English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0026",
+      "classroom": "6",
+      "subject": "Remedial English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0027",
+      "classroom": "5",
+      "subject": "Remedial English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0028",
+      "classroom": "5",
+      "subject": "Remedial English",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0029",
+      "classroom": "6",
+      "subject": "Library",
+      "teacher": "Aishwarya Kirti",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0030",
+      "classroom": "3",
+      "subject": "Culture",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0031",
+      "classroom": "4",
+      "subject": "Culture",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0032",
+      "classroom": "10A",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0033",
+      "classroom": "10A",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0034",
+      "classroom": "10A",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0035",
+      "classroom": "10B",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0036",
+      "classroom": "10B",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0037",
+      "classroom": "10B",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0038",
+      "classroom": "3",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 2,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0039",
+      "classroom": "3",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0040",
+      "classroom": "3",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0041",
+      "classroom": "3",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0042",
+      "classroom": "4",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 2,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0043",
+      "classroom": "4",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0044",
+      "classroom": "4",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0045",
+      "classroom": "4",
+      "subject": "English",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0046",
+      "classroom": "Kopal",
+      "subject": "Library",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0047",
+      "classroom": "Kopal",
+      "subject": "Library",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0048",
+      "classroom": "5",
+      "subject": "Culture",
+      "teacher": "Anjali Krishna",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0049",
+      "classroom": "9B",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0050",
+      "classroom": "9B",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0051",
+      "classroom": "9B",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0052",
+      "classroom": "9A",
+      "subject": "Library",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0053",
+      "classroom": "8A",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0054",
+      "classroom": "8A",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0055",
+      "classroom": "8A",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0056",
+      "classroom": "8A",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0057",
+      "classroom": "9A",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0058",
+      "classroom": "9A",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0059",
+      "classroom": "9A",
+      "subject": "Chemistry",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0060",
+      "classroom": "8B",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0061",
+      "classroom": "8B",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0062",
+      "classroom": "8B",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0063",
+      "classroom": "8B",
+      "subject": "Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0064",
+      "classroom": "8A",
+      "subject": "Remedial Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0065",
+      "classroom": "8A",
+      "subject": "Remedial Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0066",
+      "classroom": "8B",
+      "subject": "Remedial Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0067",
+      "classroom": "8B",
+      "subject": "Remedial Maths",
+      "teacher": "Anurag Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0068",
+      "classroom": "10B",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0069",
+      "classroom": "10B",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0070",
+      "classroom": "10B",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0071",
+      "classroom": "10A",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0072",
+      "classroom": "10A",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0073",
+      "classroom": "10A",
+      "subject": "Physics",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0074",
+      "classroom": "7",
+      "subject": "Maths",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 2,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0075",
+      "classroom": "7",
+      "subject": "Maths",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0076",
+      "classroom": "7",
+      "subject": "Maths",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0077",
+      "classroom": "8B",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0078",
+      "classroom": "8B",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0079",
+      "classroom": "8B",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0080",
+      "classroom": "8B",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0081",
+      "classroom": "8A",
+      "subject": "CTP",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0082",
+      "classroom": "8B",
+      "subject": "CTP",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0083",
+      "classroom": "8A",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0084",
+      "classroom": "8A",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0085",
+      "classroom": "8A",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0086",
+      "classroom": "8A",
+      "subject": "Science",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0087",
+      "classroom": "7",
+      "subject": "Remedial Maths",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0088",
+      "classroom": "7",
+      "subject": "Remedial Maths",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0089",
+      "classroom": "3",
+      "subject": "Games",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0090",
+      "classroom": "4",
+      "subject": "Games",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0091",
+      "classroom": "5",
+      "subject": "Games",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0092",
+      "classroom": "3",
+      "subject": "Craft",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0093",
+      "classroom": "4",
+      "subject": "Craft",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0094",
+      "classroom": "5",
+      "subject": "Craft",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0095",
+      "classroom": "Kopal",
+      "subject": "Free Play",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0096",
+      "classroom": "6",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0097",
+      "classroom": "5",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0098",
+      "classroom": "9A",
+      "subject": "Economics",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0099",
+      "classroom": "9A",
+      "subject": "Economics",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0100",
+      "classroom": "9B",
+      "subject": "CTP",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0101",
+      "classroom": "9A",
+      "subject": "CTP",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0102",
+      "classroom": "9B",
+      "subject": "Economics",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0103",
+      "classroom": "9B",
+      "subject": "Economics",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0104",
+      "classroom": "5",
+      "subject": "CTP",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0105",
+      "classroom": "6",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0106",
+      "classroom": "6",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0107",
+      "classroom": "6",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0108",
+      "classroom": "6",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0109",
+      "classroom": "5",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0110",
+      "classroom": "5",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0111",
+      "classroom": "5",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0112",
+      "classroom": "5",
+      "subject": "Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0113",
+      "classroom": "4",
+      "subject": "Environmental Studies",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0114",
+      "classroom": "4",
+      "subject": "Environmental Studies",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0115",
+      "classroom": "4",
+      "subject": "Environmental Studies",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0116",
+      "classroom": "4",
+      "subject": "Environmental Studies",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0117",
+      "classroom": "6",
+      "subject": "Remedial Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0118",
+      "classroom": "6",
+      "subject": "Remedial Maths",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0119",
+      "classroom": "7",
+      "subject": "Culture",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0120",
+      "classroom": "10B",
+      "subject": "Information Technology",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0121",
+      "classroom": "8B",
+      "subject": "Computer Lab",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0122",
+      "classroom": "10A",
+      "subject": "Information Technology",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0123",
+      "classroom": "9A",
+      "subject": "Information Technology",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0124",
+      "classroom": "7",
+      "subject": "Computer Lab",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0125",
+      "classroom": "8A",
+      "subject": "Computer Lab",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0126",
+      "classroom": "9B",
+      "subject": "Information Technology",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0127",
+      "classroom": "10A",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0128",
+      "classroom": "10A",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0129",
+      "classroom": "10A",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0130",
+      "classroom": "10A",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0131",
+      "classroom": "10A",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0132",
+      "classroom": "10B",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0133",
+      "classroom": "10B",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0134",
+      "classroom": "10B",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0135",
+      "classroom": "10B",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0136",
+      "classroom": "10B",
+      "subject": "English",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0137",
+      "classroom": "8A",
+      "subject": "Culture",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0138",
+      "classroom": "8B",
+      "subject": "Culture",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0139",
+      "classroom": "7",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0140",
+      "classroom": "7",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0141",
+      "classroom": "7",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0142",
+      "classroom": "7",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0143",
+      "classroom": "7",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0144",
+      "classroom": "8A",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0145",
+      "classroom": "8A",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0146",
+      "classroom": "8A",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0147",
+      "classroom": "8A",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0148",
+      "classroom": "8A",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0149",
+      "classroom": "7",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0150",
+      "classroom": "7",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0151",
+      "classroom": "7",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0152",
+      "classroom": "8A",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0153",
+      "classroom": "8A",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0154",
+      "classroom": "8A",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0155",
+      "classroom": "8B",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0156",
+      "classroom": "8B",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0157",
+      "classroom": "8B",
+      "subject": "Remedial English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0158",
+      "classroom": "8B",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0159",
+      "classroom": "8B",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0160",
+      "classroom": "8B",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0161",
+      "classroom": "8B",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0162",
+      "classroom": "8B",
+      "subject": "English",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0163",
+      "classroom": "8B",
+      "subject": "Library",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0164",
+      "classroom": "7",
+      "subject": "Library",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0165",
+      "classroom": "8A",
+      "subject": "Library",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0166",
+      "classroom": "4",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0167",
+      "classroom": "4",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0168",
+      "classroom": "4",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0169",
+      "classroom": "4",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0170",
+      "classroom": "4",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0171",
+      "classroom": "5",
+      "subject": "English",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0172",
+      "classroom": "5",
+      "subject": "English",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0173",
+      "classroom": "5",
+      "subject": "English",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0174",
+      "classroom": "5",
+      "subject": "English",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0175",
+      "classroom": "5",
+      "subject": "English",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0176",
+      "classroom": "3",
+      "subject": "CTP",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0177",
+      "classroom": "4",
+      "subject": "CTP",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0178",
+      "classroom": "3",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0179",
+      "classroom": "3",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0180",
+      "classroom": "3",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0181",
+      "classroom": "3",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0182",
+      "classroom": "3",
+      "subject": "Maths",
+      "teacher": "Madhavi Talwalkar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0183",
+      "classroom": "Kopal",
+      "subject": "Music",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0184",
+      "classroom": "5",
+      "subject": "Music",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0185",
+      "classroom": "3",
+      "subject": "Music",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0186",
+      "classroom": "4",
+      "subject": "Music",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0187",
+      "classroom": "10A",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 2,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0188",
+      "classroom": "10A",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0189",
+      "classroom": "10A",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0190",
+      "classroom": "10A",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0191",
+      "classroom": "10B",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0192",
+      "classroom": "10B",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0193",
+      "classroom": "10B",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0194",
+      "classroom": "10B",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0195",
+      "classroom": "10B",
+      "subject": "Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0196",
+      "classroom": "10A",
+      "subject": "CTP",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0197",
+      "classroom": "10B",
+      "subject": "CTP",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0198",
+      "classroom": "9B",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0199",
+      "classroom": "9B",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0200",
+      "classroom": "9B",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0201",
+      "classroom": "9A",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0202",
+      "classroom": "9A",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0203",
+      "classroom": "9A",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0204",
+      "classroom": "Kopal",
+      "subject": "CTP",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0205",
+      "classroom": "Kopal",
+      "subject": "Environmental Studies",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0206",
+      "classroom": "Kopal",
+      "subject": "Environmental Studies",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0207",
+      "classroom": "Kopal",
+      "subject": "Environmental Studies",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0208",
+      "classroom": "Kopal",
+      "subject": "Maths",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0209",
+      "classroom": "Kopal",
+      "subject": "Maths",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0210",
+      "classroom": "Kopal",
+      "subject": "Maths",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0211",
+      "classroom": "Kopal",
+      "subject": "English",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0212",
+      "classroom": "Kopal",
+      "subject": "English",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0213",
+      "classroom": "Kopal",
+      "subject": "English",
+      "teacher": "Nitya Pandey",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0214",
+      "classroom": "9A",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0215",
+      "classroom": "9A",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0216",
+      "classroom": "9A",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0217",
+      "classroom": "9B",
+      "subject": "Library",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0218",
+      "classroom": "9B",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0219",
+      "classroom": "9B",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0220",
+      "classroom": "9B",
+      "subject": "Geography",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0221",
+      "classroom": "9A",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0222",
+      "classroom": "9A",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0223",
+      "classroom": "9A",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0224",
+      "classroom": "9B",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0225",
+      "classroom": "9B",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0226",
+      "classroom": "9B",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0227",
+      "classroom": "8B",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0228",
+      "classroom": "8B",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0229",
+      "classroom": "8B",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0230",
+      "classroom": "8B",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0231",
+      "classroom": "8A",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0232",
+      "classroom": "8A",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0233",
+      "classroom": "8A",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0234",
+      "classroom": "8A",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0235",
+      "classroom": "6",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0236",
+      "classroom": "6",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0237",
+      "classroom": "6",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0238",
+      "classroom": "6",
+      "subject": "Social Studies",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0239",
+      "classroom": "6",
+      "subject": "CTP",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0240",
+      "classroom": "8A",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0241",
+      "classroom": "8A",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0242",
+      "classroom": "8A",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0243",
+      "classroom": "7",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0244",
+      "classroom": "7",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0245",
+      "classroom": "7",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0246",
+      "classroom": "6",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0247",
+      "classroom": "6",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0248",
+      "classroom": "6",
+      "subject": "Sanskrit",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0249",
+      "classroom": "8B",
+      "subject": "Sanskrit",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0250",
+      "classroom": "8B",
+      "subject": "Sanskrit",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0251",
+      "classroom": "8B",
+      "subject": "Sanskrit",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0252",
+      "classroom": "10B",
+      "subject": "Economics",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0253",
+      "classroom": "10B",
+      "subject": "Economics",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0254",
+      "classroom": "10A",
+      "subject": "Economics",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0255",
+      "classroom": "10A",
+      "subject": "Economics",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0256",
+      "classroom": "9B",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0257",
+      "classroom": "9B",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0258",
+      "classroom": "9B",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0259",
+      "classroom": "9B",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0260",
+      "classroom": "9B",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0261",
+      "classroom": "10A",
+      "subject": "Library",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0262",
+      "classroom": "9A",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0263",
+      "classroom": "9A",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0264",
+      "classroom": "9A",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0265",
+      "classroom": "9A",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0266",
+      "classroom": "9A",
+      "subject": "Maths",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0267",
+      "classroom": "10B",
+      "subject": "Library",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0268",
+      "classroom": "3",
+      "subject": "Dance",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0269",
+      "classroom": "Kopal",
+      "subject": "Dance",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0270",
+      "classroom": "4",
+      "subject": "Dance",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0271",
+      "classroom": "5",
+      "subject": "Dance",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0272",
+      "classroom": "6",
+      "subject": "Dance",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0273",
+      "classroom": "10B",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0274",
+      "classroom": "10B",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0275",
+      "classroom": "10B",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0276",
+      "classroom": "10A",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0277",
+      "classroom": "10A",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0278",
+      "classroom": "10A",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0279",
+      "classroom": "10A",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0280",
+      "classroom": "10A",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0281",
+      "classroom": "10A",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0282",
+      "classroom": "10B",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0283",
+      "classroom": "10B",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0284",
+      "classroom": "10B",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0285",
+      "classroom": "3",
+      "subject": "Library",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0286",
+      "classroom": "3",
+      "subject": "Library",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0287",
+      "classroom": "4",
+      "subject": "Library",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0288",
+      "classroom": "4",
+      "subject": "Library",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0289",
+      "classroom": "3",
+      "subject": "Environmental Studies",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0290",
+      "classroom": "3",
+      "subject": "Environmental Studies",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0291",
+      "classroom": "3",
+      "subject": "Environmental Studies",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0292",
+      "classroom": "3",
+      "subject": "Environmental Studies",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0293",
+      "classroom": "10A",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0294",
+      "classroom": "10A",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0295",
+      "classroom": "10A",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0296",
+      "classroom": "10A",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0297",
+      "classroom": "7",
+      "subject": "Social Studies",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0298",
+      "classroom": "7",
+      "subject": "Social Studies",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0299",
+      "classroom": "7",
+      "subject": "Social Studies",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0300",
+      "classroom": "7",
+      "subject": "Social Studies",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0301",
+      "classroom": "10B",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0302",
+      "classroom": "10B",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0303",
+      "classroom": "10B",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0304",
+      "classroom": "10B",
+      "subject": "History",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0305",
+      "classroom": "5",
+      "subject": "Environmental Studies",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0306",
+      "classroom": "5",
+      "subject": "Environmental Studies",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0307",
+      "classroom": "5",
+      "subject": "Environmental Studies",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0308",
+      "classroom": "5",
+      "subject": "Environmental Studies",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0309",
+      "classroom": "7",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0310",
+      "classroom": "7",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0311",
+      "classroom": "7",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0312",
+      "classroom": "6",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0313",
+      "classroom": "6",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0314",
+      "classroom": "6",
+      "subject": "Science",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0315",
+      "classroom": "7",
+      "subject": "CTP",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0316",
+      "classroom": "5",
+      "subject": "Library",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0317",
+      "classroom": "6",
+      "subject": "Culture",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0318",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-46",
+      "stream": null
+    },
+    {
+      "id": "L0319",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-46",
+      "stream": null
+    },
+    {
+      "id": "L0320",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-47",
+      "stream": null
+    },
+    {
+      "id": "L0321",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-47",
+      "stream": null
+    },
+    {
+      "id": "L0322",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-48",
+      "stream": null
+    },
+    {
+      "id": "L0323",
+      "classroom": "7",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "7-LRC-ct-48",
+      "stream": null
+    },
+    {
+      "id": "L0324",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0325",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0326",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0327",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0328",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0329",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0330",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0331",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0332",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0333",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0334",
+      "classroom": "7",
+      "subject": "Life Skills",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": "7-Life Skills-ct-49",
+      "stream": null
+    },
+    {
+      "id": "L0335",
+      "classroom": "7",
+      "subject": "Visual Arts",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "7-Visual Arts-ct-50",
+      "stream": null
+    },
+    {
+      "id": "L0336",
+      "classroom": "7",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "7-Visual Arts-ct-50",
+      "stream": null
+    },
+    {
+      "id": "L0337",
+      "classroom": "7",
+      "subject": "Visual Arts",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "7-Visual Arts-ct-50",
+      "stream": null
+    },
+    {
+      "id": "L0338",
+      "classroom": "7",
+      "subject": "Performing Arts",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "7-Performing Arts-ct-51",
+      "stream": null
+    },
+    {
+      "id": "L0339",
+      "classroom": "7",
+      "subject": "Performing Arts",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "7-Performing Arts-ct-51",
+      "stream": null
+    },
+    {
+      "id": "L0340",
+      "classroom": "7",
+      "subject": "Performing Arts",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "7-Performing Arts-ct-51",
+      "stream": null
+    },
+    {
+      "id": "L0341",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-52",
+      "stream": null
+    },
+    {
+      "id": "L0342",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-52",
+      "stream": null
+    },
+    {
+      "id": "L0343",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-52",
+      "stream": null
+    },
+    {
+      "id": "L0344",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-52",
+      "stream": null
+    },
+    {
+      "id": "L0345",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-53",
+      "stream": null
+    },
+    {
+      "id": "L0346",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-53",
+      "stream": null
+    },
+    {
+      "id": "L0347",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-53",
+      "stream": null
+    },
+    {
+      "id": "L0348",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-54",
+      "stream": null
+    },
+    {
+      "id": "L0349",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-54",
+      "stream": null
+    },
+    {
+      "id": "L0350",
+      "classroom": "8A",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8A-LRC-ct-54",
+      "stream": null
+    },
+    {
+      "id": "L0351",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0352",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0353",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0354",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0355",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0356",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0357",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0358",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0359",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0360",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0361",
+      "classroom": "8A",
+      "subject": "Life Skills",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": "8A-Life Skills-ct-55",
+      "stream": null
+    },
+    {
+      "id": "L0362",
+      "classroom": "8A",
+      "subject": "Visual Arts",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "8A-Visual Arts-ct-56",
+      "stream": null
+    },
+    {
+      "id": "L0363",
+      "classroom": "8A",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "8A-Visual Arts-ct-56",
+      "stream": null
+    },
+    {
+      "id": "L0364",
+      "classroom": "8A",
+      "subject": "Visual Arts",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "8A-Visual Arts-ct-56",
+      "stream": null
+    },
+    {
+      "id": "L0365",
+      "classroom": "8A",
+      "subject": "Performing Arts",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "8A-Performing Arts-ct-57",
+      "stream": null
+    },
+    {
+      "id": "L0366",
+      "classroom": "8A",
+      "subject": "Performing Arts",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Performing Arts-ct-57",
+      "stream": null
+    },
+    {
+      "id": "L0367",
+      "classroom": "8A",
+      "subject": "Performing Arts",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "8A-Performing Arts-ct-57",
+      "stream": null
+    },
+    {
+      "id": "L0368",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-58",
+      "stream": null
+    },
+    {
+      "id": "L0369",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-58",
+      "stream": null
+    },
+    {
+      "id": "L0370",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-59",
+      "stream": null
+    },
+    {
+      "id": "L0371",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-59",
+      "stream": null
+    },
+    {
+      "id": "L0372",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-60",
+      "stream": null
+    },
+    {
+      "id": "L0373",
+      "classroom": "8B",
+      "subject": "LRC",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": "8B-LRC-ct-60",
+      "stream": null
+    },
+    {
+      "id": "L0374",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0375",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0376",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0377",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0378",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0379",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0380",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0381",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0382",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0383",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0384",
+      "classroom": "8B",
+      "subject": "Life Skills",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": "8B-Life Skills-ct-61",
+      "stream": null
+    },
+    {
+      "id": "L0385",
+      "classroom": "8B",
+      "subject": "Visual Arts",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "8B-Visual Arts-ct-62",
+      "stream": null
+    },
+    {
+      "id": "L0386",
+      "classroom": "8B",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "8B-Visual Arts-ct-62",
+      "stream": null
+    },
+    {
+      "id": "L0387",
+      "classroom": "8B",
+      "subject": "Visual Arts",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "8B-Visual Arts-ct-62",
+      "stream": null
+    },
+    {
+      "id": "L0388",
+      "classroom": "8B",
+      "subject": "Performing Arts",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "8B-Performing Arts-ct-63",
+      "stream": null
+    },
+    {
+      "id": "L0389",
+      "classroom": "8B",
+      "subject": "Performing Arts",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "8B-Performing Arts-ct-63",
+      "stream": null
+    },
+    {
+      "id": "L0390",
+      "classroom": "8B",
+      "subject": "Performing Arts",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "8B-Performing Arts-ct-63",
+      "stream": null
+    },
+    {
+      "id": "L0391",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0392",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0393",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0394",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0395",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Karuna Jaithirtha",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0396",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0397",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0398",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0399",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Vikas Sharma",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0400",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "Vivek Mishra",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0401",
+      "classroom": "6",
+      "subject": "Life Skills",
+      "teacher": "bharati ghosh",
+      "span": 1,
+      "syncGroupId": "6-Life Skills-ct-64",
+      "stream": null
+    },
+    {
+      "id": "L0402",
+      "classroom": "6",
+      "subject": "Visual Arts",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "6-Visual Arts-ct-65",
+      "stream": null
+    },
+    {
+      "id": "L0403",
+      "classroom": "6",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "6-Visual Arts-ct-65",
+      "stream": null
+    },
+    {
+      "id": "L0404",
+      "classroom": "6",
+      "subject": "Visual Arts",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "6-Visual Arts-ct-65",
+      "stream": null
+    },
+    {
+      "id": "L0405",
+      "classroom": "6",
+      "subject": "Performing Arts",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "6-Performing Arts-ct-66",
+      "stream": null
+    },
+    {
+      "id": "L0406",
+      "classroom": "6",
+      "subject": "Performing Arts",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "6-Performing Arts-ct-66",
+      "stream": null
+    },
+    {
+      "id": "L0407",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0408",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0409",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0410",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0411",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0412",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0413",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0414",
+      "classroom": "9A",
+      "subject": "Art Education",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "9A-Art Education-ct-67",
+      "stream": null
+    },
+    {
+      "id": "L0415",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0416",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Bankey Bihari Agarwal",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0417",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0418",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0419",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Jaishree Vij",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0420",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0421",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0422",
+      "classroom": "9B",
+      "subject": "Art Education",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "9B-Art Education-ct-68",
+      "stream": null
+    },
+    {
+      "id": "L0423",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0424",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0425",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0426",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0427",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0428",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0429",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0430",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0431",
+      "classroom": "10A",
+      "subject": "Art Education",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "10A-Art Education-ct-69",
+      "stream": null
+    },
+    {
+      "id": "L0432",
+      "classroom": "10A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "10A-LRC-ct-70",
+      "stream": null
+    },
+    {
+      "id": "L0433",
+      "classroom": "10A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "10A-LRC-ct-71",
+      "stream": null
+    },
+    {
+      "id": "L0434",
+      "classroom": "10A",
+      "subject": "LRC",
+      "teacher": "Kalpana Sharma",
+      "span": 1,
+      "syncGroupId": "10A-LRC-ct-72",
+      "stream": null
+    },
+    {
+      "id": "L0435",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0436",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Bijay Sahu",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0437",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0438",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0439",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0440",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Seema Mehrotra",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0441",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0442",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Srajan",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0443",
+      "classroom": "10B",
+      "subject": "Art Education",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "10B-Art Education-ct-73",
+      "stream": null
+    },
+    {
+      "id": "L0444",
+      "classroom": "Kopal",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "Kopal-Visual Arts-ct-74",
+      "stream": null
+    },
+    {
+      "id": "L0445",
+      "classroom": "5",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "5-Visual Arts-ct-75",
+      "stream": null
+    },
+    {
+      "id": "L0446",
+      "classroom": "5",
+      "subject": "Visual Arts",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "5-Visual Arts-ct-75",
+      "stream": null
+    },
+    {
+      "id": "L0447",
+      "classroom": "3",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "3-Visual Arts-ct-76",
+      "stream": null
+    },
+    {
+      "id": "L0448",
+      "classroom": "4",
+      "subject": "Visual Arts",
+      "teacher": "Partha",
+      "span": 1,
+      "syncGroupId": "4-Visual Arts-ct-77",
+      "stream": null
+    },
+    {
+      "id": "L0449",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-78",
+      "stream": null
+    },
+    {
+      "id": "L0450",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-78",
+      "stream": null
+    },
+    {
+      "id": "L0451",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-79",
+      "stream": null
+    },
+    {
+      "id": "L0452",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-79",
+      "stream": null
+    },
+    {
+      "id": "L0453",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-80",
+      "stream": null
+    },
+    {
+      "id": "L0454",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-80",
+      "stream": null
+    },
+    {
+      "id": "L0455",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-81",
+      "stream": null
+    },
+    {
+      "id": "L0456",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-81",
+      "stream": null
+    },
+    {
+      "id": "L0457",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-82",
+      "stream": null
+    },
+    {
+      "id": "L0458",
+      "classroom": "8A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "8A-Hindi-ct-82",
+      "stream": null
+    },
+    {
+      "id": "L0459",
+      "classroom": "6",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0460",
+      "classroom": "6",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0461",
+      "classroom": "6",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0462",
+      "classroom": "6",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0463",
+      "classroom": "8B",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0464",
+      "classroom": "8B",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0465",
+      "classroom": "8B",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0466",
+      "classroom": "8B",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0467",
+      "classroom": "8B",
+      "subject": "Hindi",
+      "teacher": "Aarti Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0468",
+      "classroom": "5",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0469",
+      "classroom": "5",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0470",
+      "classroom": "5",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0471",
+      "classroom": "4",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0472",
+      "classroom": "4",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0473",
+      "classroom": "4",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0474",
+      "classroom": "4",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0475",
+      "classroom": "3",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0476",
+      "classroom": "3",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0477",
+      "classroom": "3",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0478",
+      "classroom": "3",
+      "subject": "Hindi",
+      "teacher": "Dwarithi Sinha Roy",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0479",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-83",
+      "stream": null
+    },
+    {
+      "id": "L0480",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-83",
+      "stream": null
+    },
+    {
+      "id": "L0481",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-84",
+      "stream": null
+    },
+    {
+      "id": "L0482",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-84",
+      "stream": null
+    },
+    {
+      "id": "L0483",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-85",
+      "stream": null
+    },
+    {
+      "id": "L0484",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-85",
+      "stream": null
+    },
+    {
+      "id": "L0485",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-86",
+      "stream": null
+    },
+    {
+      "id": "L0486",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-86",
+      "stream": null
+    },
+    {
+      "id": "L0487",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-87",
+      "stream": null
+    },
+    {
+      "id": "L0488",
+      "classroom": "10A",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10A-Hindi-ct-87",
+      "stream": null
+    },
+    {
+      "id": "L0489",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-88",
+      "stream": null
+    },
+    {
+      "id": "L0490",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-88",
+      "stream": null
+    },
+    {
+      "id": "L0491",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-89",
+      "stream": null
+    },
+    {
+      "id": "L0492",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-89",
+      "stream": null
+    },
+    {
+      "id": "L0493",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-90",
+      "stream": null
+    },
+    {
+      "id": "L0494",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-90",
+      "stream": null
+    },
+    {
+      "id": "L0495",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-91",
+      "stream": null
+    },
+    {
+      "id": "L0496",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-91",
+      "stream": null
+    },
+    {
+      "id": "L0497",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Ritu Srivastava",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-92",
+      "stream": null
+    },
+    {
+      "id": "L0498",
+      "classroom": "10B",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": "10B-Hindi-ct-92",
+      "stream": null
+    },
+    {
+      "id": "L0499",
+      "classroom": "7",
+      "subject": "Hindi",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0500",
+      "classroom": "7",
+      "subject": "Hindi",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0501",
+      "classroom": "7",
+      "subject": "Hindi",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0502",
+      "classroom": "7",
+      "subject": "Hindi",
+      "teacher": "Shivangi Vats",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0503",
+      "classroom": "Kopal",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0504",
+      "classroom": "Kopal",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0505",
+      "classroom": "Kopal",
+      "subject": "Hindi",
+      "teacher": "Shreshtha Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0506",
+      "classroom": "11",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-1",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0507",
+      "classroom": "11",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-1",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0508",
+      "classroom": "11",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-1",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0509",
+      "classroom": "11",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-2",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0510",
+      "classroom": "11",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-2",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0511",
+      "classroom": "11",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-2",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0512",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-3",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0513",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-3",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0514",
+      "classroom": "11",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-4",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0515",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-5",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0516",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-5",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0517",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-5",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0518",
+      "classroom": "11",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-6",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0519",
+      "classroom": "11",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-6",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0520",
+      "classroom": "11",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-6",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0521",
+      "classroom": "11",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-7",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0522",
+      "classroom": "11",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-7",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0523",
+      "classroom": "11",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-8",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0524",
+      "classroom": "11",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-8",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0525",
+      "classroom": "11",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-8",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0526",
+      "classroom": "11",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-9",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0527",
+      "classroom": "11",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-9",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0528",
+      "classroom": "11",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-9",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0529",
+      "classroom": "11",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-10",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0530",
+      "classroom": "11",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-10",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0531",
+      "classroom": "11",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-10",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0532",
+      "classroom": "11",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-11",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0533",
+      "classroom": "11",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-11",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0534",
+      "classroom": "11",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-11",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0535",
+      "classroom": "11",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-12",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0536",
+      "classroom": "11",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-13",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0537",
+      "classroom": "11",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-13",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0538",
+      "classroom": "11",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-13",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0539",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-14",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0540",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-14",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0541",
+      "classroom": "11",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-15",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0542",
+      "classroom": "11",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-15",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0543",
+      "classroom": "11",
+      "subject": "Psychology",
+      "teacher": "Komal",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-15",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0544",
+      "classroom": "11",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-15",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0545",
+      "classroom": "11",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-16",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0546",
+      "classroom": "11",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-16",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0547",
+      "classroom": "11",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-17",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0548",
+      "classroom": "11",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-17",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0549",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-18",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0550",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-18",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0551",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-18",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0552",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-19",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0553",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-19",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0554",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-19",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0555",
+      "classroom": "11",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-20",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0556",
+      "classroom": "11",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-20",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0557",
+      "classroom": "11",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-20",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0558",
+      "classroom": "11",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-20",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0559",
+      "classroom": "11",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-21",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0560",
+      "classroom": "11",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-21",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0561",
+      "classroom": "11",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-22",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0562",
+      "classroom": "11",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-23",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0563",
+      "classroom": "11",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-23",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0564",
+      "classroom": "11",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-23",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0565",
+      "classroom": "11",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-24",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0566",
+      "classroom": "11",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-24",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0567",
+      "classroom": "11",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-24",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0568",
+      "classroom": "11",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-24",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0569",
+      "classroom": "11",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-25",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0570",
+      "classroom": "11",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-25",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0571",
+      "classroom": "11",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-26",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0572",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-26",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0573",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-26",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0574",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-26",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0575",
+      "classroom": "11",
+      "subject": "English",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0576",
+      "classroom": "11",
+      "subject": "CTP",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0577",
+      "classroom": "11",
+      "subject": "Art Education",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0578",
+      "classroom": "11",
+      "subject": "English",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0579",
+      "classroom": "11",
+      "subject": "English",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0580",
+      "classroom": "11",
+      "subject": "English",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0581",
+      "classroom": "11",
+      "subject": "English",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0582",
+      "classroom": "12",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-27",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0583",
+      "classroom": "12",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-27",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0584",
+      "classroom": "12",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-27",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0585",
+      "classroom": "12",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-28",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0586",
+      "classroom": "12",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-28",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0587",
+      "classroom": "12",
+      "subject": "Psychology",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-28",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0588",
+      "classroom": "12",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-28",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0589",
+      "classroom": "12",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-28",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0590",
+      "classroom": "12",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0591",
+      "classroom": "12",
+      "subject": "Chemistry",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0592",
+      "classroom": "12",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0593",
+      "classroom": "12",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0594",
+      "classroom": "12",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0595",
+      "classroom": "12",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0596",
+      "classroom": "12",
+      "subject": "Political Science",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-30",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0597",
+      "classroom": "12",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "12-CTP-31",
+      "stream": "CTP"
+    },
+    {
+      "id": "L0598",
+      "classroom": "12",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "12-CTP-31",
+      "stream": "CTP"
+    },
+    {
+      "id": "L0599",
+      "classroom": "12",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "12-CTP-31",
+      "stream": "CTP"
+    },
+    {
+      "id": "L0600",
+      "classroom": "12",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-32",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0601",
+      "classroom": "12",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-32",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0602",
+      "classroom": "12",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-33",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0603",
+      "classroom": "12",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-34",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0604",
+      "classroom": "12",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-34",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0605",
+      "classroom": "12",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-34",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0606",
+      "classroom": "12",
+      "subject": "Political Science",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-35",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0607",
+      "classroom": "12",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0608",
+      "classroom": "12",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0609",
+      "classroom": "12",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0610",
+      "classroom": "12",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0611",
+      "classroom": "12",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0612",
+      "classroom": "12",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0613",
+      "classroom": "12",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-37",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0614",
+      "classroom": "12",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-37",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0615",
+      "classroom": "12",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-37",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0616",
+      "classroom": "12",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-38",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0617",
+      "classroom": "12",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-38",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0618",
+      "classroom": "12",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-38",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0619",
+      "classroom": "12",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-38",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0620",
+      "classroom": "12",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-38",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0621",
+      "classroom": "12",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-39",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0622",
+      "classroom": "12",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-39",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0623",
+      "classroom": "12",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-39",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0624",
+      "classroom": "12",
+      "subject": "Maths",
+      "teacher": "Arjun",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-40",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0625",
+      "classroom": "12",
+      "subject": "Applied Maths",
+      "teacher": "Medhna Kashyap",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-40",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0626",
+      "classroom": "12",
+      "subject": "Geography",
+      "teacher": "Sweta Singh",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-40",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0627",
+      "classroom": "12",
+      "subject": "Chemistry",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-41",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0628",
+      "classroom": "12",
+      "subject": "Political Science",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-41",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0629",
+      "classroom": "12",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-41",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0630",
+      "classroom": "12",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0631",
+      "classroom": "12",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0632",
+      "classroom": "12",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0633",
+      "classroom": "12",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0634",
+      "classroom": "12",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0635",
+      "classroom": "12",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-42",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0636",
+      "classroom": "12",
+      "subject": "Physics",
+      "teacher": "Neha Tripathi",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-43",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0637",
+      "classroom": "12",
+      "subject": "History",
+      "teacher": "Saptarshi Bhattacharya",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-43",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0638",
+      "classroom": "12",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "12-Act/His/Phy-43",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0639",
+      "classroom": "12",
+      "subject": "Chemistry",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-44",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0640",
+      "classroom": "12",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-44",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0641",
+      "classroom": "12",
+      "subject": "Political Science",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-44",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0642",
+      "classroom": "12",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-45",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0643",
+      "classroom": "12",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "12-BN/Paint-45",
+      "stream": "BN/Paint"
+    },
+    {
+      "id": "L0644",
+      "classroom": "12",
+      "subject": "English",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0645",
+      "classroom": "12",
+      "subject": "English",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0646",
+      "classroom": "12",
+      "subject": "Art Education",
+      "teacher": "Atul Vij",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0647",
+      "classroom": "12",
+      "subject": "English",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0648",
+      "classroom": "12",
+      "subject": "English",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0649",
+      "classroom": "12",
+      "subject": "English",
+      "teacher": "Vani",
+      "span": 1,
+      "syncGroupId": null,
+      "stream": null
+    },
+    {
+      "id": "L0650",
+      "classroom": "11",
+      "subject": "Psychology",
+      "teacher": "Komal",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-1",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0651",
+      "classroom": "11",
+      "subject": "Psychology",
+      "teacher": "Komal",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-2",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0652",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-3",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0653",
+      "classroom": "11",
+      "subject": "Tabla",
+      "teacher": "Chhaya Rani Singh",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-3",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0654",
+      "classroom": "11",
+      "subject": "Physical Education",
+      "teacher": "Anurag Tiwari",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-4",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0655",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-5",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0656",
+      "classroom": "11",
+      "subject": "Psychology",
+      "teacher": "Komal",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-6",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0657",
+      "classroom": "11",
+      "subject": "Bharatnatyam",
+      "teacher": "Sudeshna Banerjee",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-8",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0658",
+      "classroom": "11",
+      "subject": "Psychology",
+      "teacher": "Komal",
+      "span": 1,
+      "syncGroupId": "11-Math/AM/Psy/Geo-10",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0659",
+      "classroom": "11",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-11",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0660",
+      "classroom": "11",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-12",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0661",
+      "classroom": "11",
+      "subject": "Accountancy",
+      "teacher": "Anjali Bhagchandani",
+      "span": 1,
+      "syncGroupId": "11-Act/His/Phy-13",
+      "stream": "Act/His/Phy"
+    },
+    {
+      "id": "L0662",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-14",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0663",
+      "classroom": "11",
+      "subject": "Vocal",
+      "teacher": "Manohar Srivastava",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-14",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0664",
+      "classroom": "11",
+      "subject": "Computer Science",
+      "teacher": "Juli Singh",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-16",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0665",
+      "classroom": "11",
+      "subject": "Biology",
+      "teacher": "Urshia Akhtar",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-17",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0666",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-18",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0667",
+      "classroom": "11",
+      "subject": "Chemistry",
+      "teacher": "Anil Chary",
+      "span": 1,
+      "syncGroupId": "11-Bst/Chem/PolSci-19",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0668",
+      "classroom": "11",
+      "subject": "Economics",
+      "teacher": "Prabha",
+      "span": 1,
+      "syncGroupId": "11-Bio/CS/Eco-21",
+      "stream": "Bio/CS/Eco"
+    },
+    {
+      "id": "L0669",
+      "classroom": "11",
+      "subject": "Painting",
+      "teacher": "Shahnaz Ali",
+      "span": 1,
+      "syncGroupId": "11-PE/Paint-22",
+      "stream": "PE/Paint"
+    },
+    {
+      "id": "L0670",
+      "classroom": "12",
+      "subject": "Political Science",
+      "teacher": "Ananya Pathak",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-29",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0671",
+      "classroom": "12",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-30",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0672",
+      "classroom": "12",
+      "subject": "Chemistry",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-30",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0675",
+      "classroom": "12",
+      "subject": "Business Studies",
+      "teacher": "Danish Raza",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-35",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0676",
+      "classroom": "12",
+      "subject": "Chemistry",
+      "teacher": "Aaysha",
+      "span": 1,
+      "syncGroupId": "12-Bst/Chem/PolSci-35",
+      "stream": "Bst/Chem/PolSci"
+    },
+    {
+      "id": "L0677",
+      "classroom": "12",
+      "subject": "Psychology",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-36",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0678",
+      "classroom": "12",
+      "subject": "Psychology",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-37",
+      "stream": "Math/AM/Psy/Geo"
+    },
+    {
+      "id": "L0680",
+      "classroom": "12",
+      "subject": "Psychology",
+      "teacher": "Papya",
+      "span": 1,
+      "syncGroupId": "12-Math/AM/Psy/Geo-40",
+      "stream": "Math/AM/Psy/Geo"
+    }
+  ],
+  "streamBundles": [
+    {
+      "id": "11-Math/AM/Psy/Geo-1",
+      "classroom": "11",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Mon",
+      "size": 3
+    },
+    {
+      "id": "11-Math/AM/Psy/Geo-2",
+      "classroom": "11",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Mon",
+      "size": 3
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-3",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Mon",
+      "size": 2
+    },
+    {
+      "id": "11-PE/Paint-4",
+      "classroom": "11",
+      "stream": "PE/Paint",
+      "pdfDay": "Mon",
+      "size": 1
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-5",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Tue",
+      "size": 3
+    },
+    {
+      "id": "11-Math/AM/Psy/Geo-6",
+      "classroom": "11",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Tue",
+      "size": 3
+    },
+    {
+      "id": "11-PE/Paint-7",
+      "classroom": "11",
+      "stream": "PE/Paint",
+      "pdfDay": "Tue",
+      "size": 2
+    },
+    {
+      "id": "11-Act/His/Phy-8",
+      "classroom": "11",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Tue",
+      "size": 3
+    },
+    {
+      "id": "11-Bio/CS/Eco-9",
+      "classroom": "11",
+      "stream": "Bio/CS/Eco",
+      "pdfDay": "Tue",
+      "size": 3
+    },
+    {
+      "id": "11-Math/AM/Psy/Geo-10",
+      "classroom": "11",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Wed",
+      "size": 3
+    },
+    {
+      "id": "11-Act/His/Phy-11",
+      "classroom": "11",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Wed",
+      "size": 3
+    },
+    {
+      "id": "11-PE/Paint-12",
+      "classroom": "11",
+      "stream": "PE/Paint",
+      "pdfDay": "Wed",
+      "size": 1
+    },
+    {
+      "id": "11-Act/His/Phy-13",
+      "classroom": "11",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Thu",
+      "size": 3
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-14",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Thu",
+      "size": 2
+    },
+    {
+      "id": "11-Math/AM/Psy/Geo-15",
+      "classroom": "11",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Thu",
+      "size": 4
+    },
+    {
+      "id": "11-Bio/CS/Eco-16",
+      "classroom": "11",
+      "stream": "Bio/CS/Eco",
+      "pdfDay": "Thu",
+      "size": 2
+    },
+    {
+      "id": "11-Bio/CS/Eco-17",
+      "classroom": "11",
+      "stream": "Bio/CS/Eco",
+      "pdfDay": "Thu",
+      "size": 2
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-18",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Fri",
+      "size": 3
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-19",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Fri",
+      "size": 3
+    },
+    {
+      "id": "11-Act/His/Phy-20",
+      "classroom": "11",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Fri",
+      "size": 4
+    },
+    {
+      "id": "11-Bio/CS/Eco-21",
+      "classroom": "11",
+      "stream": "Bio/CS/Eco",
+      "pdfDay": "Fri",
+      "size": 2
+    },
+    {
+      "id": "11-PE/Paint-22",
+      "classroom": "11",
+      "stream": "PE/Paint",
+      "pdfDay": "Fri",
+      "size": 1
+    },
+    {
+      "id": "11-Bio/CS/Eco-23",
+      "classroom": "11",
+      "stream": "Bio/CS/Eco",
+      "pdfDay": "Sat",
+      "size": 3
+    },
+    {
+      "id": "11-Act/His/Phy-24",
+      "classroom": "11",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Sat",
+      "size": 4
+    },
+    {
+      "id": "11-PE/Paint-25",
+      "classroom": "11",
+      "stream": "PE/Paint",
+      "pdfDay": "Sat",
+      "size": 2
+    },
+    {
+      "id": "11-Bst/Chem/PolSci-26",
+      "classroom": "11",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Sat",
+      "size": 4
+    },
+    {
+      "id": "12-Act/His/Phy-27",
+      "classroom": "12",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Mon",
+      "size": 3
+    },
+    {
+      "id": "12-Math/AM/Psy/Geo-28",
+      "classroom": "12",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Mon",
+      "size": 5
+    },
+    {
+      "id": "12-Bst/Chem/PolSci-29",
+      "classroom": "12",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Mon",
+      "size": 6
+    },
+    {
+      "id": "12-Bst/Chem/PolSci-30",
+      "classroom": "12",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Tue",
+      "size": 1
+    },
+    {
+      "id": "12-CTP-31",
+      "classroom": "12",
+      "stream": "CTP",
+      "pdfDay": "Tue",
+      "size": 3
+    },
+    {
+      "id": "12-BN/Paint-32",
+      "classroom": "12",
+      "stream": "BN/Paint",
+      "pdfDay": "Tue",
+      "size": 2
+    },
+    {
+      "id": "12-BN/Paint-33",
+      "classroom": "12",
+      "stream": "BN/Paint",
+      "pdfDay": "Wed",
+      "size": 1
+    },
+    {
+      "id": "12-Act/His/Phy-34",
+      "classroom": "12",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Wed",
+      "size": 3
+    },
+    {
+      "id": "12-Bst/Chem/PolSci-35",
+      "classroom": "12",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Wed",
+      "size": 1
+    },
+    {
+      "id": "12-Math/AM/Psy/Geo-36",
+      "classroom": "12",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Wed",
+      "size": 6
+    },
+    {
+      "id": "12-Math/AM/Psy/Geo-37",
+      "classroom": "12",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Thu",
+      "size": 3
+    },
+    {
+      "id": "12-BN/Paint-38",
+      "classroom": "12",
+      "stream": "BN/Paint",
+      "pdfDay": "Thu",
+      "size": 5
+    },
+    {
+      "id": "12-Act/His/Phy-39",
+      "classroom": "12",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Thu",
+      "size": 3
+    },
+    {
+      "id": "12-Math/AM/Psy/Geo-40",
+      "classroom": "12",
+      "stream": "Math/AM/Psy/Geo",
+      "pdfDay": "Fri",
+      "size": 3
+    },
+    {
+      "id": "12-Bst/Chem/PolSci-41",
+      "classroom": "12",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Fri",
+      "size": 3
+    },
+    {
+      "id": "12-Act/His/Phy-42",
+      "classroom": "12",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Fri",
+      "size": 6
+    },
+    {
+      "id": "12-Act/His/Phy-43",
+      "classroom": "12",
+      "stream": "Act/His/Phy",
+      "pdfDay": "Sat",
+      "size": 3
+    },
+    {
+      "id": "12-Bst/Chem/PolSci-44",
+      "classroom": "12",
+      "stream": "Bst/Chem/PolSci",
+      "pdfDay": "Sat",
+      "size": 3
+    },
+    {
+      "id": "12-BN/Paint-45",
+      "classroom": "12",
+      "stream": "BN/Paint",
+      "pdfDay": "Sat",
+      "size": 2
+    }
+  ],
+  "stats": {
+    "cards": 649,
+    "syncGroups": 92,
+    "source": "teacher PDF + class PDF HS stream bundles"
+  }
+}

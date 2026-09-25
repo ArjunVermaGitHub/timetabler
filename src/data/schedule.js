@@ -2,8 +2,15 @@ export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 
 export const WEEKEND_DAYS = ['Sat']
 
-/** RBS class list from the live timetable export. */
+/**
+ * Full RBS class list from the class-individual export
+ * (Kopal / early years through 12). “Without Class” omitted.
+ */
 export const CLASSROOMS = [
+  'Kopal',
+  '3',
+  '4',
+  '5',
   '6',
   '7',
   '8A',
@@ -18,12 +25,80 @@ export const CLASSROOMS = [
 
 export function classroomGrade(classroom) {
   const match = String(classroom).match(/^(\d+)/)
+  // Non-numeric early rooms (e.g. Kopal) sit on the junior track.
   return match ? Number.parseInt(match[1], 10) : 0
 }
 
 /** Below class 9 → junior track; 9+ → senior track (staggered lunch). */
 export function isJuniorClassroom(classroom) {
   return classroomGrade(classroom) < 9
+}
+
+/**
+ * Classes 11–12 run option streams in parallel.
+ * Younger classes also co-schedule group splits (LRC / Remedial / arts).
+ */
+const FLEX_SUBJECTS = new Set([
+  'LRC',
+  'Remedial Maths',
+  'Remedial English',
+  'Remedial Hindi',
+  'Art Education',
+  'Performing Arts',
+  'Visual Arts',
+  'Life Skills',
+  'Dance',
+  'Music',
+  'Vocal',
+  'Tabla',
+  'Painting',
+  'Bharatnatyam',
+  'Games',
+  'Craft',
+  'Free Play',
+  'Physical Education',
+])
+
+export function isFlexSubject(subject) {
+  return FLEX_SUBJECTS.has(subject)
+}
+
+/**
+ * May two lessons share a class clock slot?
+ * - Sync-group mates (co-teach / HS elective bundle): yes
+ * - HS different streams: no (Math block ≠ Chem block)
+ * - Lower-grade flex pairs (LRC + Remedial): yes
+ */
+export function allowsConcurrentLessons(
+  classroom,
+  existingSubject,
+  incomingSubject,
+  existingLesson = null,
+  incomingLesson = null,
+) {
+  if (existingLesson && incomingLesson) {
+    const a = existingLesson.syncGroupId
+    const b = incomingLesson.syncGroupId
+    if (a && b) return a === b
+    if (a || b) return false
+    if (classroomGrade(classroom) >= 11) {
+      // Commons alone — don't stack unrelated electives
+      return false
+    }
+  }
+
+  if (existingSubject === incomingSubject) {
+    return (
+      isFlexSubject(existingSubject) ||
+      existingSubject === 'Hindi' ||
+      existingSubject === 'English'
+    )
+  }
+  if (classroomGrade(classroom) >= 11) return false
+  if (isFlexSubject(existingSubject) && isFlexSubject(incomingSubject)) {
+    return true
+  }
+  return false
 }
 
 export function trackForClassroom(classroom) {
@@ -270,4 +345,17 @@ export function nextPeriodId(slotId, classroom, day = 'Mon') {
 
 export function canPlaceDouble(startSlotId, classroom, day = 'Mon') {
   return nextPeriodId(startSlotId, classroom, day) !== null
+}
+
+/** True if this period sits before the class's lunch break that day. */
+export function isBeforeLunch(classroom, day, slotId) {
+  const slots = slotsForClassroom(classroom, day)
+  const lunchIndex = slots.findIndex(
+    (slot) => slot.kind === 'break' && /lunch/i.test(slot.label),
+  )
+  // No lunch column (or already past end) → treat as before lunch.
+  if (lunchIndex < 0) return true
+  const slotIndex = slots.findIndex((slot) => slot.id === slotId)
+  if (slotIndex < 0) return false
+  return slotIndex < lunchIndex
 }

@@ -1,7 +1,9 @@
 import {
   DAYS,
   WEEKEND_DAYS,
+  allowsConcurrentLessons,
   baseSlotsForDay,
+  isBeforeLunch,
   isBlockedKind,
   nextPeriodId,
   slotsForClassroom,
@@ -21,15 +23,15 @@ function createBoard(lessons, seedPlacements = {}) {
   const byId = new Map(lessons.map((lesson) => [lesson.id, lesson]))
   const placements = { ...seedPlacements }
 
-  /** classroom|day|slotId -> lessonId */
+  /** classroom|day|slotId -> Set(lessonId) */
   const classOcc = new Map()
   /** teacher|day|slotId -> lessonId */
   const teacherOcc = new Map()
-  /** classroom|day|subject -> lessonId */
+  /** classroom|day|subject -> Set(lessonId) (co-teachers share a day) */
   const subjectDay = new Map()
   /** teacher|day -> occupied slot ids */
   const teacherDaySlots = new Map()
-  /** classroom|day -> occupied slot ids */
+  /** classroom|day -> occupied slot ids (unique clocks; concurrent still 1) */
   const classDaySlots = new Map()
 
   function slotIndex(day) {
@@ -134,75 +136,27 @@ function createBoard(lessons, seedPlacements = {}) {
   }
 
   /**
-   * Soft score (lower is better).
-   * Students: even day fills + light packing (not forced to period 1).
-   * Teachers: compact mid-day block with preferably one free slot between
-   * lessons — never start+end of day when a tighter cluster exists.
+   * Soft score (lower is better). Kept intentionally light for speed.
    */
   function softScore(lesson, day, extraSlotIds, packTight = false) {
     const order = slotIndex(day)
     const indexOf = new Map(order.map((id, i) => [id, i]))
     const midIndex = (order.length - 1) / 2
-    const periodIds = slotsForClassroom(lesson.classroom, day)
-      .filter((slot) => slot.kind === 'period')
-      .map((slot) => slot.id)
 
     const classOccSet = new Set(
       classDaySlots.get(classKey(lesson.classroom, day)) ?? [],
     )
     for (const id of extraSlotIds) classOccSet.add(id)
 
-    const filledPeriodIndexes = periodIds
-      .filter((id) => classOccSet.has(id))
-      .map((id) => indexOf.get(id))
-
-    // Balance period-slots across days for this class
-    const classWeekLoads = ALL_DAYS.map((d) => {
-      if (d === day) return classOccSet.size
-      return (classDaySlots.get(classKey(lesson.classroom, d)) ?? []).length
-    })
-    const classDayLoad = classOccSet.size
-    const classMean =
-      classWeekLoads.reduce((a, b) => a + b, 0) / classWeekLoads.length
-    const classBalance = (classDayLoad - classMean) * 8 + classDayLoad * 0.3
-
-    // Prefer contiguous student days, but don't yank everything to slot 0
-    let holePenalty = 0
-    let adjacencyBonus = 0
-    if (filledPeriodIndexes.length > 0) {
-      const minI = Math.min(...filledPeriodIndexes)
-      const maxI = Math.max(...filledPeriodIndexes)
-      let filledInSpan = 0
-      let periodSpan = 0
-      for (const id of periodIds) {
-        const i = indexOf.get(id)
-        if (i < minI || i > maxI) continue
-        periodSpan += 1
-        if (classOccSet.has(id)) filledInSpan += 1
-      }
-      holePenalty = (periodSpan - filledInSpan) * 5
-
-      const classCentroid =
-        filledPeriodIndexes.reduce((a, b) => a + b, 0) /
-        filledPeriodIndexes.length
-      for (const id of extraSlotIds) {
-        const pIdx = periodIds.indexOf(id)
-        if (pIdx < 0) continue
-        const left = pIdx > 0 ? periodIds[pIdx - 1] : null
-        const right =
-          pIdx < periodIds.length - 1 ? periodIds[pIdx + 1] : null
-        if (left && classOccSet.has(left) && !extraSlotIds.includes(left)) {
-          adjacencyBonus -= 4
-        }
-        if (right && classOccSet.has(right) && !extraSlotIds.includes(right)) {
-          adjacencyBonus -= 4
-        }
-        // Pack toward the day's existing cluster centre (not the earliest slot)
-        adjacencyBonus += Math.abs(indexOf.get(id) - classCentroid) * 0.35
-      }
+    // Prefer emptier days for this class
+    let classBalance = classOccSet.size * 2
+    for (const d of ALL_DAYS) {
+      if (d === day) continue
+      classBalance -= (
+        classDaySlots.get(classKey(lesson.classroom, d)) ?? []
+      ).length * 0.15
     }
 
-    // Teacher compactness — this is the strong soft preference
     const teacherOccSet = new Set(
       teacherDaySlots.get(teacherKey(lesson.teacher, day)) ?? [],
     )
@@ -215,45 +169,23 @@ function createBoard(lessons, seedPlacements = {}) {
 
     let teacherCompact = 0
     if (teacherIndexes.length === 1) {
-      // First lesson of their day → prefer mid-day, not period 1
-      teacherCompact = Math.abs(teacherIndexes[0] - midIndex) * 1.4
+      teacherCompact = Math.abs(teacherIndexes[0] - midIndex) * 1.2
     } else if (teacherIndexes.length >= 2) {
       const minI = Math.min(...teacherIndexes)
       const maxI = Math.max(...teacherIndexes)
-      // Span dominates: start+end of day is expensive vs a mid cluster
-      teacherCompact += (maxI - minI) * (packTight ? 3.5 : 5.5)
-
+      teacherCompact += (maxI - minI) * (packTight ? 3 : 5)
       for (let i = 1; i < teacherIndexes.length; i += 1) {
         const gap = teacherIndexes[i] - teacherIndexes[i - 1]
-        if (gap === 2) {
-          // Ideal: one free slot (break / other class) between their lessons
-          teacherCompact -= packTight ? 2 : 4
-        } else if (gap === 1) {
-          // Back-to-back is allowed (hard cap still ≤2) but less preferred
-          teacherCompact -= packTight ? 3 : 1
-        } else if (gap === 3) {
-          teacherCompact += 1.5
-        } else {
-          teacherCompact += (gap - 2) * (packTight ? 2 : 3.5)
-        }
+        if (gap === 2) teacherCompact -= 3
+        else if (gap === 1) teacherCompact -= 1
+        else teacherCompact += (gap - 2) * 2.5
       }
-
       const centroid =
         teacherIndexes.reduce((a, b) => a + b, 0) / teacherIndexes.length
-      teacherCompact += Math.abs(centroid - midIndex) * 1.2
+      teacherCompact += Math.abs(centroid - midIndex) * 0.8
     }
 
-    let teacherWeek = 0
-    for (const d of ALL_DAYS) {
-      teacherWeek += (teacherDaySlots.get(teacherKey(lesson.teacher, d)) ?? [])
-        .length
-    }
-    // Prefer spreading a teacher's load across days (not stacking one day)
-    const teacherBias = teacherOccSet.size * 1.1 + teacherWeek * 0.03
-
-    return (
-      classBalance + holePenalty + adjacencyBonus + teacherCompact + teacherBias
-    )
+    return classBalance + teacherCompact + teacherOccSet.size * 0.5
   }
 
   function canPlace(lesson, day, slotId, packTight = false) {
@@ -271,19 +203,79 @@ function createBoard(lessons, seedPlacements = {}) {
       return { ok: false, reason: 'span' }
     }
 
+    if (lesson.subject === 'Physical Education') {
+      for (const id of needed) {
+        if (!isBeforeLunch(lesson.classroom, day, id)) {
+          return { ok: false, reason: 'pe' }
+        }
+      }
+    }
+
     for (const id of needed) {
-      if (classOcc.has(`${lesson.classroom}|${day}|${id}`)) {
-        return { ok: false, reason: 'occupied' }
+      const classKeyOcc = `${lesson.classroom}|${day}|${id}`
+      const holders = classOcc.get(classKeyOcc)
+      if (holders && holders.size > 0) {
+        const others = [...holders].filter((hid) => hid !== lesson.id)
+        for (const hid of others) {
+          const other = byId.get(hid)
+          if (!other) continue
+          if (
+            !allowsConcurrentLessons(
+              lesson.classroom,
+              other.subject,
+              lesson.subject,
+              other,
+              lesson,
+            )
+          ) {
+            return { ok: false, reason: 'occupied' }
+          }
+          if (
+            other.subject === lesson.subject &&
+            other.teacher === lesson.teacher
+          ) {
+            return { ok: false, reason: 'occupied' }
+          }
+        }
       }
       if (teacherOcc.has(`${lesson.teacher}|${day}|${id}`)) {
         return { ok: false, reason: 'teacher' }
       }
     }
 
+    // Subject-once/day for a single teacher; co-teachers must share the same slots
     const subjectKey = `${lesson.classroom}|${day}|${lesson.subject}`
-    const existingSubject = subjectDay.get(subjectKey)
-    if (existingSubject && existingSubject !== lesson.id) {
-      return { ok: false, reason: 'subject' }
+    const subjectHolders = subjectDay.get(subjectKey)
+    if (subjectHolders && subjectHolders.size > 0) {
+      for (const hid of subjectHolders) {
+        if (hid === lesson.id) continue
+        const other = byId.get(hid)
+        if (!other) continue
+        if (other.teacher === lesson.teacher) {
+          return { ok: false, reason: 'subject' }
+        }
+        const otherPlace = placements[hid]
+        if (!otherPlace) continue
+        const otherSlots = occupiedFor(other, otherPlace.day, otherPlace.slotId)
+        if (
+          !otherSlots ||
+          otherSlots.length !== needed.length ||
+          otherSlots.some((sid, idx) => sid !== needed[idx])
+        ) {
+          return { ok: false, reason: 'subject' }
+        }
+        if (
+          !allowsConcurrentLessons(
+            lesson.classroom,
+            other.subject,
+            lesson.subject,
+            other,
+            lesson,
+          )
+        ) {
+          return { ok: false, reason: 'subject' }
+        }
+      }
     }
 
     if (maxConsecutiveRun(lesson.teacher, day, needed) > 2) {
@@ -307,16 +299,37 @@ function createBoard(lessons, seedPlacements = {}) {
     const { needed } = check
     placements[lesson.id] = { day, slotId }
     for (const id of needed) {
-      classOcc.set(`${lesson.classroom}|${day}|${id}`, lesson.id)
+      const classKeyOcc = `${lesson.classroom}|${day}|${id}`
+      let holders = classOcc.get(classKeyOcc)
+      if (!holders) {
+        holders = new Set()
+        classOcc.set(classKeyOcc, holders)
+      }
+      holders.add(lesson.id)
       teacherOcc.set(`${lesson.teacher}|${day}|${id}`, lesson.id)
       addTeacherSlot(lesson.teacher, day, id)
       addClassSlot(lesson.classroom, day, id)
     }
-    subjectDay.set(
-      `${lesson.classroom}|${day}|${lesson.subject}`,
-      lesson.id,
-    )
+    subjectDayAdd(lesson.classroom, day, lesson.subject, lesson.id)
     return true
+  }
+
+  function subjectDayAdd(classroom, day, subject, lessonId) {
+    const key = `${classroom}|${day}|${subject}`
+    let set = subjectDay.get(key)
+    if (!set) {
+      set = new Set()
+      subjectDay.set(key, set)
+    }
+    set.add(lessonId)
+  }
+
+  function subjectDayRemove(classroom, day, subject, lessonId) {
+    const key = `${classroom}|${day}|${subject}`
+    const set = subjectDay.get(key)
+    if (!set) return
+    set.delete(lessonId)
+    if (set.size === 0) subjectDay.delete(key)
   }
 
   function unplace(lessonId) {
@@ -326,13 +339,22 @@ function createBoard(lessons, seedPlacements = {}) {
     const needed = occupiedFor(lesson, placement.day, placement.slotId)
     if (!needed) return
     for (const id of needed) {
-      classOcc.delete(`${lesson.classroom}|${placement.day}|${id}`)
+      const classKeyOcc = `${lesson.classroom}|${placement.day}|${id}`
+      const holders = classOcc.get(classKeyOcc)
+      if (holders) {
+        holders.delete(lessonId)
+        if (holders.size === 0) classOcc.delete(classKeyOcc)
+      }
       teacherOcc.delete(`${lesson.teacher}|${placement.day}|${id}`)
       removeTeacherSlot(lesson.teacher, placement.day, id)
       removeClassSlot(lesson.classroom, placement.day, id)
     }
-    const subjectKey = `${lesson.classroom}|${placement.day}|${lesson.subject}`
-    if (subjectDay.get(subjectKey) === lessonId) subjectDay.delete(subjectKey)
+    subjectDayRemove(
+      lesson.classroom,
+      placement.day,
+      lesson.subject,
+      lessonId,
+    )
     delete placements[lessonId]
   }
 
@@ -346,13 +368,21 @@ function createBoard(lessons, seedPlacements = {}) {
       continue
     }
     for (const id of needed) {
-      classOcc.set(`${lesson.classroom}|${placement.day}|${id}`, lesson.id)
+      const classKeyOcc = `${lesson.classroom}|${placement.day}|${id}`
+      let holders = classOcc.get(classKeyOcc)
+      if (!holders) {
+        holders = new Set()
+        classOcc.set(classKeyOcc, holders)
+      }
+      holders.add(lesson.id)
       teacherOcc.set(`${lesson.teacher}|${placement.day}|${id}`, lesson.id)
       addTeacherSlot(lesson.teacher, placement.day, id)
       addClassSlot(lesson.classroom, placement.day, id)
     }
-    subjectDay.set(
-      `${lesson.classroom}|${placement.day}|${lesson.subject}`,
+    subjectDayAdd(
+      lesson.classroom,
+      placement.day,
+      lesson.subject,
       lesson.id,
     )
   }
@@ -398,12 +428,9 @@ function teacherLoadMap(lessons) {
 }
 
 /**
- * Deterministic auto-scheduler.
- * Hard: class/teacher clash, subject-once/day, doubles, ≤2 consecutive,
- *        at least one of Jr/Sr lunch free each day the teacher teaches.
- * Soft: teacher lessons clustered mid-day (prefer one free slot between);
- *        student days balanced + lightly packed; load spread across days.
- * Busy teachers pack a bit tighter so everything still fits.
+ * Fast bundle-aware scheduler.
+ * Places sync groups atomically (HS electives / co-teach), then singles.
+ * One greedy MRV pass + a cheap bump-repair — no heavy DFS.
  */
 export function autoSchedule(lessons, options = {}) {
   const { clearExisting = true } = options
@@ -419,237 +446,179 @@ export function autoSchedule(lessons, options = {}) {
 
   const board = createBoard(lessons, seed)
   const loads = teacherLoadMap(lessons)
-  const PACK_LOAD = 28
 
-  const open = lessons.filter((lesson) => !board.placements[lesson.id])
-
-  function packTightFor(lesson) {
-    return (loads.get(lesson.teacher) ?? 0) >= PACK_LOAD
+  /** @type {Map<string, typeof lessons>} */
+  const groups = new Map()
+  const singles = []
+  for (const lesson of lessons) {
+    if (board.placements[lesson.id]) continue
+    const gid = lesson.syncGroupId
+    if (gid) {
+      let list = groups.get(gid)
+      if (!list) {
+        list = []
+        groups.set(gid, list)
+      }
+      list.push(lesson)
+    } else {
+      singles.push(lesson)
+    }
   }
 
-  /** Prefer mid-day over earliest slot when soft scores tie. */
-  function slotPreference(classroom, day, slotId) {
-    const periods = board.periodCandidates(classroom, day)
-    const idx = periods.indexOf(slotId)
-    if (idx < 0) return 0
-    const mid = (periods.length - 1) / 2
-    return Math.abs(idx - mid)
+  /** Scheduling units: one sync group or one singleton lesson. */
+  const units = [
+    ...[...groups.entries()].map(([id, members]) => ({
+      id,
+      members,
+      classroom: members[0].classroom,
+      span: Math.max(...members.map((m) => m.span)),
+      teacherLoad: members.reduce(
+        (sum, m) => sum + (loads.get(m.teacher) ?? 0),
+        0,
+      ),
+    })),
+    ...singles.map((lesson) => ({
+      id: lesson.id,
+      members: [lesson],
+      classroom: lesson.classroom,
+      span: lesson.span,
+      teacherLoad: loads.get(lesson.teacher) ?? 0,
+    })),
+  ]
+
+  function unitScore(members, day, slotId) {
+    let score = 0
+    for (const lesson of members) {
+      const check = board.canPlace(lesson, day, slotId, true)
+      if (!check.ok) return null
+      score += check.score
+    }
+    return score / members.length
   }
 
-  function betterCandidate(a, b, lesson) {
-    if (a.score < b.score) return true
-    if (a.score > b.score) return false
-    const prefA = slotPreference(lesson.classroom, a.day, a.slotId)
-    const prefB = slotPreference(lesson.classroom, b.day, b.slotId)
-    if (prefA !== prefB) return prefA < prefB
-    return `${a.day}|${a.slotId}` < `${b.day}|${b.slotId}`
-  }
-
-  function bestPlacement(lesson) {
-    const packTight = packTightFor(lesson)
-    let best = null
+  function listUnitSlots(unit) {
+    const out = []
     for (const day of ALL_DAYS) {
-      for (const slotId of board.periodCandidates(lesson.classroom, day)) {
-        const check = board.canPlace(lesson, day, slotId, packTight)
-        if (!check.ok) continue
-        const candidate = { day, slotId, score: check.score }
-        if (!best || betterCandidate(candidate, best, lesson)) {
-          best = candidate
-        }
+      for (const slotId of board.periodCandidates(unit.classroom, day)) {
+        const score = unitScore(unit.members, day, slotId)
+        if (score == null) continue
+        out.push({ day, slotId, score })
       }
     }
-    return best
+    out.sort((a, b) => a.score - b.score || a.day.localeCompare(b.day))
+    return out
   }
 
-  function optionCount(lesson) {
-    const packTight = packTightFor(lesson)
-    let count = 0
-    for (const day of ALL_DAYS) {
-      for (const slotId of board.periodCandidates(lesson.classroom, day)) {
-        if (board.canPlace(lesson, day, slotId, packTight).ok) count += 1
+  function placeUnit(unit, day, slotId) {
+    // Place all members; roll back on any failure
+    const placed = []
+    for (const lesson of unit.members) {
+      if (board.place(lesson, day, slotId, true)) {
+        placed.push(lesson.id)
+      } else {
+        for (const id of placed) board.unplace(id)
+        return false
       }
     }
-    return count
+    return true
   }
 
-  // MRV loop: always place the currently most-constrained unplaced lesson
-  const queue = [...open]
-  const failed = []
-  while (queue.length > 0) {
-    queue.sort((a, b) => {
-      if (b.span !== a.span) return b.span - a.span
-      const loadDiff = (loads.get(b.teacher) ?? 0) - (loads.get(a.teacher) ?? 0)
-      if (loadDiff !== 0) return loadDiff
-      return a.id.localeCompare(b.id)
+  function optionCount(unit) {
+    let n = 0
+    for (const day of ALL_DAYS) {
+      for (const slotId of board.periodCandidates(unit.classroom, day)) {
+        if (unitScore(unit.members, day, slotId) != null) n += 1
+      }
+    }
+    return n
+  }
+
+  // Place largest bundles first, then by teacher load — no per-step MRV recount
+  units.sort((a, b) => {
+    if (b.members.length !== a.members.length) {
+      return b.members.length - a.members.length
+    }
+    if (b.span !== a.span) return b.span - a.span
+    if (b.teacherLoad !== a.teacherLoad) return b.teacherLoad - a.teacherLoad
+    return a.id.localeCompare(b.id)
+  })
+
+  for (const unit of units) {
+    const slots = listUnitSlots(unit)
+    if (slots[0]) placeUnit(unit, slots[0].day, slots[0].slotId)
+  }
+
+  // Cheap repair: bump one blocker for each leftover unit
+  const leftoverUnits = units.filter((unit) =>
+    unit.members.some((m) => !board.placements[m.id]),
+  )
+  for (const unit of leftoverUnits) {
+    if (unit.members.every((m) => board.placements[m.id])) continue
+
+    // Unplace incomplete group members first
+    for (const m of unit.members) {
+      if (board.placements[m.id]) board.unplace(m.id)
+    }
+
+    let slots = listUnitSlots(unit)
+    if (slots[0] && placeUnit(unit, slots[0].day, slots[0].slotId)) continue
+
+    // Bump same-class singles that aren't in a sync group
+    const blockers = lessons.filter((other) => {
+      if (!board.placements[other.id]) return false
+      if (other.classroom !== unit.classroom) return false
+      if (other.syncGroupId) return false
+      return true
     })
+    blockers.sort(
+      (a, b) => (loads.get(a.teacher) ?? 0) - (loads.get(b.teacher) ?? 0),
+    )
 
-    // Among the first batch, pick fewest options (sample top 12 by span/load)
-    const batch = queue.slice(0, Math.min(12, queue.length))
-    let pickIndex = 0
-    let pickOptions = Infinity
-    for (let i = 0; i < batch.length; i += 1) {
-      const n = optionCount(batch[i])
-      if (
-        n < pickOptions ||
-        (n === pickOptions && batch[i].id < batch[pickIndex].id)
-      ) {
-        pickOptions = n
-        pickIndex = i
-      }
-    }
-
-    const lesson = batch[pickIndex]
-    const qi = queue.findIndex((item) => item.id === lesson.id)
-    queue.splice(qi, 1)
-
-    const best = bestPlacement(lesson)
-    if (!best || !board.place(lesson, best.day, best.slotId, packTightFor(lesson))) {
-      failed.push(lesson)
-    }
-  }
-
-  // Repair failures by bumping a related placed lesson
-  if (failed.length > 0) {
-    const stillFailed = []
-    for (const lesson of failed) {
-      if (tryRepairPlace(board, lesson, lessons, loads, packTightFor)) continue
-      const best = bestPlacement(lesson)
-      if (
-        best &&
-        board.place(lesson, best.day, best.slotId, packTightFor(lesson))
-      ) {
+    let placed = false
+    for (const blocker of blockers.slice(0, 25)) {
+      const saved = { ...board.placements[blocker.id] }
+      board.unplace(blocker.id)
+      slots = listUnitSlots(unit)
+      if (slots[0] && placeUnit(unit, slots[0].day, slots[0].slotId)) {
+        const blockerSlots = []
+        for (const day of ALL_DAYS) {
+          for (const slotId of board.periodCandidates(blocker.classroom, day)) {
+            const check = board.canPlace(blocker, day, slotId, true)
+            if (check.ok) blockerSlots.push({ day, slotId, score: check.score })
+          }
+        }
+        blockerSlots.sort((a, b) => a.score - b.score)
+        if (
+          blockerSlots[0] &&
+          board.place(
+            blocker,
+            blockerSlots[0].day,
+            blockerSlots[0].slotId,
+            true,
+          )
+        ) {
+          placed = true
+          break
+        }
+        for (const m of unit.members) {
+          if (board.placements[m.id]) board.unplace(m.id)
+        }
+        board.place(blocker, saved.day, saved.slotId, true)
         continue
       }
-      stillFailed.push(lesson)
+      board.place(blocker, saved.day, saved.slotId, true)
     }
-    failed.length = 0
-    failed.push(...stillFailed)
-  }
-
-  improveSpreads(board, lessons, loads, packTightFor)
-
-  const reopen = lessons.filter((lesson) => !board.placements[lesson.id])
-  for (const lesson of reopen) {
-    const best = bestPlacement(lesson)
-    if (best) board.place(lesson, best.day, best.slotId, packTightFor(lesson))
+    if (!placed) {
+      // leave unplaced
+    }
   }
 
   const remaining = lessons.filter((lesson) => !board.placements[lesson.id])
-  const scheduled = lessons.length - remaining.length
-
   return {
     placements: board.placements,
-    scheduled,
+    scheduled: lessons.length - remaining.length,
     remaining: remaining.length,
     remainingLessons: remaining,
     ms: Math.round(performance.now() - started),
-  }
-}
-
-/**
- * If a lesson won't fit, temporarily unplace a same-teacher or same-class
- * lesson that is blocking a viable slot, place the hard one, then re-place
- * the bumped lesson elsewhere.
- */
-function tryRepairPlace(board, lesson, lessons, loads, packTightFor) {
-  for (const day of ALL_DAYS) {
-    for (const slotId of board.periodCandidates(lesson.classroom, day)) {
-      const check = board.canPlace(lesson, day, slotId, packTightFor(lesson))
-      if (check.ok) {
-        return board.place(lesson, day, slotId, packTightFor(lesson))
-      }
-    }
-  }
-
-  const blockers = []
-  for (const other of lessons) {
-    if (other.id === lesson.id) continue
-    if (!board.placements[other.id]) continue
-    if (
-      other.teacher !== lesson.teacher &&
-      other.classroom !== lesson.classroom
-    ) {
-      continue
-    }
-    blockers.push(other)
-  }
-
-  blockers.sort((a, b) => {
-    if (a.span !== b.span) return a.span - b.span
-    return (loads.get(a.teacher) ?? 0) - (loads.get(b.teacher) ?? 0)
-  })
-
-  for (const blocker of blockers.slice(0, 40)) {
-    const saved = board.placements[blocker.id]
-    board.unplace(blocker.id)
-    const best = findBest(board, lesson, packTightFor)
-    if (best && board.place(lesson, best.day, best.slotId, packTightFor(lesson))) {
-      const blockerBest = findBest(board, blocker, packTightFor)
-      if (
-        blockerBest &&
-        board.place(
-          blocker,
-          blockerBest.day,
-          blockerBest.slotId,
-          packTightFor(blocker),
-        )
-      ) {
-        return true
-      }
-      board.unplace(lesson.id)
-      board.place(blocker, saved.day, saved.slotId, packTightFor(blocker))
-      continue
-    }
-    board.place(blocker, saved.day, saved.slotId, packTightFor(blocker))
-  }
-
-  return false
-}
-
-function findBest(board, lesson, packTightFor) {
-  const packTight = packTightFor(lesson)
-  let best = null
-  for (const day of ALL_DAYS) {
-    for (const slotId of board.periodCandidates(lesson.classroom, day)) {
-      const check = board.canPlace(lesson, day, slotId, packTight)
-      if (!check.ok) continue
-      const candidate = { day, slotId, score: check.score }
-      if (!best || candidate.score < best.score) {
-        best = candidate
-      } else if (candidate.score === best.score) {
-        const periods = board.periodCandidates(lesson.classroom, day)
-        const bestPeriods = board.periodCandidates(lesson.classroom, best.day)
-        const mid = (periods.length - 1) / 2
-        const bestMid = (bestPeriods.length - 1) / 2
-        const pref =
-          Math.abs(periods.indexOf(slotId) - mid) -
-          Math.abs(bestPeriods.indexOf(best.slotId) - bestMid)
-        if (pref < 0) best = candidate
-      }
-    }
-  }
-  return best
-}
-
-/**
- * Re-seat each placed lesson once if a better soft score exists.
- * Pulls teacher days into mid-day clusters after the greedy MRV pass.
- */
-function improveSpreads(board, lessons, _loads, packTightFor) {
-  const placed = lessons.filter((lesson) => board.placements[lesson.id])
-  placed.sort(
-    (a, b) => a.teacher.localeCompare(b.teacher) || a.id.localeCompare(b.id),
-  )
-
-  for (const lesson of placed) {
-    const current = board.placements[lesson.id]
-    if (!current) continue
-    board.unplace(lesson.id)
-    const best = findBest(board, lesson, packTightFor)
-    if (best) {
-      board.place(lesson, best.day, best.slotId, packTightFor(lesson))
-    } else {
-      board.place(lesson, current.day, current.slotId, packTightFor(lesson))
-    }
   }
 }

@@ -1,4 +1,9 @@
-import { nextPeriodId, slotsForClassroom } from './schedule'
+import {
+  allowsConcurrentLessons,
+  isBeforeLunch,
+  nextPeriodId,
+  slotsForClassroom,
+} from './schedule'
 
 export function occupiedSlots(lesson, placement) {
   if (!placement) return []
@@ -19,13 +24,20 @@ function isPeriodSlot(classroom, day, slotId) {
   return Boolean(slot && slot.kind === 'period')
 }
 
+/** classroom|day|slotId → lessonId[] */
 export function buildOccupancy(lessons, placements) {
   const map = new Map()
   for (const lesson of lessons) {
     const placement = placements[lesson.id]
     if (!placement) continue
     for (const slotId of occupiedSlots(lesson, placement)) {
-      map.set(`${lesson.classroom}|${placement.day}|${slotId}`, lesson.id)
+      const key = `${lesson.classroom}|${placement.day}|${slotId}`
+      let list = map.get(key)
+      if (!list) {
+        list = []
+        map.set(key, list)
+      }
+      if (!list.includes(lesson.id)) list.push(lesson.id)
     }
   }
   return map
@@ -72,12 +84,41 @@ export function evaluatePlacement(
     return { ok: false, reason: 'span' }
   }
 
+  // PE only before lunch (Jr/Sr lunch columns differ by track).
+  if (lesson.subject === 'Physical Education') {
+    for (const id of needed) {
+      if (!isBeforeLunch(classroom, day, id)) {
+        return { ok: false, reason: 'pe' }
+      }
+    }
+  }
+
   const occupancy = buildOccupancy(lessons, placements)
   for (const id of needed) {
     const key = `${classroom}|${day}|${id}`
-    const holder = occupancy.get(key)
-    if (holder && holder !== lesson.id) {
-      return { ok: false, reason: 'occupied' }
+    const holders = occupancy.get(key) ?? []
+    const others = holders.filter((holderId) => holderId !== lesson.id)
+    if (others.length === 0) continue
+    for (const holderId of others) {
+      const other = lessons.find((item) => item.id === holderId)
+      if (!other) continue
+          if (
+            !allowsConcurrentLessons(
+              classroom,
+              other.subject,
+              lesson.subject,
+              other,
+              lesson,
+            )
+          ) {
+            return { ok: false, reason: 'occupied' }
+          }
+      if (
+        other.subject === lesson.subject &&
+        other.teacher === lesson.teacher
+      ) {
+        return { ok: false, reason: 'occupied' }
+      }
     }
   }
 
@@ -93,12 +134,40 @@ export function evaluatePlacement(
     }
   }
 
+  // Subject once/day per teacher; co-teachers must share the same clock slots
   for (const other of lessons) {
     if (other.id === lesson.id) continue
     if (other.classroom !== classroom) continue
     if (other.subject !== lesson.subject) continue
     const placement = placements[other.id]
-    if (placement && placement.day === day) {
+    if (!placement || placement.day !== day) continue
+    if (other.teacher === lesson.teacher) {
+      return {
+        ok: false,
+        reason: 'subject',
+        conflict: { classroom, lessonId: other.id },
+      }
+    }
+    const otherSlots = occupiedSlots(other, placement)
+    if (
+      otherSlots.length !== needed.length ||
+      otherSlots.some((sid, idx) => sid !== needed[idx])
+    ) {
+      return {
+        ok: false,
+        reason: 'subject',
+        conflict: { classroom, lessonId: other.id },
+      }
+    }
+    if (
+      !allowsConcurrentLessons(
+        classroom,
+        other.subject,
+        lesson.subject,
+        other,
+        lesson,
+      )
+    ) {
       return {
         ok: false,
         reason: 'subject',
@@ -128,15 +197,28 @@ export function canPlaceLesson(
   ).ok
 }
 
-export function lessonAt(classroom, day, slotId, lessons, placements) {
+/** All lessons starting or covering this slot (for concurrent stream cells). */
+export function lessonsAt(classroom, day, slotId, lessons, placements) {
   const occupancy = buildOccupancy(lessons, placements)
-  const lessonId = occupancy.get(`${classroom}|${day}|${slotId}`)
-  if (!lessonId) return null
-  const lesson = lessons.find((item) => item.id === lessonId)
-  const placement = placements[lessonId]
-  if (!lesson || !placement) return null
-  if (placement.slotId !== slotId) return { lesson, placement, covered: true }
-  return { lesson, placement, covered: false }
+  const ids = occupancy.get(`${classroom}|${day}|${slotId}`) ?? []
+  const result = []
+  for (const lessonId of ids) {
+    const lesson = lessons.find((item) => item.id === lessonId)
+    const placement = placements[lessonId]
+    if (!lesson || !placement) continue
+    result.push({
+      lesson,
+      placement,
+      covered: placement.slotId !== slotId,
+    })
+  }
+  return result
+}
+
+/** First lesson at slot (compat). Prefer lessonsAt for stream classes. */
+export function lessonAt(classroom, day, slotId, lessons, placements) {
+  const all = lessonsAt(classroom, day, slotId, lessons, placements)
+  return all[0] ?? null
 }
 
 export function lessonAtTeacher(teacher, day, slotId, lessons, placements) {

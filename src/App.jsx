@@ -21,10 +21,10 @@ function readStoredTheme() {
 
 function App() {
   const [view, setView] = useState('classes')
-  const [selectedClassrooms, setSelectedClassrooms] = useState(['8A', '8B'])
-  const [selectedTeachers, setSelectedTeachers] = useState(() =>
-    TEACHERS.slice(0, 2),
-  )
+  const [selectedClassrooms, setSelectedClassrooms] = useState(() => [
+    ...CLASSROOMS,
+  ])
+  const [selectedTeachers, setSelectedTeachers] = useState(() => [...TEACHERS])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
   const [placements, setPlacements] = useState({})
   const [dragLessonId, setDragLessonId] = useState(null)
@@ -102,11 +102,44 @@ function App() {
     return () => window.removeEventListener('dragend', clearDrag, true)
   }, [dragLessonId])
 
+  // While dragging, scroll grid (and tray) when the pointer hugs an edge.
+  useEffect(() => {
+    if (!dragLessonId) return undefined
+
+    let pointer = { x: 0, y: 0 }
+    let hasPointer = false
+    let rafId = 0
+
+    function onDragOver(event) {
+      pointer = { x: event.clientX, y: event.clientY }
+      hasPointer = true
+    }
+
+    function frame() {
+      if (hasPointer) {
+        const grid = document.querySelector('.grid-scroll')
+        if (grid) autoScrollNearEdges(grid, pointer.x, pointer.y)
+        const tray = document.querySelector('.tray-body')
+        if (tray) autoScrollNearEdges(tray, pointer.x, pointer.y)
+      }
+      rafId = window.requestAnimationFrame(frame)
+    }
+
+    document.addEventListener('dragover', onDragOver, true)
+    rafId = window.requestAnimationFrame(frame)
+
+    return () => {
+      window.cancelAnimationFrame(rafId)
+      document.removeEventListener('dragover', onDragOver, true)
+    }
+  }, [dragLessonId])
+
   function handleAutoSchedule() {
     const result = autoSchedule(UNSCHEDULED_LESSONS, { clearExisting: true })
     setDragLessonId(null)
     setPlacements(result.placements)
     setSelectedClassrooms([...CLASSROOMS])
+    setSelectedTeachers([...TEACHERS])
     if (result.remaining === 0) {
       setPlacementError(null)
       setScheduleNote(
@@ -130,57 +163,88 @@ function App() {
   function handleDropLesson(lessonId, classroom, day, slotId) {
     const lesson = UNSCHEDULED_LESSONS.find((item) => item.id === lessonId)
     if (!lesson) return
-
-    const result = evaluatePlacement(
-      lesson,
-      classroom,
-      day,
-      slotId,
-      UNSCHEDULED_LESSONS,
-      placements,
-    )
-
-    if (!result.ok) {
-      if (result.reason === 'teacher') {
-        setPlacementError(
-          `${lesson.teacher} is already teaching ${result.conflict.classroom} on ${day} at this time.`,
-        )
-      } else if (result.reason === 'subject') {
-        setPlacementError(
-          `${lesson.subject} is already scheduled for ${classroom} on ${day}.`,
-        )
-      } else if (result.reason === 'occupied') {
-        setPlacementError('That slot is already taken.')
-      } else if (result.reason === 'span') {
-        setPlacementError(
-          'Double periods need two free consecutive slots (not across Assembly, Recess, Jr Lunch, or Sr Lunch).',
-        )
-      } else if (result.reason === 'break') {
-        setPlacementError(
-          'That column is a break for this class (Breakfast, Assembly, Recess, Jr Lunch, or Sr Lunch).',
-        )
-      } else if (result.reason === 'classroom') {
-        setPlacementError(
-          `This class belongs to ${lesson.classroom}, not ${classroom}.`,
-        )
-      }
+    if (lesson.classroom !== classroom) {
+      setPlacementError(
+        `This class belongs to ${lesson.classroom}, not ${classroom}.`,
+      )
       return
+    }
+
+    // Elective / co-teach bundles must move as one block
+    const mates = lesson.syncGroupId
+      ? UNSCHEDULED_LESSONS.filter(
+          (item) => item.syncGroupId === lesson.syncGroupId,
+        )
+      : [lesson]
+
+    let nextPlacements = { ...placements }
+    for (const mate of mates) {
+      delete nextPlacements[mate.id]
+    }
+
+    for (const mate of mates) {
+      const check = evaluatePlacement(
+        mate,
+        classroom,
+        day,
+        slotId,
+        UNSCHEDULED_LESSONS,
+        nextPlacements,
+      )
+      if (!check.ok) {
+        if (check.reason === 'teacher') {
+          setPlacementError(
+            `${mate.teacher} is already teaching ${check.conflict.classroom} on ${day} at this time.`,
+          )
+        } else if (check.reason === 'subject') {
+          setPlacementError(
+            `${mate.subject} is already scheduled for ${classroom} on ${day}.`,
+          )
+        } else if (check.reason === 'span') {
+          setPlacementError(
+            'Double periods need two free consecutive slots (not across Assembly, Recess, Jr Lunch, or Sr Lunch).',
+          )
+        } else if (check.reason === 'break') {
+          setPlacementError(
+            'That column is a break for this class (Breakfast, Assembly, Recess, Jr Lunch, or Sr Lunch).',
+          )
+        } else if (check.reason === 'pe') {
+          setPlacementError(
+            'Physical Education must be before lunch (not after Jr/Sr Lunch).',
+          )
+        } else {
+          setPlacementError(
+            mate.syncGroupId
+              ? `Can't place the ${mate.stream ?? 'elective'} block here.`
+              : 'That slot is already taken.',
+          )
+        }
+        return
+      }
+      nextPlacements = {
+        ...nextPlacements,
+        [mate.id]: { day, slotId },
+      }
     }
 
     setPlacementError(null)
     setDragLessonId(null)
-    setPlacements((prev) => ({
-      ...prev,
-      [lessonId]: { day, slotId },
-    }))
+    setPlacements(nextPlacements)
   }
 
   function handleUnschedule(lessonId) {
     setDragLessonId(null)
+    const lesson = UNSCHEDULED_LESSONS.find((item) => item.id === lessonId)
     setPlacements((prev) => {
-      if (!prev[lessonId]) return prev
+      if (!prev[lessonId] && !lesson?.syncGroupId) return prev
       const next = { ...prev }
-      delete next[lessonId]
+      if (lesson?.syncGroupId) {
+        for (const mate of UNSCHEDULED_LESSONS) {
+          if (mate.syncGroupId === lesson.syncGroupId) delete next[mate.id]
+        }
+      } else {
+        delete next[lessonId]
+      }
       return next
     })
   }
@@ -279,6 +343,46 @@ function scrollSchedulePanelIntoView(view, lesson) {
   if (alreadyVisible) return
 
   panel.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+}
+
+const DRAG_SCROLL_EDGE = 72
+const DRAG_SCROLL_MAX = 32
+
+/** Scroll a container when the drag pointer is near its edges. */
+function autoScrollNearEdges(el, clientX, clientY) {
+  const rect = el.getBoundingClientRect()
+  const pad = DRAG_SCROLL_EDGE
+
+  // Ignore when the pointer is clearly away from this scrollport.
+  if (
+    clientX < rect.left - pad ||
+    clientX > rect.right + pad ||
+    clientY < rect.top - pad ||
+    clientY > rect.bottom + pad
+  ) {
+    return
+  }
+
+  let dy = 0
+  if (clientY < rect.top + pad) {
+    const t = Math.min(1, (rect.top + pad - clientY) / pad)
+    dy = -Math.ceil(DRAG_SCROLL_MAX * t * t)
+  } else if (clientY > rect.bottom - pad) {
+    const t = Math.min(1, (clientY - (rect.bottom - pad)) / pad)
+    dy = Math.ceil(DRAG_SCROLL_MAX * t * t)
+  }
+
+  let dx = 0
+  if (clientX < rect.left + pad) {
+    const t = Math.min(1, (rect.left + pad - clientX) / pad)
+    dx = -Math.ceil(DRAG_SCROLL_MAX * t * t)
+  } else if (clientX > rect.right - pad) {
+    const t = Math.min(1, (clientX - (rect.right - pad)) / pad)
+    dx = Math.ceil(DRAG_SCROLL_MAX * t * t)
+  }
+
+  if (dy) el.scrollTop += dy
+  if (dx) el.scrollLeft += dx
 }
 
 function cssEscape(value) {
