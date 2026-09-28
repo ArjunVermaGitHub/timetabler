@@ -1,0 +1,105 @@
+/*
+ * The variables charismap's copied components (src/charismap) read, mapped onto
+ * timetabler's palette. Set on :root because Select menus and Ant dropdowns
+ * portal to <body>; timetabler's own vars already flip with [data-theme].
+ */
+:root {
+  --text-body: var(--ink);
+  --text-h1: var(--ink);
+  --text-h2: var(--ink-soft);
+  /* Table rows: both stripes lighter than the page so the table lifts off it */
+  --background: color-mix(in srgb, var(--panel) 72%, white 28%);
+  --table-stripe-mix: color-mix(in srgb, var(--panel) 92%, white 8%);
+  /* Surfaces (Select menus, popovers, Export menu, actions rail): charismap's light values */
+  --secondary-bg: #40b0c0;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --primary: var(--chip-on);
+  --secondary: var(--action);
+  --accent: var(--chip);
+  --link: var(--banner);
+  --link-hover: var(--action);
+  --table-header-bg: var(--chip-on);
+  --table-header-fg: var(--chip-on-ink);
+  --table-row-name-bg: transparent;
+  --divider-primary: var(--chip);
+  --divider-secondary: #ccc;
+  --divider-accent: var(--chip-on);
+  --input-bg: #fff;
+  --input-border: #aeb4bd;
+  --input-placeholder: rgba(34, 34, 34, 0.55);
+  --button-disabled-bg: #d3d3d3;
+  --button-disabled-text: #888;
+  --glassy-bg: rgba(255, 255, 255, 0.15);
+  --glassy-bg-light: rgba(255, 255, 255, 0.2);
+  --glassy-border: rgba(255, 255, 255, 0.3);
+  --glassy-border-light: rgba(255, 255, 255, 0.4);
+  --glassy-bevel-highlight: rgba(255, 255, 255, 0.35);
+  --glassy-bevel-shadow: rgba(0, 0, 0, 0.055);
+  --glassy-bevel-outer: 0 2px 13px rgba(0, 0, 0, 0.066);
+  --glassy-bevel-highlight-saturated: rgba(255, 255, 255, 0.14);
+  --glassy-bevel-shadow-saturated: rgba(72, 22, 44, 0.34);
+  --loader-ring: color-mix(in srgb, var(--chip) 25%, transparent);
+  --loader-spinner: var(--chip);
+  --shadow: rgba(0, 0, 0, 0.1);
+  --error: var(--action);
+}
+
+[data-theme='dark'] {
+  /* charismap's dark values, warmed onto timetabler's browns */
+  --card-bg: color-mix(in srgb, var(--sheet) 95%, transparent);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --secondary-bg: var(--sheet);
+  --divider-secondary: color-mix(in srgb, var(--ink) 18%, transparent);
+  --input-border: #6b7280;
+  --input-placeholder: rgba(255, 255, 255, 0.5);
+  --glassy-bg: rgba(0, 0, 0, 0.2);
+  --glassy-bg-light: rgba(0, 0, 0, 0.3);
+  --glassy-border: rgba(255, 255, 255, 0.1);
+  --glassy-border-light: rgba(255, 255, 255, 0.2);
+  --glassy-bevel-highlight: rgba(255, 255, 255, 0.08);
+  --glassy-bevel-shadow: rgba(0, 0, 0, 0.22);
+  --glassy-bevel-outer: 0 2px 11px rgba(0, 0, 0, 0.18);
+  --shadow: rgba(0, 0, 0, 0.3);
+  --button-disabled-bg: #444;
+  --button-disabled-text: #888;
+  --input-bg: var(--sheet);
+  --background: color-mix(in srgb, var(--panel) 86%, white 14%);
+  --table-stripe-mix: color-mix(in srgb, var(--panel) 95%, white 5%);
+  --link: var(--chip-on);
+}
+
+/*
+ * Button hard-codes charismap's blue gradients with !important; out-rank them
+ * (:root + two attribute selectors) to use timetabler's colours instead.
+ */
+:root button[class*='charismaBtnPrimary'][type] {
+  background: var(--positive) !important;
+  color: var(--positive-ink) !important;
+}
+
+:root button[class*='charismaBtnSecondary'][type] {
+  background: color-mix(in srgb, var(--ink) 7%, var(--input-bg)) !important;
+  color: var(--ink) !important;
+  border-color: color-mix(in srgb, var(--ink) 20%, transparent) !important;
+}
+
+:root button[class*='charismaBtn'][type]:disabled {
+  background: var(--button-disabled-bg) !important;
+  color: var(--button-disabled-text) !important;
+}
+
+/* Modal (charismap globals) hard-codes light-grey dividers and hover */
+.modal-header {
+  border-bottom-color: var(--divider-secondary) !important;
+  color: var(--text-h1);
+}
+
+.modal-header .close-btn:hover {
+  background: color-mix(in srgb, var(--ink) 10%, transparent) !important;
+}
+
+.modal-overlay.modal-open {
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}

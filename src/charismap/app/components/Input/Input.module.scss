@@ -1,0 +1,169 @@
+@use '../../styles/components/colors' as *;
+@use '../../styles/components/form-control' as *;
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  isolation: isolate;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputField {
+  @include form-control-field;
+  @include form-control-field-responsive;
+
+  // Mic is 30 px wide and sits at right: 8px. 30 + 8 + 6 buffer ≈ 44 px.
+  &.withTranscribeMic {
+    padding-right: 44px;
+  }
+
+  // 30 (mic) + 6 (gap) + 36 (password) + 16 (password right offset) + buffer
+  &.withTranscribeMicAndPassword {
+    padding-right: 88px;
+  }
+
+  // Listening adds waveform (24) + cancel (22) + gaps: mic (30) + extras ≈ 84 + offsets.
+  &.withTranscribeMic.transcribeListeningPad {
+    padding-right: 102px;
+  }
+
+  &.withTranscribeMicAndPassword.transcribeListeningPad {
+    padding-right: 150px;
+  }
+}
+
+.inputContainerNumber {
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
+  min-width: var(--number-field-min-width, 6ch);
+  margin-bottom: 0;
+
+  .inputWrapper {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .inputField {
+    @include form-control-field-number;
+    width: 100%;
+    min-width: var(--number-field-min-width, 6ch);
+    box-sizing: border-box;
+    @include form-control-field-number-responsive;
+  }
+
+  .floatingLabel {
+    @include form-floating-label-number;
+
+    &.active {
+      max-width: calc(100% - 1.25rem);
+      overflow: visible;
+      text-overflow: unset;
+      white-space: nowrap;
+    }
+  }
+}
+
+.floatingLabel {
+  @include form-floating-label-idle;
+  @include form-floating-label-responsive;
+
+  &.active {
+    @include form-floating-label-active;
+    @include form-floating-label-active-responsive;
+  }
+}
+
+.requiredMark {
+  @include form-required-mark;
+}
+
+.voiceStatus {
+  margin: 0.3rem 0 0;
+  padding: 0 2px;
+}
+
+.transcribeMicInput {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.transcribeMicBeforePassword {
+  position: absolute;
+  // 16 (password right offset) + 36 (password width) + 6 (gap) = 58 px from right
+  right: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: #9ca3af;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  z-index: 1000;
+  line-height: 1;
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    color: $accent;
+    background-color: transparent;
+  }
+
+  &:active {
+    background-color: transparent;
+  }
+
+  &.active {
+    color: $accent;
+    background-color: transparent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(91, 127, 163, 0.35);
+    outline-offset: 1px;
+  }
+
+  @media (max-width: 480px) {
+    right: 14px;
+    padding: 5px;
+  }
+
+  @media (max-height: 700px) {
+    right: 14px;
+    padding: 4px;
+  }
+
+  @media (max-height: 600px) {
+    right: 12px;
+    padding: 3px;
+  }
+}
+
+.passwordToggleIcon {
+  display: inline-flex;
+}

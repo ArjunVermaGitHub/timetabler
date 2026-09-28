@@ -1,5 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
-import { DAYS, WEEKEND_DAYS, slotsForTeacherDay } from '../data/schedule'
+import { memo, useEffect, useMemo, useState } from 'react'
+import {
+  DAYS,
+  WEEKEND_DAYS,
+  classroomDayEnd,
+  fixedDutyFor,
+  slotsForTeacherDay,
+} from '../data/schedule'
 import {
   evaluatePlacement,
   lessonAtTeacher,
@@ -69,7 +75,10 @@ export function TeacherTimetableGrid({
     if (
       result.reason === 'teacher' ||
       result.reason === 'subject' ||
-      result.reason === 'pe'
+      result.reason === 'pre-lunch' ||
+      result.reason === 'end-of-day' ||
+      result.reason === 'late' ||
+      result.reason === 'hours'
     ) {
       return {
         teacher: hoverTarget.teacher,
@@ -93,84 +102,118 @@ export function TeacherTimetableGrid({
   return (
     <div className="grid-scroll">
       <div className="grid-stage">
-        {teachers.map((teacher) => (
-          <section
-            key={teacher}
-            className="class-panel"
-            data-teacher={teacher}
-            style={{ '--panel-accent': panelAccent() }}
-          >
-            <aside className="class-panel-side" aria-label={teacher}>
-              <span className="class-panel-badge is-teacher">{teacher}</span>
-            </aside>
-            <div className="class-panel-body">
-              <table className="timetable">
-                <thead>
-                  <tr>
-                    <th className="day-col">
-                      <span className="day-head">Day</span>
-                    </th>
-                      {weekdaySlots.map((slot) => (
-                        <SlotHead key={slot.id} slot={slot} />
-                      ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {DAYS.map((day) => (
-                    <DayRow
-                      key={`${teacher}-${day}`}
-                      teacher={teacher}
-                      day={day}
-                      slots={weekdaySlots}
-                      lessons={lessons}
-                      placements={placements}
-                      dragLesson={dragLesson}
-                      hoverPreview={hoverPreview}
-                      onHoverTarget={setHoverTarget}
-                      onDragStartLesson={onDragStartLesson}
-                      onDragEndLesson={onDragEndLesson}
-                      onDropLesson={onDropLesson}
-                    />
-                  ))}
-                </tbody>
-              </table>
-              <table className="timetable is-saturday">
-                <thead>
-                  <tr>
-                    <th className="day-col">
-                      <span className="day-head">Day</span>
-                    </th>
-                      {saturdaySlots.map((slot) => (
-                        <SlotHead key={slot.id} slot={slot} />
-                      ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {WEEKEND_DAYS.map((day) => (
-                    <DayRow
-                      key={`${teacher}-${day}`}
-                      teacher={teacher}
-                      day={day}
-                      slots={saturdaySlots}
-                      lessons={lessons}
-                      placements={placements}
-                      dragLesson={dragLesson}
-                      hoverPreview={hoverPreview}
-                      onHoverTarget={setHoverTarget}
-                      onDragStartLesson={onDragStartLesson}
-                      onDragEndLesson={onDragEndLesson}
-                      onDropLesson={onDropLesson}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        ))}
+        {teachers.map((teacher) => {
+          // Only the dragged lesson's teacher panel reacts to drag/hover state
+          const mine = dragLesson?.teacher === teacher
+          return (
+            <TeacherPanel
+              key={teacher}
+              teacher={teacher}
+              weekdaySlots={weekdaySlots}
+              saturdaySlots={saturdaySlots}
+              lessons={lessons}
+              placements={placements}
+              dragLesson={mine ? dragLesson : null}
+              hoverPreview={mine ? hoverPreview : null}
+              onHoverTarget={setHoverTarget}
+              onDragStartLesson={onDragStartLesson}
+              onDragEndLesson={onDragEndLesson}
+              onDropLesson={onDropLesson}
+            />
+          )
+        })}
       </div>
     </div>
   )
 }
+
+const TeacherPanel = memo(function TeacherPanel({
+  teacher,
+  weekdaySlots,
+  saturdaySlots,
+  lessons,
+  placements,
+  dragLesson,
+  hoverPreview,
+  onHoverTarget: setHoverTarget,
+  onDragStartLesson,
+  onDragEndLesson,
+  onDropLesson,
+}) {
+  return (
+    <section
+      className="class-panel"
+      data-teacher={teacher}
+      style={{ '--panel-accent': panelAccent() }}
+    >
+      <aside className="class-panel-side" aria-label={teacher}>
+        <span className="class-panel-badge is-teacher">{teacher}</span>
+      </aside>
+      <div className="class-panel-body">
+        <table className="timetable">
+          <thead>
+            <tr>
+              <th className="day-col">
+                <span className="day-head">Day</span>
+              </th>
+              {weekdaySlots.map((slot) => (
+                <SlotHead key={slot.id} slot={slot} />
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {DAYS.map((day) => (
+              <DayRow
+                key={`${teacher}-${day}`}
+                teacher={teacher}
+                day={day}
+                slots={weekdaySlots}
+                lessons={lessons}
+                placements={placements}
+                dragLesson={dragLesson}
+                hoverPreview={hoverPreview}
+                onHoverTarget={setHoverTarget}
+                onDragStartLesson={onDragStartLesson}
+                onDragEndLesson={onDragEndLesson}
+                onDropLesson={onDropLesson}
+              />
+            ))}
+          </tbody>
+        </table>
+        <table className="timetable is-saturday">
+          <thead>
+            <tr>
+              <th className="day-col">
+                <span className="day-head">Day</span>
+              </th>
+              {saturdaySlots.map((slot) => (
+                <SlotHead key={slot.id} slot={slot} />
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {WEEKEND_DAYS.map((day) => (
+              <DayRow
+                key={`${teacher}-${day}`}
+                teacher={teacher}
+                day={day}
+                slots={saturdaySlots}
+                lessons={lessons}
+                placements={placements}
+                dragLesson={dragLesson}
+                hoverPreview={hoverPreview}
+                onHoverTarget={setHoverTarget}
+                onDragStartLesson={onDragStartLesson}
+                onDragEndLesson={onDragEndLesson}
+                onDropLesson={onDropLesson}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+})
 
 function DayRow({
   teacher,
@@ -288,24 +331,36 @@ function renderDaySlots({
   while (index < slots.length) {
     const slot = slots[index]
 
+    const duty =
+      slot.kind === 'fixed' ? fixedDutyFor(teacher, day, slot.id) : null
+    if (duty) {
+      cells.push(
+        <td
+          key={`${teacher}-${day}-${slot.id}`}
+          className="slot is-fixed"
+          title={`${duty.label} · ${duty.classroom} · ${slot.start}–${slot.end}`}
+        >
+          <div className="fixed-cell is-duty">
+            <span className="fixed-label">
+              {duty.label} · {duty.classroom}
+            </span>
+          </div>
+        </td>,
+      )
+      index += 1
+      continue
+    }
+
     if (slot.kind === 'break' || slot.kind === 'fixed') {
       cells.push(
         <td
           key={`${teacher}-${day}-${slot.id}`}
-          className={
-            slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'
-          }
+          className={slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'}
           title={`${slot.label} · ${slot.start}–${slot.end}`}
         >
-          <div
-            className={
-              slot.kind === 'fixed' ? 'fixed-cell' : 'break-cell'
-            }
-          >
+          <div className={slot.kind === 'fixed' ? 'fixed-cell' : 'break-cell'}>
             <span
-              className={
-                slot.kind === 'fixed' ? 'fixed-label' : 'break-label'
-              }
+              className={slot.kind === 'fixed' ? 'fixed-label' : 'break-label'}
             >
               {slot.label}
             </span>
@@ -375,9 +430,15 @@ function renderDaySlots({
             ? ` · ${dragLesson.teacher} already teaching then`
             : blockReason === 'break'
               ? ` · break for ${dragLesson.classroom}`
-              : blockReason === 'pe'
-                ? ' · PE only before lunch'
-                : ` · can’t place here`
+              : blockReason === 'pre-lunch'
+                ? ' · only before lunch'
+                : blockReason === 'end-of-day'
+                  ? ' · extra classes end the day'
+                  : blockReason === 'late'
+                    ? ' · juniors end at 2:30 (extras only)'
+                    : blockReason === 'hours'
+                      ? ` · ${dragLesson.classroom} has no classes after ${classroomDayEnd(dragLesson.classroom)}`
+                      : ` · can’t place here`
       : ''
 
     cells.push(
@@ -422,7 +483,10 @@ function takenSlotReason(
     result.reason === 'teacher' ||
     result.reason === 'break' ||
     result.reason === 'span' ||
-    result.reason === 'pe'
+    result.reason === 'pre-lunch' ||
+    result.reason === 'end-of-day' ||
+    result.reason === 'late' ||
+    result.reason === 'hours'
   ) {
     return result.reason
   }

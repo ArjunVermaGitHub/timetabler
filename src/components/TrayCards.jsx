@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from 'react'
-import { LessonCard } from './LessonCard'
+import { useLayoutEffect, useMemo, useRef } from 'react'
+import { TrayUnitCard } from './LessonCard'
 
 /**
  * Tray card strip with FLIP reflow so siblings ease into gaps
@@ -8,6 +8,16 @@ import { LessonCard } from './LessonCard'
 export function TrayCards({ lessons, onDragStartLesson, onDragEndLesson }) {
   const rowRef = useRef(null)
   const prevRects = useRef(new Map())
+
+  const units = useMemo(() => {
+    const byKey = new Map()
+    for (const lesson of lessons) {
+      const key = lesson.syncGroupId || lesson.id
+      if (!byKey.has(key)) byKey.set(key, [])
+      byKey.get(key).push(lesson)
+    }
+    return [...byKey.entries()].map(([key, members]) => ({ key, members }))
+  }, [lessons])
 
   useLayoutEffect(() => {
     const root = rowRef.current
@@ -44,14 +54,14 @@ export function TrayCards({ lessons, onDragStartLesson, onDragEndLesson }) {
     }
 
     prevRects.current = nextRects
-  }, [lessons])
+  }, [units])
 
   return (
     <div className="tray-cards" ref={rowRef}>
-      {lessons.map((lesson) => (
-        <div key={lesson.id} className="tray-card-wrap" data-flip-id={lesson.id}>
-          <LessonCard
-            lesson={lesson}
+      {units.map(({ key, members }) => (
+        <div key={key} className="tray-card-wrap" data-flip-id={key}>
+          <TrayUnitCard
+            lessons={members}
             onDragStartLesson={onDragStartLesson}
             onDragEndLesson={onDragEndLesson}
           />

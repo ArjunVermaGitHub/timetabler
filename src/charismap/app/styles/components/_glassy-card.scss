@@ -1,0 +1,85 @@
+// Shared glass surfaces — `<Card />`, global `.card`, accordions, nested rails.
+// Tune via --glassy-* tokens in globals.scss.
+//
+// Use one of:
+// - `app-glass-surface` — default cards / panels (--glassy-bg)
+// - `app-glass-surface-light` — nested shells (--glassy-bg-light), same bevel as cards
+// - `app-glass-bevel-stack` — inset bevel + outer drop shadow (cards, panels)
+// - `app-glass-bevel-inset` — inset bevel only, no drop shadow (light fills)
+// - `app-glass-bevel-inset-saturated` — darker inset bevel for pink / strong fills
+// - `glassy-inset-row` — nested shiny tiles (learning "you'll learn to" rows, inner critic / NPC lines)
+
+@use 'colors' as colors;
+
+@mixin app-glass-bevel-inset {
+  box-shadow:
+    inset 0.55px 0.55px 0 var(--glassy-bevel-highlight),
+    inset -0.55px -0.55px 0 var(--glassy-bevel-shadow);
+}
+
+@mixin app-glass-bevel-inset-saturated {
+  box-shadow:
+    inset 0.55px 0.55px 0 var(--glassy-bevel-highlight-saturated),
+    inset -0.55px -0.55px 0 var(--glassy-bevel-shadow-saturated);
+}
+
+@mixin app-glass-bevel-stack {
+  box-shadow:
+    var(--glassy-bevel-outer),
+    inset 0.55px 0.55px 0 var(--glassy-bevel-highlight),
+    inset -0.55px -0.55px 0 var(--glassy-bevel-shadow);
+}
+
+@mixin app-glass-surface {
+  background: var(--glassy-bg);
+  border: 1px solid color-mix(in srgb, var(--glassy-border) 85%, transparent);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @include app-glass-bevel-stack;
+  color: var(--text-body);
+}
+
+@mixin app-glass-surface-light {
+  background: var(--glassy-bg-light);
+  border: 1px solid color-mix(in srgb, var(--glassy-border-light) 85%, transparent);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @include app-glass-bevel-stack;
+  color: var(--text-body);
+}
+
+@mixin glassy-card {
+  @include app-glass-surface;
+}
+
+@mixin glassy-inset-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--divider-secondary);
+  transition: background 0.2s ease;
+
+  @include colors.dark-mode {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+
+    @include colors.dark-mode {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  > p {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

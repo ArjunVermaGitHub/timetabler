@@ -1,24 +1,24 @@
-export function ViewTabs({ view, onChange }) {
+import { Link } from '../router'
+
+const VIEWS = [
+  ['classes', 'Classes', '/classes'],
+  ['teachers', 'Teachers', '/teachers'],
+  ['manage', 'Manage', '/manage'],
+]
+
+export function ViewTabs({ view }) {
   return (
-    <div className="view-tabs" role="tablist" aria-label="Timetable view">
-      <button
-        type="button"
-        role="tab"
-        aria-selected={view === 'classes'}
-        className={view === 'classes' ? 'view-tab is-on' : 'view-tab'}
-        onClick={() => onChange('classes')}
-      >
-        Classes
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected={view === 'teachers'}
-        className={view === 'teachers' ? 'view-tab is-on' : 'view-tab'}
-        onClick={() => onChange('teachers')}
-      >
-        Teachers
-      </button>
-    </div>
+    <nav className="view-tabs" aria-label="Timetable view">
+      {VIEWS.map(([id, label, to]) => (
+        <Link
+          key={id}
+          to={to}
+          aria-current={view === id ? 'page' : undefined}
+          className={view === id ? 'view-tab is-on' : 'view-tab'}
+        >
+          {label}
+        </Link>
+      ))}
+    </nav>
   )
 }

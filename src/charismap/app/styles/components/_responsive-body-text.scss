@@ -1,0 +1,30 @@
+/// Shared mobile-first scale (matches lesson detail body: ~15px → 16px at 768px+).
+
+@mixin responsive-body-text-reading {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+/// Primary label on card-style radio / checkbox rows.
+@mixin responsive-form-option-label {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+/// Secondary line under a titled option (e.g. RadioButton description).
+@mixin responsive-form-option-description {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}

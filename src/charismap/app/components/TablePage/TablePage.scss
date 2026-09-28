@@ -1,0 +1,57 @@
+.table-page-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.75rem;
+}
+
+.table-page-filter-count {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: var(--link);
+  color: #fff;
+}
+
+.statusStyle {
+    padding: 2px 8px;
+    // width: 39px;
+    // height: 19px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 2px;
+    text-align: center;
+    display: inline-block;
+    line-height: normal;
+}
+.new{
+    @extend .statusStyle;
+    background-color: #D9EEF8;
+    color: #008DD0;
+}
+.accepted{
+    @extend .statusStyle;
+    background-color: #E4ECDD;
+    color: #49811E;
+}
+.onHold{
+    @extend .statusStyle;
+    background-color: #FEF4DA;
+    color: #F8B509;
+}
+.contacted {
+    @extend .statusStyle;
+    background-color: #DFDFDF;
+    color: #2A2A2A;
+}
+.rejected {
+    @extend .statusStyle;
+    background-color: #F4DFDF;
+    color: #B82B2B;
+}
+.consentSent{
+    @extend .statusStyle;
+    background-color: #DFE6F1;
+    color: #2957A4;
+}

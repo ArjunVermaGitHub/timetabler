@@ -1,0 +1,453 @@
+@use '../../styles/components/colors' as *;
+
+// Base button styles - Only for our app components
+.charismaBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-family: 'Slabien', serif !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  min-width: 100px !important;
+  text-align: center !important;
+  position: relative !important;
+  user-select: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  
+  // Force cursor pointer on all states
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  & * {
+    cursor: pointer !important;
+  }
+  
+  &:disabled,
+  &:disabled * {
+    cursor: not-allowed !important;
+  }
+}
+
+// Leading icon slot (used by the `icon` prop on every variant)
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  margin-right: 0.4em; // gap from the label; reset for icon-only / flex (large) buttons below
+}
+
+// Primary button - Blue-grey background, white text
+.charismaBtnPrimary {
+  @include button-primary;
+  border: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+.charismaBtnPrimary:hover:not(:disabled) {
+  filter: brightness(0.9) !important;
+}
+
+.charismaBtnPrimary:active:not(:disabled) {
+  transform: scale(0.97) !important; // Shrink slightly in place on click
+}
+
+// Secondary button - Light gray background, dark text
+.charismaBtnSecondary {
+  @include button-secondary;
+  border: 1px solid #ccc !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  
+  .icon {
+    svg {
+      fill: currentColor !important;
+    }
+  }
+  
+  @include dark-mode {
+    border-color: #555 !important;
+    
+    .icon {
+      svg {
+        fill: currentColor !important;
+      }
+    }
+  }
+}
+
+.charismaBtnSecondary:hover:not(:disabled) {
+  filter: brightness(0.95) !important;
+}
+
+.charismaBtnSecondary:active:not(:disabled) {
+  transform: scale(0.97) !important; // Shrink slightly in place on click
+}
+
+// Danger button - Red background, white text
+.charismaBtnDanger {
+  background: #dc2626 !important;
+  color: white !important;
+  border: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+.charismaBtnDanger:hover:not(:disabled) {
+  background: #b91c1c !important;
+}
+
+.charismaBtnDanger:active:not(:disabled) {
+  transform: scale(0.97) !important; // Shrink slightly in place on click
+}
+
+// Disabled state
+.charismaBtn:disabled {
+  background: $button-disabled-bg !important;
+  color: $button-disabled-text !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8 !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+// Loading state
+.charismaBtnLoading {
+  position: relative;
+  color: transparent;
+}
+
+.charismaBtnLoading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.charismaBtnSecondary.charismaBtnLoading::after {
+  border: 2px solid rgba(0, 0, 0, 0.12);
+  border-top-color: rgba(0, 0, 0, 0.65);
+}
+
+// Small button variant
+.charismaBtnSmall {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+// Large button variant - bigger hit area + flex layout so a leading icon aligns with the label
+.charismaBtnLarge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.6rem !important;
+  padding: 16px 32px !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  min-width: 220px !important;
+
+  .icon {
+    margin-right: 0; // spacing handled by flex `gap`
+  }
+
+  .icon svg {
+    width: 1.25em;
+    height: 1.25em;
+  }
+}
+
+// Optional shine: a subtle, infrequent light sweep to pull a little extra attention.
+.charismaBtnShine {
+  overflow: hidden !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -130%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.28) 50%,
+      transparent 100%
+    );
+    transform: skewX(-20deg);
+    animation: btnShine 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .charismaBtnShine::before {
+    animation: none;
+    display: none;
+  }
+}
+
+// Quick sweep (~1s) then a long pause so it isn't constantly shining.
+@keyframes btnShine {
+  0% {
+    left: -130%;
+  }
+  16% {
+    left: 150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+// Square pagination / page-size style controls (table footer, etc.)
+.charismaBtnPagination {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2.375rem !important;
+  height: 2.375rem !important;
+  min-width: 2.375rem !important;
+  max-width: 2.375rem !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 6px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  font-family: 'Poppins', system-ui, sans-serif !important;
+  @include button-secondary;
+  border: 1px solid #9a9a9a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+
+  @include dark-mode {
+    border-color: #7a7a7a !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 1px 3px rgba(0, 0, 0, 0.42);
+  }
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+}
+
+.charismaBtnPagination:hover:not(:disabled) {
+  filter: brightness(0.95) !important;
+}
+
+.charismaBtnPagination:active:not(:disabled) {
+  transform: scale(0.97) !important;
+}
+
+.charismaBtnPaginationActive {
+  background: var(--link) !important;
+  color: #fff !important;
+  border-color: var(--link) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.18) !important;
+}
+
+.charismaBtnPagination.charismaBtnPaginationActive:hover:not(:disabled) {
+  filter: brightness(1.06) !important;
+}
+
+.charismaBtnPagination:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+// Sign out button
+.charismaSignOutBtn {
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  min-width: auto !important;
+}
+
+// Social button specific styles
+.charismaSocialBtn {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 10px 14px;
+  // Default width for larger screens - let responsive styles handle small screens
+}
+
+// Default width for larger screens
+@media (min-width: 481px) {
+  .charismaSocialBtn {
+    width: 140px;
+    min-width: 140px;
+  }
+}
+
+.charismaSocialIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 50%;
+  padding: 4px;
+  
+  // Ensure the SVG inside is properly sized
+  svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+}
+
+// Social signin section
+.charismaSocialSigninSection {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.charismaSocialSigninText {
+  font-size: 14px;
+  color: #666;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+// Social buttons container
+.charismaSocialButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+// Icon button variant
+.charismaIconBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97) !important;
+  }
+
+  .icon {
+    font-size: 18px;
+    line-height: 1;
+    margin-right: 0; // icon-only: keep glyph centered
+  }
+}
+
+// Icon button system (legacy)
+.charismaIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+  
+  // Color variants
+  &.charismaPrimary { color: $primary; }
+  &.charismaSecondary { color: $text-body; }
+  &.charismaWhite { color: white; }
+  &.charismaDanger { color: #F44336; }
+  &.charismaSuccess { color: #4CAF50; }
+}
+
+.charismaBackBtn {
+  @extend .charismaIconButton;
+  color: $text-body;
+  margin-bottom: 1rem;
+  
+  &:hover {
+    color: $primary;
+  }
+}
+
+// Responsive styles for buttons
+@media (max-width: 768px) {
+  .charismaBtn {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    min-width: 80px;
+  }
+  
+  .charismaBtnSmall {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: 60px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

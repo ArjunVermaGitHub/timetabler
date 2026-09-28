@@ -1,0 +1,223 @@
+// Color System Component
+// Standardized color palette for consistent theming across all components
+
+// Dark mode mixin for complex styling
+@mixin dark-mode {
+  [data-theme="dark"] & {
+    @content;
+  }
+}
+
+// Text color mixin that handles both light and dark modes (legacy - prefer CSS variables)
+@mixin text-color($light-color, $dark-color) {
+  color: $light-color;
+  
+  @include dark-mode {
+    color: $dark-color;
+  }
+}
+
+// Background color mixins using CSS variables
+@mixin bg-primary {
+  background-color: var(--primary);
+}
+
+@mixin bg-secondary {
+  background-color: var(--secondary);
+}
+
+@mixin bg-accent {
+  background-color: var(--accent);
+}
+
+@mixin bg-card {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+// Border color mixins using CSS variables
+@mixin border-primary {
+  border-color: var(--divider-primary);
+}
+
+@mixin border-secondary {
+  border-color: var(--divider-secondary);
+}
+
+@mixin border-accent {
+  border-color: var(--divider-accent);
+}
+
+// Text color mixins for common use cases (using CSS variables for automatic theme switching)
+@mixin text-body {
+  color: var(--text-body);
+}
+
+@mixin text-h1 {
+  color: var(--text-h1);
+}
+
+@mixin text-h2 {
+  color: var(--text-h2);
+}
+
+@mixin text-accent {
+  color: var(--accent);
+}
+
+@mixin text-link {
+  color: var(--link);
+  
+  &:hover {
+    color: var(--link-hover);
+  }
+}
+
+// Primary Colors - Original SCSS variables (reverted to fix checkbox/dropdown styling)
+$primary: #008000; // Green - main brand color
+$secondary: #F88FC5; // Pink - secondary brand color
+$accent: #538098; // Blue-grey - accent color
+
+// SCSS color variables for functions (same as main variables)
+$primary-scss: #008000; // Green - main brand color
+$secondary-scss: #F88FC5; // Pink - secondary brand color
+$accent-scss: #538098; // Blue-grey - accent color
+
+// Background Colors
+$background: #FFD45C; // Yellow - main background
+$secondary-bg: #40B0C0; // Teal - secondary background
+
+// Text Colors - Base colors (light mode)
+$text-h1: #008000; // Green - main headings
+$text-h2: #538098; // Blue-grey - secondary headings
+$text-body: #222; // Dark grey - body text
+
+// Interactive Colors
+$link: #625593; // Purple - links
+$input-border: #ccc; // Light grey - input borders
+
+// Button Colors - Base colors (light mode)
+$button-primary-bg: #538098; // Blue-grey - primary button background
+$button-primary-text: #fff; // White - primary button text
+$button-secondary-bg: #f0f0f0; // Light grey - secondary button background
+$button-secondary-text: #333; // Dark grey - secondary button text
+$button-disabled-bg: #d3d3d3; // Grey - disabled button background
+$button-disabled-text: #888; // Medium grey - disabled button text
+
+// Button color mixins for dark mode support
+@mixin button-primary {
+  background: linear-gradient(to bottom, #6f93b8, #5b7fa3) !important;
+  color: $button-primary-text !important;
+  
+  @include dark-mode {
+    background: linear-gradient(to bottom, #64B5F6, #42A5F5) !important;
+    color: #ffffff !important;
+  }
+}
+
+@mixin button-secondary {
+  background: linear-gradient(to bottom, #f5f5f5, #e0e0e0) !important;
+  color: $button-secondary-text !important;
+  
+  @include dark-mode {
+    background: linear-gradient(to bottom, #444, #2a2a2a) !important;
+    color: #ffffff !important;
+  }
+}
+
+// Input mixin for dark mode support
+@mixin input-field {
+  background: #fff;
+  border: 1px solid $input-border;
+  color: $text-body;
+  
+  @include dark-mode {
+    background: #1a1a1a;
+    border-color: var(--input-border, #6b7280);
+    color: #ffffff;
+  }
+  
+  &:focus {
+    border-color: $accent;
+    
+    @include dark-mode {
+      border-color: #64B5F6;
+    }
+  }
+}
+
+// Divider Colors
+$divider-primary: #538098; // Blue-grey - standard divider (matches buttons)
+$divider-secondary: #ccc; // Light grey - subtle dividers
+$divider-accent: #008000; // Green - accent dividers
+
+// Status Colors
+$success: #4CAF50; // Green - success states
+$warning: #FF9800; // Orange - warning states
+$error: #F44336; // Red - error states
+$info: #2196F3; // Blue - info states
+
+// Date Marker Colors
+$date-marker-bg: #e9ba70; // Tan/beige - date marker text background
+
+// Semantic Color Classes
+.text-primary { color: $primary; }
+.text-secondary { color: $secondary; }
+.text-accent { color: $accent; }
+.text-success { color: $success; }
+.text-warning { color: $warning; }
+.text-error { color: $error; }
+.text-info { color: $info; }
+
+.bg-primary { background-color: $primary; }
+.bg-secondary { background-color: $secondary; }
+.bg-accent { background-color: $accent; }
+.bg-success { background-color: $success; }
+.bg-warning { background-color: $warning; }
+.bg-error { background-color: $error; }
+.bg-info { background-color: $info; }
+
+// Learning Page Colors
+$lesson-default-bg: rgba(140, 120, 104, 0.49); // Middle value - default lesson node (between original light and darker)
+$lesson-complete-bg: rgba(76, 175, 80, 0.55); // Green - completed lesson background
+$lesson-in-progress-bg: rgba(255, 167, 38, 0.55); // Orange - in-progress lesson background
+$lesson-disabled-bg: rgba(220, 220, 220, 0.3); // Grey - disabled lesson background
+
+$lesson-text-dark: #3D2817; // Dark brown - lesson symbol text
+$lesson-text-black: #000000; // Black - tooltip text (light mode)
+$lesson-text-white: #ffffff; // White - tooltip text (dark mode)
+
+$lesson-status-complete: #4CAF50; // Green - completion checkmark
+$lesson-status-in-progress: #FF9800; // Orange - progress dot
+
+$lesson-unavailable: #b71c1c; // Darker red - unavailable message (light mode, better contrast)
+$lesson-unavailable-dark: #e53935; // Red - unavailable message (dark mode, readable but strong)
+
+// Glassy card backgrounds
+$glassy-bg-light: rgba(255, 255, 255, 0.15); // White glassy background
+$glassy-bg-dark: rgba(0, 0, 0, 0.3); // Dark glassy background
+$glassy-border-light: rgba(255, 255, 255, 0.3); // White glassy border
+$glassy-border-dark: rgba(255, 255, 255, 0.2); // Dark glassy border
+
+// Scrollbar colors (using accent color)
+$scrollbar-track-light: rgba(255, 255, 255, 0.05);
+$scrollbar-track-dark: rgba(0, 0, 0, 0.1);
+$scrollbar-thumb: rgba(83, 128, 152, 0.6); // Matches $accent
+$scrollbar-thumb-hover: rgba(83, 128, 152, 0.8);
+
+// Tooltip colors
+$tooltip-text: #000000; // Tooltip default text
+$tooltip-text-dark: #ffffff; // Tooltip text in dark mode
+$tooltip-close-bg: #666666; // Close button background
+$tooltip-close-bg-hover: #777777; // Close button hover
+$tooltip-close-bg-dark: #888888; // Close button dark mode
+$tooltip-close-bg-dark-hover: #999999; // Close button dark mode hover
+$tooltip-close-text: #ffffff; // Close button text
+$tooltip-arrow-light: rgba(255, 255, 255, 0.15); // Tooltip arrow light mode
+$tooltip-arrow-dark: rgba(0, 0, 0, 0.3); // Tooltip arrow dark mode
+
+// Expand button colors
+$expand-button-hover: rgba(83, 128, 152, 0.1); // Expand button hover background
+$expand-button-focus: rgba(83, 128, 152, 0.3); // Expand button focus border
+$expand-button-text-dark: #64B5F6; // Expand button text dark mode
+$expand-button-hover-dark: rgba(100, 181, 246, 0.15); // Expand button hover dark mode 

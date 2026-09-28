@@ -1,5 +1,4 @@
-import catalog from './rbsCatalog.json'
-import { CLASSROOMS, classroomGrade } from './schedule'
+import { setClassrooms } from './schedule'
 
 const COLOR_BY_SUBJECT = {
   Maths: '#2a7ab8',
@@ -85,36 +84,25 @@ export function colorFor(subject, teacher) {
   return shift === 0 ? base : shiftHex(base, shift)
 }
 
-/** Full teacher list from the RBS teacher-individual export. */
-export const TEACHER_DIRECTORY = catalog.teachers
-
-/** Class teacher map from the class-individual export. */
-export const CLASS_TEACHERS = catalog.classTeachers
+/** Lesson cards, teachers and class teachers from the server catalog. */
+export let UNSCHEDULED_LESSONS = []
+export let TEACHERS = []
+export let CLASS_TEACHERS = {}
 
 /**
- * Every lesson card from RBS exports (600+).
- * HS electives carry syncGroupId so PDF stream mates stay locked together.
+ * Install a catalog from `/api/catalog`. Fresh arrays every time, so caches
+ * keyed on the lesson list (placement lookups) never serve stale data.
  */
-export const UNSCHEDULED_LESSONS = catalog.lessons.map((lesson) => ({
-  ...lesson,
-  color: colorFor(lesson.subject, lesson.teacher),
-}))
-
-export const TEACHERS = [
-  ...new Set([
-    ...TEACHER_DIRECTORY,
-    ...UNSCHEDULED_LESSONS.map((lesson) => lesson.teacher),
-  ]),
-].sort((a, b) => a.localeCompare(b))
-
-/** Sanity: catalog classrooms should match schedule.CLASSROOMS. */
-export function catalogClassroomCount() {
-  return catalog.classrooms.length
+export function applyCatalog({ classrooms, teachers, lessons }) {
+  setClassrooms(classrooms)
+  CLASS_TEACHERS = Object.fromEntries(
+    classrooms.filter((c) => c.classTeacher).map((c) => [c.name, c.classTeacher]),
+  )
+  UNSCHEDULED_LESSONS = lessons.map((lesson) => ({
+    ...lesson,
+    color: colorFor(lesson.subject, lesson.teacher),
+  }))
+  TEACHERS = [
+    ...new Set([...teachers, ...UNSCHEDULED_LESSONS.map((l) => l.teacher)]),
+  ].sort((a, b) => a.localeCompare(b))
 }
-
-export function catalogLessonCount() {
-  return UNSCHEDULED_LESSONS.length
-}
-
-// Re-export grade helper usage for any leftover callers
-export { CLASSROOMS, classroomGrade }

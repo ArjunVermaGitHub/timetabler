@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { ClassroomFilter } from './components/ClassroomFilter'
 import { HeaderBar } from './components/HeaderBar'
 import { TeacherFilter } from './components/TeacherFilter'
@@ -9,7 +9,27 @@ import { ViewTabs } from './components/ViewTabs'
 import { TEACHERS, UNSCHEDULED_LESSONS } from './data/mockLessons'
 import { evaluatePlacement } from './data/placement'
 import { autoSchedule } from './data/scheduler'
-import { CLASSROOMS } from './data/schedule'
+import { CLASSROOMS, classroomDayEnd } from './data/schedule'
+import { navigate, usePath } from './router'
+
+// Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open
+const ManagePanel = lazy(() =>
+  import('./components/ManagePanel').then((m) => ({ default: m.ManagePanel })),
+)
+
+const MANAGE_TABS = ['teachers', 'classes', 'links']
+const TITLES = { classes: 'Classes', teachers: 'Teachers', manage: 'Manage' }
+
+/** `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route. */
+function routeFor(path) {
+  const [first, second] = path.split('/').filter(Boolean)
+  if (first === 'teachers') return { view: 'teachers', path: '/teachers' }
+  if (first === 'manage') {
+    const tab = MANAGE_TABS.includes(second) ? second : MANAGE_TABS[0]
+    return { view: 'manage', tab, path: `/manage/${tab}` }
+  }
+  return { view: 'classes', path: '/classes' }
+}
 
 function readStoredTheme() {
   try {
@@ -19,8 +39,10 @@ function readStoredTheme() {
   }
 }
 
-function App() {
-  const [view, setView] = useState('classes')
+function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
+  const path = usePath()
+  const route = routeFor(path)
+  const { view } = route
   const [selectedClassrooms, setSelectedClassrooms] = useState(() => [
     ...CLASSROOMS,
   ])
@@ -31,14 +53,34 @@ function App() {
   const [placementError, setPlacementError] = useState(null)
   const [scheduleNote, setScheduleNote] = useState(null)
 
+  useEffect(() => {
+    if (route.path !== path) navigate(route.path, { replace: true })
+  }, [route.path, path])
+
+  useEffect(() => {
+    document.title = `${TITLES[view]} · Timetabler`
+  }, [view])
+
+  // A reloaded catalog may add or drop classes, teachers and lessons
+  useEffect(() => {
+    setSelectedClassrooms([...CLASSROOMS])
+    setSelectedTeachers([...TEACHERS])
+    setPlacements((prev) => {
+      const ids = new Set(UNSCHEDULED_LESSONS.map((lesson) => lesson.id))
+      return Object.fromEntries(
+        Object.entries(prev).filter(([id]) => ids.has(id)),
+      )
+    })
+  }, [catalogVersion])
+
   const visibleClassrooms = useMemo(
     () => CLASSROOMS.filter((id) => selectedClassrooms.includes(id)),
-    [selectedClassrooms],
+    [selectedClassrooms, catalogVersion],
   )
 
   const visibleTeachers = useMemo(
     () => TEACHERS.filter((name) => selectedTeachers.includes(name)),
-    [selectedTeachers],
+    [selectedTeachers, catalogVersion],
   )
 
   const trayLessons = useMemo(() => {
@@ -50,10 +92,9 @@ function App() {
     }
     return UNSCHEDULED_LESSONS.filter(
       (lesson) =>
-        selectedClassrooms.includes(lesson.classroom) &&
-        !placements[lesson.id],
+        selectedClassrooms.includes(lesson.classroom) && !placements[lesson.id],
     )
-  }, [view, selectedClassrooms, selectedTeachers, placements])
+  }, [view, selectedClassrooms, selectedTeachers, placements, catalogVersion])
 
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? 'dark' : 'light'
@@ -153,6 +194,26 @@ function App() {
     }
   }
 
+  const [exportingPdf, setExportingPdf] = useState(false)
+
+  async function handleDownloadPdf() {
+    setExportingPdf(true)
+    try {
+      // pdfmake is heavy; only fetch it when someone actually downloads
+      const { downloadTimetablePdf } = await import('./data/timetablePdf')
+      downloadTimetablePdf({
+        mode: view === 'teachers' ? 'teacher' : 'classroom',
+        groups: view === 'teachers' ? visibleTeachers : visibleClassrooms,
+        lessons: UNSCHEDULED_LESSONS,
+        placements,
+      })
+    } catch (err) {
+      setPlacementError(`Couldn't create the PDF: ${err.message}`)
+    } finally {
+      setExportingPdf(false)
+    }
+  }
+
   function handleClearSchedule() {
     setDragLessonId(null)
     setPlacements({})
@@ -185,7 +246,7 @@ function App() {
     for (const mate of mates) {
       const check = evaluatePlacement(
         mate,
-        classroom,
+        mate.classroom,
         day,
         slotId,
         UNSCHEDULED_LESSONS,
@@ -198,7 +259,7 @@ function App() {
           )
         } else if (check.reason === 'subject') {
           setPlacementError(
-            `${mate.subject} is already scheduled for ${classroom} on ${day}.`,
+            `${mate.subject} is already scheduled for ${mate.classroom} on ${day}.`,
           )
         } else if (check.reason === 'span') {
           setPlacementError(
@@ -208,9 +269,21 @@ function App() {
           setPlacementError(
             'That column is a break for this class (Breakfast, Assembly, Recess, Jr Lunch, or Sr Lunch).',
           )
-        } else if (check.reason === 'pe') {
+        } else if (check.reason === 'hours') {
           setPlacementError(
-            'Physical Education must be before lunch (not after Jr/Sr Lunch).',
+            `${mate.classroom} only has classes until ${classroomDayEnd(mate.classroom)}.`,
+          )
+        } else if (check.reason === 'pre-lunch') {
+          setPlacementError(
+            `${mate.subject} must be before lunch (not after Jr/Sr Lunch).`,
+          )
+        } else if (check.reason === 'late') {
+          setPlacementError(
+            `Junior classes end at 2:30 — only LRC and remedial extras can use ${mate.classroom}'s last period.`,
+          )
+        } else if (check.reason === 'end-of-day') {
+          setPlacementError(
+            `LRC and remedial classes are end-of-day extras — nothing else can come after them in ${mate.classroom}'s day.`,
           )
         } else {
           setPlacementError(
@@ -252,15 +325,26 @@ function App() {
   return (
     <div className="app">
       <HeaderBar
-        unscheduledCount={trayLessons.length}
         scheduledCount={Object.keys(placements).length}
         onAutoSchedule={handleAutoSchedule}
         onClearSchedule={handleClearSchedule}
+        onDownloadPdf={handleDownloadPdf}
+        pdfDisabled={
+          exportingPdf ||
+          (view === 'teachers' ? visibleTeachers : visibleClassrooms).length === 0
+        }
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode((value) => !value)}
-        viewTabs={<ViewTabs view={view} onChange={setView} />}
+        viewTabs={<ViewTabs view={view} />}
+        user={user}
+        onSignOut={onSignOut}
+        manageMode={view === 'manage'}
       />
-      {view === 'classes' ? (
+      {view === 'manage' ? (
+        <Suspense fallback={<p className="manage-empty manage">Loading…</p>}>
+          <ManagePanel user={user} tab={route.tab} onChanged={onCatalogChange} />
+        </Suspense>
+      ) : view === 'classes' ? (
         <ClassroomFilter
           selected={selectedClassrooms}
           onChange={setSelectedClassrooms}
@@ -281,8 +365,9 @@ function App() {
           {scheduleNote}
         </div>
       ) : null}
-      <div className="workspace">
-        {view === 'classes' ? (
+      {/* Stays mounted under Manage so returning to the grids is instant */}
+      <div className="workspace" hidden={view === 'manage'}>
+        {view !== 'teachers' ? (
           <TimetableGrid
             classrooms={visibleClassrooms}
             lessons={UNSCHEDULED_LESSONS}
@@ -304,8 +389,8 @@ function App() {
           />
         )}
         <UnscheduledTray
-          groups={view === 'classes' ? visibleClassrooms : visibleTeachers}
-          groupMode={view === 'classes' ? 'classroom' : 'teacher'}
+          groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
+          groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
           lessons={trayLessons}
           onDragStartLesson={handleDragStartLesson}
           onDragEndLesson={handleDragEndLesson}
@@ -337,12 +422,15 @@ function scrollSchedulePanelIntoView(view, lesson) {
   const rootRect = scrollRoot.getBoundingClientRect()
   const panelRect = panel.getBoundingClientRect()
   const alreadyVisible =
-    panelRect.top >= rootRect.top + 8 &&
-    panelRect.bottom <= rootRect.bottom - 8
+    panelRect.top >= rootRect.top + 8 && panelRect.bottom <= rootRect.bottom - 8
 
   if (alreadyVisible) return
 
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+  panel.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+    inline: 'nearest',
+  })
 }
 
 const DRAG_SCROLL_EDGE = 72

@@ -1,0 +1,862 @@
+@use '../../../styles/components/glassy-card' as glassy;
+
+.table-page{
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    --table-grid-font-size: 0.9375rem;
+
+    @media (min-width: 1024px) {
+        --table-grid-font-size: 1rem;
+    }
+
+    /* Shared by scroll pane + sticky rail (siblings — must not rely on .table-data inheritance) */
+    %grid-surface-type {
+        font-size: var(--table-grid-font-size);
+        line-height: 1.35;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .cell {
+        margin: auto;
+        padding: 0 8px;
+        word-break: break-word;
+        box-sizing: content-box;
+        &:first-of-type {
+            margin-left: 20px
+        }
+        &:last-of-type{
+            // margin-right: 20px;
+        }
+    }
+    .row-data.action-holder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .embed-toggle-btn {
+        appearance: none;
+        -webkit-appearance: none;
+        background: none;
+        border: none;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: inherit;
+        line-height: 0;
+        flex-shrink: 0;
+        &:focus-visible {
+            outline: 2px solid var(--link);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+    }
+
+    .embed-toggle-chevron {
+        display: block;
+        flex-shrink: 0;
+        color: currentColor;
+        transition: transform 0.2s ease;
+        transform: rotate(0deg);
+    }
+
+    .embed-toggle-chevron-open {
+        transform: rotate(180deg);
+    }
+
+    .embedded{
+        border: 1px solid #E9E9EA;
+        overflow: auto;
+        position: absolute;
+        width: -webkit-fill-available;
+        z-index: 1;
+        padding: 5px 25px;
+    
+    }
+    [class*="-row"], .row{
+        &:has([class*="checkbox"], [class*="row-selector"]){
+            .cell:first-of-type{
+                // margin-left: 63px;
+            }
+        }
+    }
+    
+    /* Above the grid only — not global heading scale */
+    .table-heading {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--text-h1);
+    }
+
+    .column-header-row .column-header {
+        margin: 0;
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    .column-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: 1.25;
+        color: inherit;
+        @extend .cell;
+        /* After .cell: border-box width must cover label + sort + padding (see tableUtils.minHeaderBorderBoxWidth) */
+        box-sizing: border-box;
+        /* Override .cell word-break so header labels stay one line; width comes from measureText */
+        white-space: nowrap;
+        word-break: normal;
+        overflow-wrap: normal;
+        button{
+            vertical-align: middle;
+        }
+        &s{
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            width: max-content;
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        &-row {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-fg);
+            cursor: unset;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0;
+            font-size: var(--table-grid-font-size);
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: 0.03em;
+            text-transform: none;
+            /* Legibility on saturated header strip */
+            text-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.55),
+                0 0 1px rgba(0, 0, 0, 0.45);
+            padding-block: 0.65rem;
+            min-height: 3.5rem;
+            box-sizing: border-box;
+            min-width: 100%;
+            width: max-content;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--divider-secondary);
+            /* Theme toggle: sticky compositing can lag if any inherited transition interpolates background */
+            transition: none;
+        }
+        &-sort-trigger {
+            appearance: none;
+            -webkit-appearance: none;
+            background: none;
+            border: none;
+            margin: 0;
+            padding: 0 0 0 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
+            font: inherit;
+            line-height: 0;
+            vertical-align: middle;
+            &:focus-visible {
+                outline: 2px solid var(--link);
+                outline-offset: 2px;
+                border-radius: 2px;
+            }
+        }
+        &-sort-icon{
+            margin-top: 0px !important;
+            cursor: pointer;
+            // height: fit-content;
+        }
+        &-sort-svg {
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+            color: currentColor;
+        }
+        &-checkbox{
+            padding-left: 25px;
+            position: absolute;
+            transform: translateY(-50%);
+            top: 50%;
+            z-index: 101;
+        }
+    }
+    .row-wrapper{
+        width: max-content;
+        min-width: 100%;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        .row {
+            min-height: 44px;
+            height: auto;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            /* Stretch cells to row height; vertical centering of text is on .row-data */
+            align-items: stretch;
+            position: relative;
+            width: max-content;
+            min-width: 100%;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        
+            &-action {
+                position: initial !important;           
+            }
+        
+            &-data {
+                    @extend .cell;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    /* Keep explicit column width; avoid flex shrinking/wrapping tight columns */
+                    min-width: auto;
+                    flex-shrink: 0;
+                    box-sizing: border-box;
+                    margin: 0;
+                    &:first-of-type {
+                        margin-left: 0;
+                    }
+                    font-size: inherit;
+                    /* inherit so row-level rowStyles (e.g. fontWeight) from TableRow apply */
+                    font-weight: inherit;
+                    color: inherit;
+                    line-height: 1.4;
+                    white-space: normal;
+                    word-break: normal;
+                    overflow-wrap: break-word;
+                }
+            &-selector{
+                @extend .column-header-checkbox
+            }
+        }
+    }
+    :global(.ant-radio-group) {
+        min-width: 100%;
+    }
+    .odd-row-bg-color {
+        /* Light: halfway white + page yellow (--table-stripe-mix); dark: falls back to card */
+        background-color: var(--table-stripe-mix, var(--card-bg));
+            &:has(:global(.ant-checkbox-wrapper-checked)){
+                background-color: var(--glassy-bg-light);
+            }
+    }
+     
+    .even-row-bg-color {
+        background-color: var(--background);
+            &:has(:global(.ant-checkbox-wrapper-checked)){
+                background-color: var(--glassy-bg-light);
+            }
+    }    
+    
+    .sp-button {
+        background-color: #f5f5f5;
+        border-radius: 5px !important;
+        margin: 3px;
+    }
+    .table-rows-body {
+        width: max-content;
+        min-width: 100%;
+        box-sizing: border-box;
+        /* Reserve row slots when paginated so the footer stays aligned on short last pages */
+        min-height: calc(var(--table-page-slot-count, 0) * var(--table-row-min-height, 44px));
+    }
+    .spf-table {
+        background: var(--background);
+        width: max-content;
+        min-width: 100%;
+        box-sizing: border-box;
+        &:has(>div>.no-records){
+            position: sticky;
+            left: 0;
+        }
+        position: static;
+        overflow: visible;
+        max-height: unset;
+        .ant-radio-inner:after{
+            background-color: #1890ff;;
+        }
+        .ant-radio-group{
+            width: 100%;
+        }
+    }
+    .table-control-section {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 0.75rem 1.25rem;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        line-height: 1.4;
+
+        > span {
+            align-self: center;
+            color: var(--text-body);
+            font-size: inherit;
+        }
+
+        .table-control-left,
+        .table-control-right,
+        [data-table-toolbar='left'],
+        [data-table-toolbar='right'] {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 0.75rem 1.25rem;
+            min-width: 0;
+        }
+
+        .table-control-right,
+        [data-table-toolbar='right'] {
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+
+            .table-control-right,
+            [data-table-toolbar='right'] {
+                width: 100%;
+            }
+        }
+    }
+
+    .table-page-size-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.65rem;
+    }
+
+    .table-page-size-label,
+    .table-page-size-suffix {
+        margin: 0;
+        align-self: center;
+        color: var(--text-body);
+        font-size: inherit;
+        line-height: 1.3;
+        white-space: nowrap;
+    }
+
+    .column-selector-list {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        min-width: 12rem;
+    }
+
+    /* Ant Design popover is portaled — scope inner content via exported overlay class */
+    .columnSelectorPopover {
+        :global(.ant-popover-inner) {
+            background: var(--card-bg) !important;
+            border: 1px solid var(--divider-secondary) !important;
+            box-shadow: 0 8px 24px var(--shadow) !important;
+        }
+        :global(.ant-popover-title) {
+            color: var(--text-body) !important;
+            border-bottom-color: var(--divider-secondary) !important;
+            background: transparent !important;
+        }
+        :global(.ant-popover-inner-content) {
+            padding: 10px !important;
+            max-height: 320px;
+            overflow-y: auto;
+            min-width: 220px;
+            color: var(--text-body) !important;
+            background: var(--card-bg) !important;
+        }
+    }
+
+    /* Export (and other) Ant dropdown menus — dark panel so white/light item text stays readable */
+    .tableAntDropdown {
+        :global(.ant-dropdown-menu) {
+            background: var(--card-bg) !important;
+            border: 1px solid var(--divider-secondary) !important;
+            box-shadow: 0 8px 24px var(--shadow) !important;
+            padding: 4px 0 !important;
+        }
+        :global(.ant-dropdown-menu-item) {
+            color: var(--text-body) !important;
+        }
+        :global(.ant-dropdown-menu-item:hover),
+        :global(.ant-dropdown-menu-item-active) {
+            background: var(--glassy-bg-light) !important;
+        }
+    }
+
+    .table-search-wrap {
+        flex: 0 1 22rem;
+        max-width: 22rem;
+        min-width: 8rem;
+    }
+
+    .table-search-input-tight {
+        margin-bottom: 0 !important;
+    }
+
+    .table-currency-wrap {
+        min-width: 8rem;
+    }
+
+    .title {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0;
+        &-buttons{
+            margin-left: auto;
+            .ant-form-item {
+                margin-bottom: 6px !important;
+            }
+        }
+    }
+    .options {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0;
+    }
+
+    /* Icon + label in toolbar buttons (Columns, Export): optical alignment + inset before icon */
+    .btnIconLabel {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        vertical-align: middle;
+        padding-left: 0.4rem;
+        line-height: 1;
+
+        > span:last-child {
+            display: inline-block;
+            line-height: 1.25;
+        }
+    }
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        padding: 10px 0;
+        &-wrapper{
+            width: 100%;
+            min-width: 0;
+            min-height: 0;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .pagination-summary {
+        margin: 0;
+        color: var(--text-body);
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .pagination-page-jump {
+        max-width: 9rem;
+        min-width: 6rem;
+    }
+
+    .pagination-ellipsis {
+        padding: 0 0.25rem;
+        color: var(--text-body);
+        user-select: none;
+    }
+
+    /* Class hooks on pagination buttons (compose with Button variant="pagination") */
+    .pagination-nav-btn {
+        border: 1px solid var(--divider-secondary) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.45),
+            0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-active {
+        border-color: var(--link) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.25),
+            0 0 0 1px var(--link),
+            0 1px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    :global([data-theme='dark']) & {
+        .pagination-nav-btn {
+            border-color: #6a6a6a !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 1px 3px rgba(0, 0, 0, 0.45);
+        }
+
+        .page-active {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 0 0 1px var(--link),
+                0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+    }
+    .export-color:hover{
+        background: #008DD0!important;
+        color: #FFFFFF!important;
+    }
+    /* Main grid chrome: same bevelled glass shell as dashboard <Card /> */
+    .table-wrapper
+    {
+        @include glassy.app-glass-surface;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        align-self: stretch;
+        gap: 0;
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        width: 100%;
+        flex: 1 1 0%;
+        max-height: 100%;
+    }
+
+    /* Vertical scroll only: horizontal scroll lives in .tableDataHScroll so the sticky rail stays fixed */
+    .table-scroll-stage {
+        flex: 1 1 0%;
+        min-height: 0;
+        min-width: 0;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+
+    .table-inner-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    /* Scroll viewport: intrinsic width = sum of columns (flex must not shrink cells) */
+    .table-scroll-inner {
+        display: block;
+        width: max-content;
+        min-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .table-data{
+        @extend %grid-surface-type;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        /* Stretch into whatever the sticky actions rail leaves behind. The rail
+           is `flex: 0 0 auto` (sized to its own content), so when only a few
+           columns are visible we still fill the row band, and when the actions
+           column is toggled off via the columns selector the rail unmounts and
+           we automatically reclaim its slot. Cells inside the row have explicit
+           widths + `flex-shrink: 0` and the row is `justify-content: flex-start`,
+           so the extra width shows up as empty space to the right of the last
+           column rather than stretching individual cells. Horizontal scroll
+           still kicks in via `.tableDataHScroll` when total column width
+           exceeds the viewport. */
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 0;
+        overflow: visible;
+        border: none;
+        border-radius: 0;
+        .InovuaReactDataGrid__cell__content img{
+            width: 40px!important;
+            height: 100%!important;
+            display: inline-block!important;
+            object-fit: contain;
+        }
+    }
+
+    /* Same role as .sticky-column-header-block: sticky to .table-scroll-stage, sibling of body scroll */
+    .mainColumnHeaderBlock {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-sizing: border-box;
+        pointer-events: auto;
+        background-color: var(--card-bg);
+        border-bottom: 1px solid var(--divider-secondary);
+        box-shadow: 0 2px 12px var(--shadow);
+        transition: none;
+    }
+
+    /*
+     * Header strip is NOT user-scrollable — only the body (.tableDataHScroll)
+     * accepts horizontal scroll input, and JS sets scrollLeft on this element
+     * to mirror it. `overflow-x: hidden` still allows programmatic scrollLeft
+     * to shift the inner content, and eliminates the bidirectional scroll
+     * event loop that caused the header to drift / accelerate on Safari and
+     * during trackpad momentum scrolling.
+     */
+    .mainColumnHeaderScroll {
+        overflow-x: hidden;
+        overflow-y: hidden;
+        min-width: 0;
+        width: 100%;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    /* Main grid body: horizontal scroll only; vertical scroll is .table-scroll-stage */
+    .tableDataHScroll {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: min-content;
+        overflow-x: auto;
+        overflow-y: visible;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Inner header chrome (shell + shadow live on .mainColumnHeaderBlock) */
+    .floatingHeaderOverlay {
+        position: relative;
+        overflow: visible;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        pointer-events: auto;
+
+        .column-headers {
+            position: static;
+            top: auto;
+        }
+
+        .column-header-row {
+            position: static !important;
+            top: auto !important;
+        }
+    }
+
+    .floatingHeaderInner {
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    /* Sticky rail header: same scroll viewport; flex-end helps align with main grid when super-headers exist */
+    .sticky-column-header-block {
+        position: sticky;
+        top: 0;
+        z-index: 101;
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-sizing: border-box;
+        pointer-events: auto;
+        background-color: var(--card-bg);
+        border-bottom: 1px solid var(--divider-secondary);
+        box-shadow: 0 2px 12px var(--shadow);
+        border-left: 1px solid var(--divider-secondary);
+        transition: none;
+
+        .column-headers {
+            position: static;
+            top: auto;
+        }
+
+        .column-header-row {
+            position: static !important;
+            top: auto !important;
+        }
+    }
+
+    
+    .button-holder{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        margin-left: auto;
+        margin-right: auto;
+        min-height: 2.5rem;
+    }
+    .no-records{
+        /* Full-width row band so the loader / "No records" copy centres in the
+           table viewport instead of shrink-wrapping to its own content. */
+        width: 100%;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        &-text{
+            text-align: center;
+            font: inherit;
+            font-weight: 600;
+            color: var(--text-body);
+            opacity: 0.75;
+        }
+    }
+    .action{
+        :global(.ant-btn:active),
+        :global(.ant-btn:focus),
+        :global(.ant-btn:hover) {
+            background: #0000;
+            border-color: #0000 !important;
+            color: inherit;
+        }
+
+        // border:1px solid #E9E9EA;
+        border-radius: 0 5px 5px 0;
+        width: unset !important;
+        &-header{
+            @extend .column-header-row;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            padding-right: 12px;
+            min-height: 50px;
+            border-radius: 0 5px 0 0;
+            justify-content: center;
+        }
+        &-holder{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 12px;
+            // padding: 0 20px;
+            :global(button) {
+                background: #0000;
+                padding: 4px 0;
+                border: none;
+                &:first-of-type {
+                    border: 0;
+                }
+                &:last-child {
+                    border: 0;
+                }
+            }
+        }
+    }
+    // *:has(>.column-space){
+    //     padding:10px 10px 10px 16px !important;
+    //     height: 300px;
+    //     overflow: scroll;
+    // }
+    .super-headers .column-header{
+        justify-content: center;
+    }
+    .hover\:text-clip:hover {
+        text-overflow: clip;
+        text-wrap: balance;
+        transition-delay: 5ms;
+    }
+    
+    /* Match main grid row stack min-height when paginated (same CSS var as .table-rows-body) */
+    .sticky-column-rows {
+        min-height: calc(var(--table-page-slot-count, 0) * var(--table-row-min-height, 44px));
+        width: max-content;
+        min-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+        .row {
+            transition: none;
+        }
+    }
+
+    .sticky-column-holder{
+        @extend %grid-surface-type;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        flex: 0 0 auto;
+        align-self: stretch;
+        width: max-content;
+        min-width: max-content;
+        max-width: none;
+        position: relative;
+        z-index: 2;
+        margin-left: 0;
+        color: var(--text-body);
+        background-color: var(--card-bg);
+        border: none;
+        border-left: 1px solid var(--divider-secondary);
+        border-radius: 0;
+        min-height: 0;
+        overflow: visible;
+        transition: none;
+
+        .column-header-row {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-fg);
+        }
+
+        /* Cell text was inheriting page default (16px); main grid gets this from .table-data */
+        .row-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: auto;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: 1.4;
+            color: inherit;
+        }
+
+        /* Default cell anchors inherit row type; AppNavLink keeps nav link weight/color */
+        a:not(:global(.app-nav-link)) {
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+    }
+    .sticky-column-holder.action .column-header:first-of-type , .sticky-column-holder.action .row-wrapper .row-data:first-of-type{
+        // margin-left: 8px !important;
+    }
+    :global(.ant-btn > .ant-btn-loading-icon) {
+        display: none !important;
+    }
+}

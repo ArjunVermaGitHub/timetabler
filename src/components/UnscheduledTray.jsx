@@ -20,7 +20,21 @@ export function UnscheduledTray({
 }) {
   const trayRef = useRef(null)
   const dragRef = useRef(null)
-  const [heightPx, setHeightPx] = useState(null)
+  // Size on the first render so the tray never paints at a default height and snaps
+  const [heightPx, setHeightPx] = useState(() => {
+    if (lessons.length === 0) return EMPTY_TRAY_PX
+    const rows = groups.filter((group) =>
+      lessons.some((lesson) =>
+        groupMode === 'teacher'
+          ? lesson.teacher === group
+          : lesson.classroom === group,
+      ),
+    ).length
+    return Math.min(
+      Math.round(window.innerHeight * MAX_TRAY_RATIO),
+      Math.max(MIN_TRAY_PX, CHROME_PX + Math.min(3, Math.max(1, rows)) * ROW_PX),
+    )
+  })
   const [dragging, setDragging] = useState(false)
   const wasEmptyRef = useRef(lessons.length === 0)
 
@@ -194,7 +208,8 @@ export function UnscheduledTray({
               <div>
                 <h2>Unscheduled tray</h2>
                 <p>
-                  {lessons.length} waiting · one row per{' '}
+                  {new Set(lessons.map((l) => l.syncGroupId || l.id)).size}{' '}
+                  waiting · one row per{' '}
                   {groupMode === 'teacher' ? 'teacher' : 'class'} · drag grip up
                   for more rows
                 </p>

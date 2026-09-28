@@ -1,0 +1,8 @@
+// Shared typography for shrunk / top floating labels (Input active state, Textarea)
+
+/* Match chatroom composer / message body size (Slabien 14px in .chatroom) */
+$form-floating-label-active-font-size: 14px;
+
+@mixin floating-label-active-size {
+  font-size: $form-floating-label-active-font-size;
+}

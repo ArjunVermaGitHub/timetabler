@@ -1,0 +1,330 @@
+// Shared tokens + mixins for text-like form controls.
+//
+// Use these mixins in <Input>, <Select>, <DateInput>, <TimePicker>, <Textarea>,
+// and any future field component so they share padding, height, font sizing,
+// focus state, placeholder treatment, autofill override, and floating-label
+// position/typography. Component-specific padding (e.g. extra right padding
+// for trailing icons / dropdown arrows) is layered on top of the base mixin.
+
+@use 'colors' as *;
+@use 'form-floating-label' as *;
+
+// Field surface dimensions
+$form-control-radius: 8px;
+
+// Base (≥ 481px and tall viewports). Mirrors the original <Input> styling
+// so the single source of truth is the value we already validated visually.
+$form-control-min-height: 60px;
+$form-control-padding-y-top: 26px;
+$form-control-padding-y-bottom: 10px;
+$form-control-padding-x: 16px;
+$form-control-font-size: 1rem;
+
+// Small breakpoint (≤ 480px width or ≤ 700px height)
+$form-control-min-height-sm: 52px;
+$form-control-padding-y-top-sm: 22px;
+$form-control-padding-y-bottom-sm: 8px;
+$form-control-padding-x-sm: 14px;
+$form-control-font-size-sm: 13px;
+
+// Tiny breakpoint (≤ 600px height — laptop fold / mobile landscape)
+$form-control-min-height-xs: 44px;
+$form-control-padding-y-top-xs: 18px;
+$form-control-padding-y-bottom-xs: 5px;
+$form-control-padding-x-xs: 12px;
+$form-control-font-size-xs: 12px;
+
+// Floating label typography
+$form-label-idle-font-size: 15px;
+$form-label-idle-color: #9ca3af;
+$form-label-idle-top: 26px;
+
+$form-label-active-top: 4px;
+$form-label-active-color: $accent;
+$form-label-active-font-weight: 600;
+
+// Horizontal label position — shared by every field component so labels sit
+// at the same x-offset whether the control is an Input, Select, DateInput,
+// TimePicker, or Textarea. Scales down at the same breakpoints as the field.
+$form-label-left: 24px;
+$form-label-left-sm: 20px;
+$form-label-left-xs: 18px;
+
+// Compact number fields (short values, no mic)
+$form-control-padding-x-number: 10px;
+$form-label-left-number: 10px;
+$form-control-min-height-number: 48px;
+$form-control-padding-y-top-number: 22px;
+$form-control-padding-y-bottom-number: 8px;
+
+@mixin form-control-field {
+  width: 100%;
+  min-width: 100%;
+  padding:
+    $form-control-padding-y-top
+    $form-control-padding-x
+    $form-control-padding-y-bottom
+    $form-control-padding-x;
+  border-radius: $form-control-radius;
+  font-size: $form-control-font-size;
+  font-family: 'Slabien', serif;
+  margin: 0;
+  box-sizing: border-box;
+  transition: border 0.2s, background 0.2s;
+  position: relative;
+  min-height: $form-control-min-height;
+  overflow: visible;
+  @include input-field;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:disabled {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--button-disabled-bg) !important;
+    color: var(--button-disabled-text);
+    -webkit-text-fill-color: var(--button-disabled-text);
+    cursor: not-allowed;
+    opacity: 1;
+    -webkit-box-shadow: 0 0 0 30px var(--button-disabled-bg) inset !important;
+  }
+
+  &::placeholder {
+    color: var(--input-placeholder, #9ca3af);
+    opacity: 1;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
+    -webkit-text-fill-color: var(--text-body) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:disabled:-webkit-autofill,
+  &:disabled:-webkit-autofill:hover,
+  &:disabled:-webkit-autofill:focus,
+  &:disabled:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--button-disabled-bg) inset !important;
+    -webkit-text-fill-color: var(--button-disabled-text) !important;
+  }
+}
+
+@mixin form-control-field-number {
+  padding:
+    $form-control-padding-y-top-number
+    $form-control-padding-x-number
+    $form-control-padding-y-bottom-number
+    $form-control-padding-x-number;
+  min-height: $form-control-min-height-number;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+@mixin form-control-field-number-responsive {
+  @media (max-width: 480px) {
+    padding:
+      18px
+      8px
+      6px
+      8px;
+    min-height: 44px;
+  }
+
+  @media (max-height: 700px) {
+    padding:
+      18px
+      8px
+      5px
+      8px;
+    min-height: 42px;
+  }
+
+  @media (max-height: 600px) {
+    padding:
+      16px
+      8px
+      4px
+      8px;
+    min-height: 40px;
+  }
+}
+
+@mixin form-control-field-responsive {
+  @media (max-width: 480px) {
+    padding:
+      $form-control-padding-y-top-sm
+      $form-control-padding-x-sm
+      $form-control-padding-y-bottom-sm
+      $form-control-padding-x-sm;
+    min-height: $form-control-min-height-sm;
+    font-size: $form-control-font-size-sm;
+  }
+
+  @media (max-height: 700px) {
+    padding:
+      $form-control-padding-y-top-sm
+      $form-control-padding-x-sm
+      $form-control-padding-y-bottom-sm
+      $form-control-padding-x-sm;
+    min-height: $form-control-min-height-sm;
+    font-size: $form-control-font-size-sm;
+  }
+
+  @media (max-height: 600px) {
+    padding:
+      $form-control-padding-y-top-xs
+      $form-control-padding-x-xs
+      $form-control-padding-y-bottom-xs
+      $form-control-padding-x-xs;
+    min-height: $form-control-min-height-xs;
+    font-size: $form-control-font-size-xs;
+  }
+}
+
+@mixin form-required-mark {
+  color: color-mix(in srgb, var(--secondary) 35%, #9d174d);
+  font-family: system-ui, sans-serif;
+  font-size: 1.2em;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 0.12em;
+  vertical-align: -0.08em;
+}
+
+@mixin form-floating-label-idle {
+  position: absolute;
+  left: $form-label-left;
+  top: $form-label-idle-top;
+  font-size: $form-label-idle-font-size;
+  color: $form-label-idle-color;
+  font-family: 'Slabien', serif;
+  font-weight: 400;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background: transparent;
+  transform: translateY(0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 48px);
+  line-height: 1.2;
+}
+
+@mixin form-floating-label-active {
+  left: $form-label-left;
+  top: $form-label-active-top;
+  @include floating-label-active-size;
+  color: $form-label-active-color;
+  font-weight: $form-label-active-font-weight;
+  transform: translateY(0);
+  max-width: none;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: nowrap;
+}
+
+@mixin form-floating-label-responsive {
+  @media (max-width: 480px) {
+    left: $form-label-left-sm;
+    top: 22px;
+    font-size: 14px;
+  }
+
+  @media (max-height: 700px) {
+    left: $form-label-left-sm;
+    top: 20px;
+    font-size: 13px;
+  }
+
+  @media (max-height: 600px) {
+    left: $form-label-left-xs;
+    top: 18px;
+    font-size: 12px;
+  }
+}
+
+@mixin form-floating-label-active-responsive {
+  @media (max-width: 480px) {
+    left: $form-label-left-sm;
+    top: 3px;
+    font-size: clamp(10px, 1.5vw, 14px);
+  }
+
+  @media (max-height: 700px) {
+    left: $form-label-left-sm;
+    top: 2px;
+    font-size: 12px;
+  }
+
+  @media (max-height: 600px) {
+    left: $form-label-left-xs;
+    top: 1px;
+    font-size: 11px;
+  }
+}
+
+@mixin form-floating-label-number {
+  left: $form-label-left-number;
+
+  &.active {
+    left: $form-label-left-number;
+  }
+
+  @media (max-width: 480px) {
+    left: 8px;
+
+    &.active {
+      left: 8px;
+    }
+  }
+}
+
+// Always-active floating label.
+//
+// Used by <Select>, <DateInput>, <TimePicker>, <Textarea> — fields whose label
+// never sits inside the input. Position + typography + responsive behavior
+// match <Input>'s raised label so a column of mixed field types lines up on
+// the left edge at every breakpoint.
+@mixin form-floating-label-permanent {
+  position: absolute;
+  left: $form-label-left;
+  top: $form-label-active-top;
+  @include floating-label-active-size;
+  color: $form-label-active-color;
+  font-family: 'Slabien', serif;
+  font-weight: $form-label-active-font-weight;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background: transparent;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: none;
+  line-height: 1.2;
+
+  @media (max-width: 480px) {
+    left: $form-label-left-sm;
+    top: 3px;
+    font-size: clamp(10px, 1.5vw, 14px);
+  }
+
+  @media (max-height: 700px) {
+    left: $form-label-left-sm;
+    top: 2px;
+    font-size: 12px;
+  }
+
+  @media (max-height: 600px) {
+    left: $form-label-left-xs;
+    top: 1px;
+    font-size: 11px;
+  }
+}

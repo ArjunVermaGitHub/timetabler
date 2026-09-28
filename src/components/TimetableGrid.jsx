@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { DAYS, WEEKEND_DAYS, slotsForClassroom } from '../data/schedule'
 import {
-  evaluatePlacement,
-  lessonsAt,
-  occupiedSlots,
-} from '../data/placement'
+  DAYS,
+  WEEKEND_DAYS,
+  classroomDayEnd,
+  fixedSessionAt,
+  slotsForClassroom,
+} from '../data/schedule'
+import { evaluatePlacement, lessonsAt, occupiedSlots } from '../data/placement'
 import { LessonCard, LESSON_MIME, CoteachCard } from './LessonCard'
 import { SlotHead } from './SlotHead'
 
@@ -62,7 +64,10 @@ export function TimetableGrid({
     if (
       result.reason === 'teacher' ||
       result.reason === 'subject' ||
-      result.reason === 'pe'
+      result.reason === 'pre-lunch' ||
+      result.reason === 'end-of-day' ||
+      result.reason === 'late' ||
+      result.reason === 'hours'
     ) {
       return {
         classroom: hoverTarget.classroom,
@@ -96,9 +101,7 @@ export function TimetableGrid({
           return (
             <section
               key={classroom}
-              className={
-                dimmed ? 'class-panel is-drag-dimmed' : 'class-panel'
-              }
+              className={dimmed ? 'class-panel is-drag-dimmed' : 'class-panel'}
               data-classroom={classroom}
               aria-hidden={dimmed ? true : undefined}
               style={{ '--panel-accent': panelAccent() }}
@@ -285,26 +288,42 @@ function renderDaySlots({
   while (index < slots.length) {
     const slot = slots[index]
 
+    const session =
+      slot.kind === 'fixed' ? fixedSessionAt(classroom, day, slot.id) : null
+    if (session) {
+      cells.push(
+        <td
+          key={`${classroom}-${day}-${slot.id}`}
+          className="slot is-fixed"
+          title={`${session.parts
+            .map((p) => (p.teacher ? `${p.label} · ${p.teacher}` : p.label))
+            .join(' / ')} · ${slot.start}–${slot.end}`}
+        >
+          <div className="fixed-cell is-split">
+            {session.parts.map((p) => (
+              <span key={p.label} className="fixed-label">
+                {p.label}
+              </span>
+            ))}
+          </div>
+        </td>,
+      )
+      index += 1
+      continue
+    }
+
     if (slot.kind === 'break' || slot.kind === 'fixed') {
       cells.push(
         <td
           key={`${classroom}-${day}-${slot.id}`}
-          className={
-            slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'
-          }
+          className={slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'}
           title={`${slot.label} · ${slot.start}–${slot.end}${
             slot.kind === 'fixed' ? '' : ' · doubles cannot cross'
           }`}
         >
-          <div
-            className={
-              slot.kind === 'fixed' ? 'fixed-cell' : 'break-cell'
-            }
-          >
+          <div className={slot.kind === 'fixed' ? 'fixed-cell' : 'break-cell'}>
             <span
-              className={
-                slot.kind === 'fixed' ? 'fixed-label' : 'break-label'
-              }
+              className={slot.kind === 'fixed' ? 'fixed-label' : 'break-label'}
             >
               {slot.label}
             </span>
@@ -354,6 +373,7 @@ function renderDaySlots({
           {sameSubject ? (
             <CoteachCard
               lessons={starters.map((item) => item.lesson)}
+              showRoom={false}
               onDragStartLesson={onDragStartLesson}
               onDragEndLesson={onDragEndLesson}
             />
@@ -378,6 +398,7 @@ function renderDaySlots({
                   lesson={lesson}
                   variant="grid"
                   compact={isBundle}
+                  showRoom={false}
                   onDragStartLesson={onDragStartLesson}
                   onDragEndLesson={onDragEndLesson}
                 />
@@ -424,9 +445,15 @@ function renderDaySlots({
               ? ' · break for this class'
               : blockReason === 'span'
                 ? ' · double can’t fit here'
-                : blockReason === 'pe'
-                  ? ' · PE only before lunch'
-                  : ' · can’t place here'
+                : blockReason === 'pre-lunch'
+                  ? ' · only before lunch'
+                  : blockReason === 'end-of-day'
+                    ? ' · extra classes end the day'
+                    : blockReason === 'late'
+                      ? ' · juniors end at 2:30 (extras only)'
+                      : blockReason === 'hours'
+                        ? ` · no classes after ${classroomDayEnd(classroom)}`
+                        : ' · can’t place here'
       : ''
 
     cells.push(
@@ -471,7 +498,10 @@ function takenSlotReason(
     result.reason === 'teacher' ||
     result.reason === 'break' ||
     result.reason === 'span' ||
-    result.reason === 'pe'
+    result.reason === 'pre-lunch' ||
+    result.reason === 'end-of-day' ||
+    result.reason === 'late' ||
+    result.reason === 'hours'
   ) {
     return result.reason
   }

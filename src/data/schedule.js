@@ -2,26 +2,8 @@ export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 
 export const WEEKEND_DAYS = ['Sat']
 
-/**
- * Full RBS class list from the class-individual export
- * (Kopal / early years through 12). “Without Class” omitted.
- */
-export const CLASSROOMS = [
-  'Kopal',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8A',
-  '8B',
-  '9A',
-  '9B',
-  '10A',
-  '10B',
-  '11',
-  '12',
-]
+/** Class names in display order; replaced by the server catalog on sign-in. */
+export let CLASSROOMS = []
 
 export function classroomGrade(classroom) {
   const match = String(classroom).match(/^(\d+)/)
@@ -77,14 +59,10 @@ export function allowsConcurrentLessons(
   incomingLesson = null,
 ) {
   if (existingLesson && incomingLesson) {
+    // Parallel groups are explicit in the catalog; only mates share a cell
     const a = existingLesson.syncGroupId
     const b = incomingLesson.syncGroupId
-    if (a && b) return a === b
-    if (a || b) return false
-    if (classroomGrade(classroom) >= 11) {
-      // Commons alone — don't stack unrelated electives
-      return false
-    }
+    return Boolean(a && b && a === b)
   }
 
   if (existingSubject === incomingSubject) {
@@ -272,6 +250,105 @@ export const SATURDAY_SLOTS = [
   },
 ]
 
+/** Junior P-8: only end-of-day extras (LRC / remedial) run here. */
+export const LATE_SLOT_ID = 'wd_1430'
+
+export function isLateSlot(classroom, slotId) {
+  return slotId === LATE_SLOT_ID && isJuniorClassroom(classroom)
+}
+
+const lateOverflowCache = new WeakMap()
+
+/**
+ * Junior classes whose regular (non-extra) periods exceed their capacity
+ * before P-8 — only those may spill a regular lesson into P-8.
+ */
+export function lateOverflowClassrooms(lessons) {
+  const hit = lateOverflowCache.get(lessons)
+  if (hit) return hit
+  const load = new Map()
+  const seen = new Set()
+  for (const lesson of lessons) {
+    if (
+      lesson.timing === 'end-of-day' ||
+      !isJuniorClassroom(lesson.classroom)
+    ) {
+      continue
+    }
+    const unitId = lesson.syncGroupId
+      ? `${lesson.classroom}|${lesson.syncGroupId}`
+      : lesson.id
+    if (seen.has(unitId)) continue
+    seen.add(unitId)
+    load.set(lesson.classroom, (load.get(lesson.classroom) ?? 0) + lesson.span)
+  }
+  const out = new Set()
+  for (const [classroom, periods] of load) {
+    let capacity = 0
+    for (const day of [...DAYS, ...WEEKEND_DAYS]) {
+      for (const slot of slotsForClassroom(classroom, day)) {
+        if (
+          slot.kind === 'period' &&
+          slot.id !== LATE_SLOT_ID &&
+          isWithinClassroomHours(classroom, day, slot.id)
+        ) {
+          capacity += 1
+        }
+      }
+    }
+    if (periods > capacity) out.add(classroom)
+  }
+  lateOverflowCache.set(lessons, out)
+  return out
+}
+
+/**
+ * Junior extras sit in P-8; regular lessons stay out of it unless the
+ * class overflows.
+ */
+export function violatesLateSlot(lesson, slotIds, lessons) {
+  if (lesson.timing === 'end-of-day') {
+    return (
+      isJuniorClassroom(lesson.classroom) &&
+      isWithinClassroomHours(lesson.classroom, 'Mon', LATE_SLOT_ID) &&
+      slotIds[slotIds.length - 1] !== LATE_SLOT_ID
+    )
+  }
+  if (!slotIds.some((id) => isLateSlot(lesson.classroom, id))) return false
+  return !lateOverflowClassrooms(lessons).has(lesson.classroom)
+}
+
+/** Taught sessions inside locked (fixed) columns, split beside the fixed label. */
+export const FIXED_SESSIONS = [
+  {
+    classroom: '12',
+    day: 'Sat',
+    slotId: 'sa_0830',
+    parts: [
+      { label: 'Self Study' },
+      { label: 'Yoga', teacher: 'Anurag Tiwari' },
+    ],
+  },
+]
+
+export function fixedSessionAt(classroom, day, slotId) {
+  return (
+    FIXED_SESSIONS.find(
+      (s) => s.classroom === classroom && s.day === day && s.slotId === slotId,
+    ) ?? null
+  )
+}
+
+/** The part a teacher leads in a fixed column, with its classroom. */
+export function fixedDutyFor(teacher, day, slotId) {
+  for (const s of FIXED_SESSIONS) {
+    if (s.day !== day || s.slotId !== slotId) continue
+    const part = s.parts.find((p) => p.teacher === teacher)
+    if (part) return { classroom: s.classroom, label: part.label }
+  }
+  return null
+}
+
 export function baseSlotsForDay(day) {
   return day === 'Sat' ? SATURDAY_SLOTS : WEEKDAY_SLOTS
 }
@@ -345,6 +422,28 @@ export function nextPeriodId(slotId, classroom, day = 'Mon') {
 
 export function canPlaceDouble(startSlotId, classroom, day = 'Mon') {
   return nextPeriodId(startSlotId, classroom, day) !== null
+}
+
+/** Latest end time (HH:MM) a class may be taught until; absent = full day. */
+let CLASSROOM_DAY_END = {}
+
+/** Install the class list from the server catalog ({ name, dayEnd }[]). */
+export function setClassrooms(classrooms) {
+  CLASSROOMS = classrooms.map((c) => c.name)
+  CLASSROOM_DAY_END = Object.fromEntries(
+    classrooms.filter((c) => c.dayEnd).map((c) => [c.name, c.dayEnd]),
+  )
+}
+
+export function isWithinClassroomHours(classroom, day, slotId) {
+  const cutoff = CLASSROOM_DAY_END[classroom]
+  if (!cutoff) return true
+  const slot = baseSlotsForDay(day).find((item) => item.id === slotId)
+  return Boolean(slot && slot.end <= cutoff)
+}
+
+export function classroomDayEnd(classroom) {
+  return CLASSROOM_DAY_END[classroom] ?? null
 }
 
 /** True if this period sits before the class's lunch break that day. */

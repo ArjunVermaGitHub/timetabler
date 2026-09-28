@@ -1,0 +1,120 @@
+@use '../../styles/components/colors' as *;
+@use '../../styles/components/responsive-body-text' as rb;
+@use '../../styles/components/glassy-card' as glassy;
+
+// Common option styling for both checkboxes and radio buttons
+.optionContainer {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: rgba($secondary, 0.06);
+  border: 2px solid rgba($secondary, 0.24);
+  border-radius: 12px;
+  @include glassy.app-glass-bevel-stack;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: rgba($secondary, 0.4);
+  }
+  
+  &.selected {
+    border-color: $secondary;
+    background: rgba($secondary, 0.2);
+    
+    @include dark-mode {
+      background: rgba($secondary, 0.3);
+    }
+    
+    &:hover {
+      border-color: $secondary;
+      @include glassy.app-glass-bevel-stack;
+      
+      @include dark-mode {
+        background: rgba($secondary, 0.3);
+      }
+    }
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.optionInput {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  accent-color: $secondary;
+  cursor: pointer;
+  border: 2px solid rgba($secondary, 0.3);
+  border-radius: 3px;
+  flex-shrink: 0;
+  
+  &:checked {
+    border: 2px solid rgba($secondary, 0.3);
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.optionText {
+  color: var(--text-body);
+  @include rb.responsive-form-option-label;
+  font-weight: 500;
+  cursor: pointer;
+  flex: 1;
+  
+  .disabled & {
+    cursor: not-allowed;
+  }
+}
+
+// Checkbox-specific styling (extends common option container)
+.checkboxLabel {
+  @extend .optionContainer;
+  
+  // Reduce vertical padding on smaller screens for checkboxes
+  @media (max-width: 768px) {
+    padding: 0.5rem 1rem; // Reduce vertical padding while keeping horizontal
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0.375rem 1rem; // Further reduce vertical padding on very small screens
+  }
+  
+  &.checked {
+    @extend .selected;
+  }
+}
+
+.checkbox {
+  @extend .optionInput;
+}
+
+.checkboxText {
+  @extend .optionText;
+}
+
+// Prevent any hover effects on checkbox
+.checkboxLabel:hover .checkbox {
+  accent-color: $secondary;
+  opacity: 1;
+  filter: none;
+}
+
+// Force checkbox to ignore hover state completely
+.checkbox:not(:hover) {
+  accent-color: $secondary;
+}
+
+.checkbox:hover {
+  accent-color: $secondary;
+}

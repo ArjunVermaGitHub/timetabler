@@ -1,0 +1,238 @@
+@use '../../styles/components/colors' as *;
+@use '../../styles/components/form-control' as *;
+@use '../../styles/components/form-floating-label' as *;
+
+.selectContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  isolation: isolate;
+
+  &.dropdownOpen {
+    z-index: 99998;
+  }
+}
+
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.selectField {
+  @include form-control-field;
+  & {
+    cursor: pointer;
+    // Reserve space on the right for the dropdown arrow without shrinking field height
+    padding-right: 40px;
+  }
+  @include form-control-field-responsive;
+
+  &:focus {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+  }
+
+  &:disabled {
+    background: var(--button-disabled-bg);
+    color: var(--button-disabled-text);
+    cursor: not-allowed;
+  }
+}
+
+.actionButtons {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #666;
+  }
+}
+
+.dropdownArrow {
+  font-size: 12px;
+  color: var(--text-body);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  pointer-events: none;
+
+  &.open {
+    transform: rotate(180deg);
+    color: var(--accent);
+  }
+}
+
+.dropdown {
+  position: fixed;
+  background: var(--card-bg);
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 24px var(--shadow), 0 2px 8px var(--shadow);
+  max-height: 300px;
+  height: fit-content;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  z-index: 100000;
+  pointer-events: auto;
+}
+
+.dropdownList {
+  max-height: inherit;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--divider-secondary);
+    border-radius: 3px;
+
+    &:hover {
+      background: var(--accent);
+    }
+  }
+}
+
+.dropdownBelow {
+  top: 100%;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  margin-top: 0;
+}
+
+.dropdownAbove {
+  bottom: 100%;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: -2px;
+}
+
+.option {
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Slabien', serif;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin: 0;
+
+  &:hover {
+    background-color: rgba(64, 176, 192, 0.3);
+
+    @include dark-mode {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  &.selected {
+    background-color: var(--secondary-bg);
+
+    @include dark-mode {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &.highlighted {
+    background-color: rgba(64, 176, 192, 0.3);
+
+    @include dark-mode {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  &.clearOption {
+    color: var(--error);
+    font-weight: 600;
+    border-bottom: 1px solid var(--divider-secondary);
+
+    &:hover {
+      background-color: rgba(239, 83, 80, 0.1);
+    }
+  }
+}
+
+.dropdownAbove .option {
+  &:first-child {
+    border-radius: 0;
+  }
+}
+
+.noOptions {
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Slabien', serif;
+  color: var(--text-body);
+  opacity: 0.6;
+  text-align: center;
+  font-style: italic;
+}
+
+// Select's label always sits at the raised position (the field text doubles
+// as the placeholder when empty). Single shared mixin keeps left/top/font in
+// lockstep with <Input>'s active label so a stack of mixed fields lines up.
+.floatingLabel {
+  @include form-floating-label-permanent;
+  & {
+    z-index: 2;
+  }
+}
+
+.requiredMark {
+  @include form-required-mark;
+}
+
+// Inline / toolbar variant (e.g. table page-size selector). No label slot.
+.selectContainerCompact {
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 4.25rem;
+  max-width: 6.5rem;
+}
+
+.selectFieldCompact {
+  min-height: 38px;
+  padding: 8px 32px 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &::placeholder {
+    font-size: 13px;
+  }
+}
+
+.selectContainerCompact .actionButtons {
+  right: 10px;
+}

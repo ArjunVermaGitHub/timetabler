@@ -1,0 +1,243 @@
+/* Chatbot FAB uses var(--secondary) pink circle — match that for idle mic */
+$record-red: #ef4444;
+
+.root {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.cancel {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--divider-secondary, rgba(0, 0, 0, 0.15));
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--card-bg, #fff);
+  color: var(--text-body);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+
+  &:hover {
+    transform: scale(1.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent, #3b82f6);
+    outline-offset: 2px;
+  }
+}
+
+// Inline form-field variant — sized to sit comfortably inside <Input> /
+// <Textarea> trailing-icon slots without crowding the field text.
+.rootCompact {
+  gap: 4px;
+
+  .cancel {
+    width: 22px;
+    height: 22px;
+
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+  }
+
+  .waveform {
+    height: 18px;
+    min-width: 24px;
+    gap: 1px;
+  }
+
+  .waveBar {
+    width: 2px;
+  }
+
+  .circle {
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .recordingDot {
+    top: 4px;
+    right: 4px;
+    width: 5px;
+    height: 5px;
+  }
+}
+
+.waveform {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+  height: 26px;
+  min-width: 40px;
+  padding: 0 2px;
+}
+
+.waveBar {
+  width: 3px;
+  min-height: 2px;
+  border-radius: 2px;
+  background: var(--secondary, #ec4899);
+  transform-origin: bottom;
+  transition: height 0.06s ease-out;
+  opacity: 0.85;
+
+  .listening & {
+    background: rgba(255, 255, 255, 0.95);
+    opacity: 1;
+  }
+}
+
+.circle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--secondary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  &:hover:not(:disabled) {
+    transform: scale(1.06);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.listening .circle {
+  background: $record-red;
+  animation: recordPulse 1.5s ease-in-out infinite;
+}
+
+.transcribing .circle {
+  background: var(--button-disabled-bg, #d3d3d3);
+  color: var(--button-disabled-text, #888);
+  animation: none;
+  box-shadow: none;
+  cursor: wait;
+
+  &:hover:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.transcribingSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  animation: transcribeSpin 0.75s linear infinite;
+}
+
+.rootCompact .transcribingSpinner {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
+@keyframes transcribeSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.recordingDot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  animation: blinkDot 1s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes recordPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.88;
+  }
+}
+
+@keyframes blinkDot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.hasError .circle {
+  background: #b91c1c;
+}
+
+.fieldStatus {
+  margin: 0;
+  pointer-events: none;
+  opacity: 0.8;
+  font-style: italic;
+}
