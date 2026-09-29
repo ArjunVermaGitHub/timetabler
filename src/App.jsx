@@ -10,11 +10,12 @@ import { TEACHERS, UNSCHEDULED_LESSONS } from './data/mockLessons'
 import { evaluatePlacement } from './data/placement'
 import { autoSchedule } from './data/scheduler'
 import { CLASSROOMS, classroomDayEnd } from './data/schedule'
+import { loadModule, preloadLazyModules } from './lazyModules'
 import { navigate, usePath } from './router'
 
 // Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open
 const ManagePanel = lazy(() =>
-  import('./components/ManagePanel').then((m) => ({ default: m.ManagePanel })),
+  loadModule('manage').then((m) => ({ default: m.ManagePanel })),
 )
 
 const MANAGE_TABS = ['teachers', 'classes', 'links']
@@ -43,6 +44,8 @@ function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
   const path = usePath()
   const route = routeFor(path)
   const { view } = route
+
+  useEffect(preloadLazyModules, [])
   const [selectedClassrooms, setSelectedClassrooms] = useState(() => [
     ...CLASSROOMS,
   ])
@@ -199,8 +202,7 @@ function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
   async function handleDownloadPdf() {
     setExportingPdf(true)
     try {
-      // pdfmake is heavy; only fetch it when someone actually downloads
-      const { downloadTimetablePdf } = await import('./data/timetablePdf')
+      const { downloadTimetablePdf } = await loadModule('pdf')
       downloadTimetablePdf({
         mode: view === 'teachers' ? 'teacher' : 'classroom',
         groups: view === 'teachers' ? visibleTeachers : visibleClassrooms,
