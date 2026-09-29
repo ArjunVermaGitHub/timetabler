@@ -5,12 +5,6 @@ async function connect() {
   const client = await new MongoClient(process.env.MONGODB_URI).connect()
   const db = client.db(process.env.MONGODB_DB || 'timetabler')
   await Promise.all([
-    db.collection('authTokens').createIndex({ hash: 1 }, { unique: true }),
-    db.collection('authTokens').createIndex({ email: 1, purpose: 1 }),
-    db
-      .collection('authTokens')
-      .createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }),
-    db.collection('users').createIndex({ email: 1 }, { unique: true }),
     db
       .collection('teachers')
       .createIndex({ nameKey: 1 }, { unique: true }),

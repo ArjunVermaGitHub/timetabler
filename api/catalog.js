@@ -5,7 +5,7 @@ import { handle } from './_lib/http.js'
 
 export default handle({
   async GET(req) {
-    requireUser(req)
+    await requireUser(req)
     return loadCatalog(await getDb())
   },
 })

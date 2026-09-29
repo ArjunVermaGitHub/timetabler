@@ -19,7 +19,7 @@ async function guardDuplicate(error) {
 
 export default handle({
   async GET(req) {
-    requireUser(req)
+    await requireUser(req)
     const db = await getDb()
     const teachers = await db
       .collection('teachers')
@@ -30,7 +30,7 @@ export default handle({
   },
 
   async POST(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const doc = { ...parseTeacher(await readJson(req)), createdAt: new Date() }
     const db = await getDb()
     const { insertedId } = await db
@@ -41,7 +41,7 @@ export default handle({
   },
 
   async PATCH(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const _id = toId(query(req).id)
     const db = await getDb()
     const doc = await db
@@ -57,7 +57,7 @@ export default handle({
   },
 
   async DELETE(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const id = query(req).id
     const _id = toId(id)
     const db = await getDb()

@@ -57,7 +57,7 @@ async function parseLink(db, body) {
 
 export default handle({
   async GET(req) {
-    requireUser(req)
+    await requireUser(req)
     const db = await getDb()
     const links = await db
       .collection('links')
@@ -68,7 +68,7 @@ export default handle({
   },
 
   async POST(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const db = await getDb()
     const fields = await parseLink(db, await readJson(req))
     const [last] = await db
@@ -83,7 +83,7 @@ export default handle({
   },
 
   async PATCH(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const _id = toId(query(req).id)
     const db = await getDb()
     const fields = await parseLink(db, await readJson(req))
@@ -95,7 +95,7 @@ export default handle({
   },
 
   async DELETE(req) {
-    requireAdmin(req)
+    await requireAdmin(req)
     const _id = toId(query(req).id)
     const db = await getDb()
     await db.collection('links').deleteOne({ _id })

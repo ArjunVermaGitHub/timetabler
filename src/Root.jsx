@@ -1,30 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useAuth, useClerk } from '@clerk/react'
 import App from './App.jsx'
 import { api } from './api'
-import { LoginScreen } from './components/LoginScreen'
+import { BlockedScreen, LoginScreen } from './components/LoginScreen'
 import { applyCatalog } from './data/mockLessons'
 
-/** One-time token from an emailed link (?verify=… or ?reset=…), removed from the URL. */
-function takeLinkToken() {
-  const params = new URLSearchParams(window.location.search)
-  for (const purpose of ['verify', 'reset']) {
-    const token = params.get(purpose)
-    if (token) {
-      window.history.replaceState(null, '', window.location.pathname)
-      return { purpose, token }
-    }
-  }
-  return null
-}
-
 export function Root() {
+  const { isLoaded, isSignedIn, userId } = useAuth()
+  const { signOut: clerkSignOut } = useClerk()
   const [status, setStatus] = useState('loading')
   const [user, setUser] = useState(null)
+  const [blocked, setBlocked] = useState(null)
   const [catalogVersion, setCatalogVersion] = useState(0)
   const [error, setError] = useState(null)
-  const [link] = useState(takeLinkToken)
-  const [loginNotice, setLoginNotice] = useState(null)
-  const booted = useRef(false)
 
   const loadCatalog = useCallback(async () => {
     try {
@@ -32,63 +20,45 @@ export function Root() {
       setCatalogVersion((v) => v + 1)
       setStatus('ready')
     } catch (err) {
-      if (err.status === 401) {
-        setUser(null)
-        setStatus('signed-out')
-      } else {
-        setError(err.message)
-        setStatus('error')
-      }
+      setError(err.message)
+      setStatus('error')
     }
   }, [])
 
-  const signedIn = useCallback(
-    (me) => {
-      setUser(me)
-      setStatus('loading')
-      loadCatalog()
-    },
-    [loadCatalog],
-  )
-
   useEffect(() => {
-    // Link tokens are single-use: never replay this under StrictMode
-    if (booted.current) return
-    booted.current = true
-    if (link?.purpose === 'verify') {
-      api('/api/auth/verify-email', {
-        method: 'POST',
-        body: { token: link.token },
-      })
-        .then(({ user: me }) => signedIn(me))
-        .catch((err) => {
-          setLoginNotice({ kind: 'error', text: err.message })
-          setStatus('signed-out')
-        })
-      return
-    }
-    if (link?.purpose === 'reset') {
+    if (!isLoaded) return
+    if (!isSignedIn) {
+      setUser(null)
+      setBlocked(null)
       setStatus('signed-out')
       return
     }
+    let cancelled = false
+    setStatus('loading')
     api('/api/auth/me')
-      .then(({ user: me }) => {
-        if (!me) return setStatus('signed-out')
-        signedIn(me)
+      .then(({ user: me, blocked: denied }) => {
+        if (cancelled) return
+        if (!me) {
+          setBlocked(denied ?? { email: null, domain: 'school' })
+          setStatus('blocked')
+          return
+        }
+        setUser(me)
+        loadCatalog()
       })
       .catch((err) => {
+        if (cancelled) return
         setError(err.message)
         setStatus('error')
       })
-  }, [link, signedIn])
+    return () => {
+      cancelled = true
+    }
+  }, [isLoaded, isSignedIn, userId, loadCatalog])
 
-  const signOut = useCallback(async () => {
-    await api('/api/auth/logout', { method: 'POST' }).catch(() => {})
-    setUser(null)
-    setStatus('signed-out')
-  }, [])
+  const signOut = useCallback(() => clerkSignOut(), [clerkSignOut])
 
-  if (status === 'loading') {
+  if (!isLoaded || status === 'loading') {
     return <div className="boot-screen">Loading timetable…</div>
   }
   if (status === 'error') {
@@ -105,14 +75,11 @@ export function Root() {
       </div>
     )
   }
+  if (status === 'blocked') {
+    return <BlockedScreen email={blocked.email} domain={blocked.domain} />
+  }
   if (status === 'signed-out' || !user) {
-    return (
-      <LoginScreen
-        resetToken={link?.purpose === 'reset' ? link.token : null}
-        notice={loginNotice}
-        onSignedIn={signedIn}
-      />
-    )
+    return <LoginScreen />
   }
   return (
     <App

@@ -1348,24 +1348,8 @@ button {
   line-height: 1.45;
 }
 
-.login-dev {
-  margin: 0;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--break-fill) 30%, transparent);
-  font-size: 13px;
-}
 
-.login-dev a {
-  color: inherit;
-  font-weight: 700;
-}
 
-.login-links {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
 
 .field {
   display: grid;
@@ -1437,22 +1421,6 @@ button {
 [data-theme='dark'] .small-button.is-danger {
   color: #ff8a80;
 }
-
-.link-button {
-  font: inherit;
-  font-size: 13px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--banner);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-[data-theme='dark'] .link-button {
-  color: var(--tray-muted);
-}
-
 .form-error {
   margin: 0;
   padding: 8px 10px;
