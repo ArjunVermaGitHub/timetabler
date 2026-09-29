@@ -11,6 +11,7 @@ import { evaluatePlacement } from './data/placement'
 import { autoSchedule } from './data/scheduler'
 import { CLASSROOMS, classroomDayEnd } from './data/schedule'
 import { loadModule, preloadLazyModules } from './lazyModules'
+import { knownPlacements, useScheduleSync } from './useScheduleSync'
 import { navigate, usePath } from './router'
 
 // Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open
@@ -40,7 +41,7 @@ function readStoredTheme() {
   }
 }
 
-function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
+function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }) {
   const path = usePath()
   const route = routeFor(path)
   const { view } = route
@@ -51,10 +52,19 @@ function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
   ])
   const [selectedTeachers, setSelectedTeachers] = useState(() => [...TEACHERS])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
-  const [placements, setPlacements] = useState({})
+  const [placements, setPlacements] = useState(() =>
+    knownPlacements(savedSchedule?.placements),
+  )
   const [dragLessonId, setDragLessonId] = useState(null)
   const [placementError, setPlacementError] = useState(null)
   const [scheduleNote, setScheduleNote] = useState(null)
+  const saveStatus = useScheduleSync({
+    placements,
+    setPlacements,
+    saved: savedSchedule,
+    enabled: Boolean(user?.admin),
+    onConflict: setPlacementError,
+  })
 
   useEffect(() => {
     if (route.path !== path) navigate(route.path, { replace: true })
@@ -328,6 +338,7 @@ function App({ user, catalogVersion, onCatalogChange, onSignOut }) {
     <div className="app">
       <HeaderBar
         scheduledCount={Object.keys(placements).length}
+        saveStatus={user?.admin ? saveStatus : null}
         onAutoSchedule={handleAutoSchedule}
         onClearSchedule={handleClearSchedule}
         onDownloadPdf={handleDownloadPdf}

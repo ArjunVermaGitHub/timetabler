@@ -1,7 +1,15 @@
 import { useEffect, useRef } from 'react'
 
+const SAVE_LABELS = {
+  pending: 'Saving…',
+  saving: 'Saving…',
+  saved: 'Saved',
+  error: 'Not saved, retrying…',
+}
+
 export function HeaderBar({
   scheduledCount = 0,
+  saveStatus = null,
   onAutoSchedule,
   onClearSchedule,
   onDownloadPdf,
@@ -58,6 +66,11 @@ export function HeaderBar({
         </button>
         {manageMode ? null : (
           <>
+            {saveStatus ? (
+              <span className={`save-status is-${saveStatus}`} role="status">
+                {SAVE_LABELS[saveStatus]}
+              </span>
+            ) : null}
             <button
               type="button"
               className="clear-schedule"

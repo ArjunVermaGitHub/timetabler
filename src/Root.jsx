@@ -12,11 +12,17 @@ export function Root() {
   const [user, setUser] = useState(null)
   const [blocked, setBlocked] = useState(null)
   const [catalogVersion, setCatalogVersion] = useState(0)
+  const [savedSchedule, setSavedSchedule] = useState(null)
   const [error, setError] = useState(null)
 
-  const loadCatalog = useCallback(async () => {
+  const loadCatalog = useCallback(async ({ withSchedule = false } = {}) => {
     try {
-      applyCatalog(await api('/api/catalog'))
+      const [catalog, schedule] = await Promise.all([
+        api('/api/catalog'),
+        withSchedule ? api('/api/schedule') : null,
+      ])
+      applyCatalog(catalog)
+      if (schedule) setSavedSchedule(schedule)
       setCatalogVersion((v) => v + 1)
       setStatus('ready')
     } catch (err) {
@@ -44,7 +50,7 @@ export function Root() {
           return
         }
         setUser(me)
-        loadCatalog()
+        loadCatalog({ withSchedule: true })
       })
       .catch((err) => {
         if (cancelled) return
@@ -57,6 +63,7 @@ export function Root() {
   }, [isLoaded, isSignedIn, userId, loadCatalog])
 
   const signOut = useCallback(() => clerkSignOut(), [clerkSignOut])
+  const reloadCatalog = useCallback(() => loadCatalog(), [loadCatalog])
 
   if (!isLoaded || status === 'loading') {
     return <div className="boot-screen">Loading timetable…</div>
@@ -85,7 +92,8 @@ export function Root() {
     <App
       user={user}
       catalogVersion={catalogVersion}
-      onCatalogChange={loadCatalog}
+      savedSchedule={savedSchedule}
+      onCatalogChange={reloadCatalog}
       onSignOut={signOut}
     />
   )

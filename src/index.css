@@ -1430,6 +1430,18 @@ button {
   font-size: 13px;
 }
 
+.save-status {
+  font-size: 12px;
+  color: var(--banner-ink);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.save-status.is-error {
+  color: #ffb4a8;
+  opacity: 1;
+}
+
 .header-user {
   display: inline-flex;
   align-items: center;
