@@ -658,6 +658,7 @@ function reserveTrailingFree(lessons, rotation = 0) {
   const lateKept = (classroom) =>
     !overflow.has(classroom) && isLateSlot(classroom, LATE_SLOT_ID)
   const load = new Map()
+  const doubles = new Map()
   const seen = new Set()
   for (const lesson of lessons) {
     load.set(lesson.classroom, load.get(lesson.classroom) ?? 0)
@@ -668,6 +669,9 @@ function reserveTrailingFree(lessons, rotation = 0) {
     if (seen.has(unitId)) continue
     seen.add(unitId)
     load.set(lesson.classroom, load.get(lesson.classroom) + lesson.span)
+    if (lesson.span === 2) {
+      doubles.set(lesson.classroom, (doubles.get(lesson.classroom) ?? 0) + 1)
+    }
   }
 
   const reserved = new Set()
@@ -680,10 +684,15 @@ function reserveTrailingFree(lessons, rotation = 0) {
       ),
     }))
     let spare = remaining.reduce((sum, d) => sum + d.ids.length, 0) - periods
+    // A double needs two periods in one day: trimming must leave enough such days
+    const doublesNeeded = doubles.get(classroom) ?? 0
+    const canTrim = (d) =>
+      d.ids.length !== 2 ||
+      remaining.filter((r) => r.ids.length >= 2).length > doublesNeeded
     // Saturday goes first (a free Saturday is the tail of the week)
     for (const d of remaining) {
       if (!WEEKEND_DAYS.includes(d.day)) continue
-      while (spare > 0 && d.ids.length > 0) {
+      while (spare > 0 && d.ids.length > 0 && canTrim(d)) {
         reserved.add(`${classroom}|${d.day}|${d.ids.pop()}`)
         spare -= 1
       }
@@ -693,7 +702,7 @@ function reserveTrailingFree(lessons, rotation = 0) {
       // Longest remaining day gives up its last period; ties rotate
       const order = remaining
         .map((d, i) => ({ d, i }))
-        .filter(({ d }) => d.ids.length > 0)
+        .filter(({ d }) => d.ids.length > 0 && canTrim(d))
         .sort(
           (a, b) =>
             b.d.ids.length - a.d.ids.length ||
