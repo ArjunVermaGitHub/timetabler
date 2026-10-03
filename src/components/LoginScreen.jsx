@@ -21,8 +21,13 @@ export const CLERK_LOCALIZATION = {
       subtitle: 'Use your school email',
       subtitleCombined: 'Use your school email',
     },
+    emailCode: { subtitle: 'to continue to the RBS timetable' },
+    emailCodeMfa: { subtitle: 'to continue to the RBS timetable' },
+    emailLink: { subtitle: 'to continue to the RBS timetable' },
+    emailLinkMfa: { subtitle: 'to continue to the RBS timetable' },
   },
   signUp: {
+    emailLink: { subtitle: 'to continue to the RBS timetable' },
     start: {
       title: 'Create your timetable account',
       titleCombined: 'Create your timetable account',

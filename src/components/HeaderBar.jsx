@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useClerk } from '@clerk/react'
 
 const SAVE_LABELS = {
   pending: 'Saving…',
@@ -22,6 +23,7 @@ export function HeaderBar({
   manageMode = false,
 }) {
   const ref = useRef(null)
+  const { openUserProfile } = useClerk()
 
   // Publish the (wrapping) header height so fixed overlays can sit just below it
   useEffect(() => {
@@ -49,6 +51,16 @@ export function HeaderBar({
             {user.email.split('@')[0]}
             {user.admin ? <span className="header-role">admin</span> : null}
           </span>
+        ) : null}
+        {user ? (
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() => openUserProfile()}
+            title="Set or change your password"
+          >
+            Account
+          </button>
         ) : null}
         {onSignOut ? (
           <button type="button" className="theme-toggle" onClick={onSignOut}>
