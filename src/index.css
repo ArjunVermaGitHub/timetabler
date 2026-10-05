@@ -1259,38 +1259,25 @@ button {
 }
 
 .lesson-stack.is-elective {
-  --batch-base: color-mix(in srgb, var(--panel-fill) 70%, var(--panel-accent) 30%);
-  --surface: var(--batch-base);
+  --batch-hue: var(--panel-accent);
+  --surface: color-mix(in srgb, var(--panel-fill) 62%, var(--batch-hue));
   gap: 3px;
   padding: 4px;
   background: var(--surface);
-  /* Same hairline bevel as the empty slots it sits among */
   border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--surface), black 10%);
+  border: 1.5px solid color-mix(in srgb, var(--batch-hue) 80%, black);
   box-shadow:
     inset 0.55px 0.55px 0 color-mix(in srgb, black 10%, transparent),
     inset -0.55px -0.55px 0 color-mix(in srgb, white 32%, transparent);
 }
 
-/* Neighbouring batches alternate light and dark so each reads as its own group */
-.lesson-stack.is-elective[data-shade='0'] {
-  --surface: color-mix(in srgb, var(--batch-base), white 22%);
-}
-.lesson-stack.is-elective[data-shade='1'] {
-  --surface: color-mix(in srgb, var(--batch-base), black 14%);
-}
-.lesson-stack.is-elective[data-shade='2'] {
-  --surface: color-mix(in srgb, var(--batch-base), white 40%);
-}
-.lesson-stack.is-elective[data-shade='3'] {
-  --surface: color-mix(in srgb, var(--batch-base), black 26%);
-}
-.lesson-stack.is-elective[data-shade='4'] {
-  --surface: var(--batch-base);
-}
-.lesson-stack.is-elective[data-shade='5'] {
-  --surface: color-mix(in srgb, var(--batch-base), black 38%);
-}
+/* Muted hues, alternating cool and warm, so neighbouring batches never blur together */
+.lesson-stack.is-elective[data-shade='0'] { --batch-hue: #4f6d9a; }
+.lesson-stack.is-elective[data-shade='1'] { --batch-hue: #b08a3e; }
+.lesson-stack.is-elective[data-shade='2'] { --batch-hue: #3f8f8a; }
+.lesson-stack.is-elective[data-shade='3'] { --batch-hue: #8a5a8c; }
+.lesson-stack.is-elective[data-shade='4'] { --batch-hue: #6b8f5a; }
+.lesson-stack.is-elective[data-shade='5'] { --batch-hue: #a0564a; }
 
 /* A dark rim keeps each card distinct on any background, light or tinted */
 .lesson-stack.is-elective > .lesson-card {
@@ -1303,7 +1290,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 70%, var(--panel-accent));
+  color: color-mix(in srgb, var(--ink) 75%, var(--batch-hue, var(--panel-accent)));
   padding: 0 2px 2px;
   line-height: 1.2;
   white-space: nowrap;

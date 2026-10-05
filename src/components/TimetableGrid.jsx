@@ -559,9 +559,9 @@ function panelAccent() {
 const BATCH_SHADE_COUNT = 6
 
 /**
- * Each batch (lessons sharing a clock cell) gets a grey shade that no other
+ * Each batch (lessons sharing a clock cell) gets a tint that no other
  * batch in the same class and day uses; a batch spanning several classes
- * keeps one shade in all of them.
+ * keeps one tint in all of them.
  */
 function buildBatchShades(lessons, placements) {
   const occurrences = new Map()
