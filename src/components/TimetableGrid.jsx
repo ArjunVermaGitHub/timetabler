@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   DAYS,
   WEEKEND_DAYS,
-  alignToColumns,
+  buildTimeGrid,
   classroomDayEnd,
   fixedSessionAt,
   slotsForClassroom,
 } from '../data/schedule'
 import { evaluatePlacement, lessonsAt, occupiedSlots } from '../data/placement'
 import { LessonCard, LESSON_MIME, CoteachCard } from './LessonCard'
-import { SlotHead } from './SlotHead'
+import { SlotHead, TimeColumns } from './SlotHead'
 
 export function TimetableGrid({
   classrooms,
@@ -101,7 +101,7 @@ export function TimetableGrid({
         {classrooms.map((classroom) => {
           const weekdaySlots = slotsForClassroom(classroom, 'Mon')
           const saturdaySlots = slotsForClassroom(classroom, 'Sat')
-          const saturdayCols = alignToColumns(weekdaySlots, saturdaySlots)
+          const timeGrid = buildTimeGrid(weekdaySlots, saturdaySlots)
           const dimmed =
             Boolean(dragLesson) && dragLesson.classroom !== classroom
 
@@ -118,13 +118,18 @@ export function TimetableGrid({
               </aside>
               <div className="class-panel-body">
                 <table className="timetable">
+                  <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />
                   <thead>
                     <tr>
                       <th className="day-col">
                         <span className="day-head">Day</span>
                       </th>
-                      {weekdaySlots.map((slot) => (
-                        <SlotHead key={slot.id} slot={slot} />
+                      {weekdaySlots.map((slot, i) => (
+                        <SlotHead
+                          key={slot.id}
+                          slot={slot}
+                          colSpan={timeGrid.columnSpans[i]}
+                        />
                       ))}
                     </tr>
                   </thead>
@@ -135,6 +140,7 @@ export function TimetableGrid({
                         classroom={classroom}
                         day={day}
                         slots={weekdaySlots}
+                        colSpans={timeGrid.columnSpans}
                         lessons={lessons}
                         placements={placements}
                         dragLesson={dragLesson}
@@ -149,23 +155,30 @@ export function TimetableGrid({
                   </tbody>
                   <tbody className="is-saturday">
                     <tr className="saturday-gap" aria-hidden="true">
-                      <td colSpan={weekdaySlots.length + 1} />
+                      <td colSpan={timeGrid.cells.length + 1} />
                     </tr>
                     <tr className="saturday-head">
                       <th className="day-col">
                         <span className="day-head">Day</span>
                       </th>
+                      {timeGrid.lead > 0 ? (
+                        <th
+                          className="slot-void"
+                          colSpan={timeGrid.lead}
+                          aria-hidden="true"
+                        />
+                      ) : null}
                       {saturdaySlots.map((slot, i) => (
                         <SlotHead
                           key={slot.id}
                           slot={slot}
-                          colSpan={saturdayCols.spans[i]}
+                          colSpan={timeGrid.slotSpans[i]}
                         />
                       ))}
-                      {saturdayCols.trailing > 0 ? (
+                      {timeGrid.trailing > 0 ? (
                         <th
                           className="slot-void"
-                          colSpan={saturdayCols.trailing}
+                          colSpan={timeGrid.trailing}
                           aria-hidden="true"
                         />
                       ) : null}
@@ -176,8 +189,9 @@ export function TimetableGrid({
                         classroom={classroom}
                         day={day}
                         slots={saturdaySlots}
-                        colSpans={saturdayCols.spans}
-                        trailing={saturdayCols.trailing}
+                        colSpans={timeGrid.slotSpans}
+                        lead={timeGrid.lead}
+                        trailing={timeGrid.trailing}
                         lessons={lessons}
                         placements={placements}
                         dragLesson={dragLesson}
@@ -205,6 +219,7 @@ function DayRow({
   day,
   slots,
   colSpans,
+  lead = 0,
   trailing = 0,
   lessons,
   placements,
@@ -280,6 +295,9 @@ function DayRow({
       <th className="day-col">
         <span className="day-pill">{day}</span>
       </th>
+      {lead > 0 ? (
+        <td className="slot is-void" colSpan={lead} aria-hidden="true" />
+      ) : null}
       {renderDaySlots({
         classroom,
         day,
@@ -319,7 +337,8 @@ function renderDaySlots({
   const columnsFor = (from, count = 1) => {
     if (!colSpans) return count
     let total = 0
-    for (let i = from; i < from + count && i < colSpans.length; i += 1) total += colSpans[i]
+    for (let i = from; i < from + count && i < colSpans.length; i += 1)
+      total += colSpans[i]
     return total
   }
 
@@ -428,7 +447,9 @@ function renderDaySlots({
               }
               data-shade={
                 isBundle
-                  ? (batchShades.get(batchKind(starters.map((item) => item.lesson))) ?? 0)
+                  ? (batchShades.get(
+                      batchKind(starters.map((item) => item.lesson)),
+                    ) ?? 0)
                   : undefined
               }
             >
@@ -591,7 +612,9 @@ const BATCH_SHADE_COUNT = 8
 function batchKind(cellLessons) {
   const stream = cellLessons.find((lesson) => lesson.stream)?.stream
   if (stream) return stream
-  return [...new Set(cellLessons.map((lesson) => lesson.subject))].sort().join('/')
+  return [...new Set(cellLessons.map((lesson) => lesson.subject))]
+    .sort()
+    .join('/')
 }
 
 /**
@@ -635,7 +658,8 @@ function buildBatchShades(lessons, placements) {
   const shadeOf = new Map()
   const saturation = (kind) => {
     const used = new Set()
-    for (const n of neighbours.get(kind)) if (shadeOf.has(n)) used.add(shadeOf.get(n))
+    for (const n of neighbours.get(kind))
+      if (shadeOf.has(n)) used.add(shadeOf.get(n))
     return used.size
   }
   const pending = new Set(kinds)

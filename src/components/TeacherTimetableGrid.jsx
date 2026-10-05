@@ -2,7 +2,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import {
   DAYS,
   WEEKEND_DAYS,
-  alignToColumns,
+  buildTimeGrid,
   classroomDayEnd,
   fixedDutyFor,
   slotsForTeacherDay,
@@ -13,7 +13,7 @@ import {
   occupiedSlots,
 } from '../data/placement'
 import { LessonCard, LESSON_MIME } from './LessonCard'
-import { SlotHead } from './SlotHead'
+import { SlotHead, TimeColumns } from './SlotHead'
 
 /**
  * Same days/slots as the class view, but each panel is a teacher.
@@ -32,8 +32,8 @@ export function TeacherTimetableGrid({
 
   const weekdaySlots = useMemo(() => slotsForTeacherDay('Mon'), [])
   const saturdaySlots = useMemo(() => slotsForTeacherDay('Sat'), [])
-  const saturdayCols = useMemo(
-    () => alignToColumns(weekdaySlots, saturdaySlots),
+  const timeGrid = useMemo(
+    () => buildTimeGrid(weekdaySlots, saturdaySlots),
     [weekdaySlots, saturdaySlots],
   )
 
@@ -116,7 +116,7 @@ export function TeacherTimetableGrid({
               teacher={teacher}
               weekdaySlots={weekdaySlots}
               saturdaySlots={saturdaySlots}
-              saturdayCols={saturdayCols}
+              timeGrid={timeGrid}
               lessons={lessons}
               placements={placements}
               dragLesson={mine ? dragLesson : null}
@@ -137,7 +137,7 @@ const TeacherPanel = memo(function TeacherPanel({
   teacher,
   weekdaySlots,
   saturdaySlots,
-  saturdayCols,
+  timeGrid,
   lessons,
   placements,
   dragLesson,
@@ -158,13 +158,18 @@ const TeacherPanel = memo(function TeacherPanel({
       </aside>
       <div className="class-panel-body">
         <table className="timetable">
+          <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />
           <thead>
             <tr>
               <th className="day-col">
                 <span className="day-head">Day</span>
               </th>
-              {weekdaySlots.map((slot) => (
-                <SlotHead key={slot.id} slot={slot} />
+              {weekdaySlots.map((slot, i) => (
+                <SlotHead
+                  key={slot.id}
+                  slot={slot}
+                  colSpan={timeGrid.columnSpans[i]}
+                />
               ))}
             </tr>
           </thead>
@@ -175,6 +180,7 @@ const TeacherPanel = memo(function TeacherPanel({
                 teacher={teacher}
                 day={day}
                 slots={weekdaySlots}
+                colSpans={timeGrid.columnSpans}
                 lessons={lessons}
                 placements={placements}
                 dragLesson={dragLesson}
@@ -188,19 +194,30 @@ const TeacherPanel = memo(function TeacherPanel({
           </tbody>
           <tbody className="is-saturday">
             <tr className="saturday-gap" aria-hidden="true">
-              <td colSpan={weekdaySlots.length + 1} />
+              <td colSpan={timeGrid.cells.length + 1} />
             </tr>
             <tr className="saturday-head">
               <th className="day-col">
                 <span className="day-head">Day</span>
               </th>
-              {saturdaySlots.map((slot, i) => (
-                <SlotHead key={slot.id} slot={slot} colSpan={saturdayCols.spans[i]} />
-              ))}
-              {saturdayCols.trailing > 0 ? (
+              {timeGrid.lead > 0 ? (
                 <th
                   className="slot-void"
-                  colSpan={saturdayCols.trailing}
+                  colSpan={timeGrid.lead}
+                  aria-hidden="true"
+                />
+              ) : null}
+              {saturdaySlots.map((slot, i) => (
+                <SlotHead
+                  key={slot.id}
+                  slot={slot}
+                  colSpan={timeGrid.slotSpans[i]}
+                />
+              ))}
+              {timeGrid.trailing > 0 ? (
+                <th
+                  className="slot-void"
+                  colSpan={timeGrid.trailing}
                   aria-hidden="true"
                 />
               ) : null}
@@ -211,8 +228,9 @@ const TeacherPanel = memo(function TeacherPanel({
                 teacher={teacher}
                 day={day}
                 slots={saturdaySlots}
-                colSpans={saturdayCols.spans}
-                trailing={saturdayCols.trailing}
+                colSpans={timeGrid.slotSpans}
+                lead={timeGrid.lead}
+                trailing={timeGrid.trailing}
                 lessons={lessons}
                 placements={placements}
                 dragLesson={dragLesson}
@@ -235,6 +253,7 @@ function DayRow({
   day,
   slots,
   colSpans,
+  lead = 0,
   trailing = 0,
   lessons,
   placements,
@@ -316,6 +335,9 @@ function DayRow({
       <th className="day-col">
         <span className="day-pill">{day}</span>
       </th>
+      {lead > 0 ? (
+        <td className="slot is-void" colSpan={lead} aria-hidden="true" />
+      ) : null}
       {renderDaySlots({
         teacher,
         day,
@@ -353,7 +375,8 @@ function renderDaySlots({
   const columnsFor = (from, count = 1) => {
     if (!colSpans) return count
     let total = 0
-    for (let i = from; i < from + count && i < colSpans.length; i += 1) total += colSpans[i]
+    for (let i = from; i < from + count && i < colSpans.length; i += 1)
+      total += colSpans[i]
     return total
   }
 

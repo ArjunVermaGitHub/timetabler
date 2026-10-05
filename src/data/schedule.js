@@ -359,34 +359,40 @@ function toMinutes(time) {
 }
 
 /**
- * How many of `columns` each of `slots` spans when drawn beneath them, so a
- * shorter day (Saturday) lines up under the weekday grid. A column belongs to
- * the slot holding its midpoint; columns before the first slot stretch it
- * leftward, and columns after the last slot are left blank (`trailing`).
+ * Lays a shorter day (Saturday) out under the weekday columns in proportion to
+ * time. Every start/end from either day becomes a cut, so each weekday column
+ * splits into pieces (`cells`, each a share of one column) and both days span
+ * whole pieces: weekday slots their own column's pieces, Saturday slots the
+ * pieces their times cover. `lead`/`trailing` are pieces outside Saturday.
  */
-export function alignToColumns(columns, slots) {
-  const spans = slots.map(() => 0)
-  let trailing = 0
-  const firstStart = toMinutes(slots[0].start)
-  const lastEnd = toMinutes(slots[slots.length - 1].end)
-  for (const column of columns) {
-    const mid = (toMinutes(column.start) + toMinutes(column.end)) / 2
-    if (mid >= lastEnd) {
-      trailing += 1
-      continue
-    }
-    const index =
-      mid < firstStart ? 0 : slots.findIndex((slot) => mid < toMinutes(slot.end))
-    spans[index] += 1
+export function buildTimeGrid(columns, slots) {
+  const dayStart = toMinutes(columns[0].start)
+  const dayEnd = toMinutes(columns[columns.length - 1].end)
+  const clip = (t) => Math.min(dayEnd, Math.max(dayStart, toMinutes(t)))
+  const cuts = [
+    ...new Set([
+      ...columns.flatMap((c) => [toMinutes(c.start), toMinutes(c.end)]),
+      ...slots.flatMap((s) => [clip(s.start), clip(s.end)]),
+    ]),
+  ].sort((a, b) => a - b)
+
+  const cells = []
+  for (let i = 0; i < cuts.length - 1; i += 1) {
+    const [from, to] = [cuts[i], cuts[i + 1]]
+    const column = columns.findIndex(
+      (c) => toMinutes(c.start) <= from && to <= toMinutes(c.end),
+    )
+    const own = toMinutes(columns[column].end) - toMinutes(columns[column].start)
+    cells.push({ from, to, column, share: (to - from) / own })
   }
-  // A slot too short to own any column can't be drawn aligned; fall back to one column each
-  if (spans.some((span) => span === 0)) {
-    return {
-      spans: slots.map(() => 1),
-      trailing: Math.max(0, columns.length - slots.length),
-    }
-  }
-  return { spans, trailing }
+
+  const piecesIn = (from, to) =>
+    cells.filter((cell) => cell.from >= from && cell.to <= to).length
+  const columnSpans = columns.map((c) => piecesIn(toMinutes(c.start), toMinutes(c.end)))
+  const slotSpans = slots.map((s) => piecesIn(clip(s.start), clip(s.end)))
+  const lead = piecesIn(dayStart, clip(slots[0].start))
+  const trailing = piecesIn(clip(slots[slots.length - 1].end), dayEnd)
+  return { cells, columnSpans, slotSpans, lead, trailing }
 }
 
 export function dualLabel(slot) {

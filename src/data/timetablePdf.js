@@ -3,7 +3,7 @@ import vfs from 'pdfmake/build/vfs_fonts'
 import {
   DAYS,
   WEEKEND_DAYS,
-  alignToColumns,
+  buildTimeGrid,
   fixedDutyFor,
   fixedSessionAt,
   slotsForClassroom,
@@ -159,7 +159,8 @@ function pageHeader(mode, group) {
 function spanned(cell, n) {
   if (n <= 0) return []
   if (n === 1) return [{ ...cell }]
-  return [{ ...cell, colSpan: n }, ...Array.from({ length: n - 1 }, () => ({}))]
+  const filler = cell.border ? { text: '', border: cell.border } : {}
+  return [{ ...cell, colSpan: n }, ...Array.from({ length: n - 1 }, () => ({ ...filler }))]
 }
 
 // A4 landscape minus page margins; table chrome is 3pt padding per side and 0.6pt rules
@@ -167,32 +168,45 @@ const CONTENT_WIDTH = 841.89 - 48
 const CELL_CHROME = 6
 const RULE = 0.6
 
-/** Fixed point widths for the weekday columns, filling the page, so other tables can reuse them. */
-function columnWidths(columns) {
+/**
+ * Point widths for each time piece: weekday columns fill the page, and a
+ * column split into pieces shares its width (chrome included) by time.
+ */
+function pieceWidths(columns, cells) {
   const fixed = [30, ...columns.map((slot) => (slot.kind === 'period' ? null : 34))]
   const chrome = fixed.length * CELL_CHROME + (fixed.length + 1) * RULE
   const taken = fixed.reduce((total, w) => total + (w ?? 0), 0)
   const stars = fixed.filter((w) => w === null).length
   const star = Math.floor(((CONTENT_WIDTH - chrome - taken) / stars) * 100) / 100
-  return fixed.map((w) => w ?? star)
+  const widths = fixed.map((w) => w ?? star)
+  const outer = CELL_CHROME + RULE
+  return [
+    widths[0],
+    ...cells.map((cell) =>
+      Math.max(0, (widths[cell.column + 1] + outer) * cell.share - outer),
+    ),
+  ]
 }
+
+const VOID = { text: '', border: [false, false, false, false] }
 
 function weekTable(ctx, days) {
   const { theme, mode, group } = ctx
   const slotsFor = (day) =>
     mode === 'teacher' ? slotsForTeacherDay(day) : slotsForClassroom(group, day)
-  // Every table on the page shares the weekday columns, so Saturday lines up beneath them
+  // Every table on the page shares one time grid, so Saturday lines up beneath the weekdays
   const columns = slotsFor(DAYS[0])
-  const slots = slotsFor(days[0])
-  const { spans, trailing } =
-    days[0] === DAYS[0]
-      ? { spans: slots.map(() => 1), trailing: 0 }
-      : alignToColumns(columns, slots)
-
-  const widths = columnWidths(columns)
+  const grid = buildTimeGrid(columns, slotsFor(WEEKEND_DAYS[0]))
+  const isWeekday = days[0] === DAYS[0]
+  const slots = isWeekday ? columns : slotsFor(days[0])
+  const spans = isWeekday ? grid.columnSpans : grid.slotSpans
+  const lead = isWeekday ? 0 : grid.lead
+  const trailing = isWeekday ? 0 : grid.trailing
+  const widths = pieceWidths(columns, grid.cells)
 
   const header = [
     headCell(theme, 'Day'),
+    ...spanned(VOID, lead),
     ...slots.flatMap((slot, i) =>
       spanned(
         headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
@@ -211,6 +225,7 @@ function weekTable(ctx, days) {
         fillColor: theme.headFill ?? rowFill,
         alignment: 'center',
       },
+      ...spanned(VOID, lead),
       ...dayCells(ctx, rowFill, day, slots, spans),
     ]
   })
@@ -219,7 +234,7 @@ function weekTable(ctx, days) {
     table: {
       headerRows: 1,
       dontBreakRows: true,
-      // Saturday stops at its last slot; the weekday columns it skips are simply not drawn
+      // Saturday stops at its last slot; the pieces after it are simply not drawn
       widths: widths.slice(0, widths.length - trailing),
       heights: (row) => (row === 0 ? 20 : 46),
       body: [header, ...body],

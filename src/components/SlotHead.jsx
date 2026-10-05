@@ -24,3 +24,22 @@ export function SlotHead({ slot, colSpan = 1 }) {
     </th>
   )
 }
+
+/** Column widths for a time grid: each piece is its share of the weekday column it sits in. */
+export function TimeColumns({ columns, cells }) {
+  return (
+    <colgroup>
+      <col style={{ width: 'var(--day-w)' }} />
+      {cells.map((cell) => (
+        <col
+          key={cell.from}
+          style={{
+            width: `calc(${
+              columns[cell.column].kind === 'period' ? 'var(--period-min)' : 'var(--break-w)'
+            } * ${cell.share})`,
+          }}
+        />
+      ))}
+    </colgroup>
+  )
+}
