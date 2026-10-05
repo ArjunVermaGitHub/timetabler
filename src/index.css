@@ -652,6 +652,35 @@ button {
   box-shadow: none;
 }
 
+.day-head:has(.day-head-day) {
+  position: relative;
+  display: block;
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.6px),
+      color-mix(in srgb, var(--day-ink), transparent 55%) 50%,
+      transparent calc(50% + 0.6px)
+    ),
+    var(--day-fill);
+  font-size: 9px;
+}
+
+.day-head-time,
+.day-head-day {
+  position: absolute;
+  line-height: 1;
+}
+
+.day-head-time {
+  top: 7px;
+  right: 6px;
+}
+
+.day-head-day {
+  bottom: 7px;
+  left: 6px;
+}
+
 .day-pill {
   --surface: var(--day-fill);
   display: flex;

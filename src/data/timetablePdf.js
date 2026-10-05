@@ -207,7 +207,7 @@ function weekTable(ctx, days) {
   // Saturday borrows the weekday header; only its off-schedule slots show their own times
   const timed = isWeekday ? slots.map(() => false) : grid.slotOffGrid
   const header = [
-    headCell(theme, 'Day'),
+    cornerCell(theme, widths[0]),
     ...spanned(VOID, lead),
     ...slots.flatMap((slot, i) =>
       spanned(
@@ -238,7 +238,7 @@ function weekTable(ctx, days) {
       dontBreakRows: true,
       // Saturday stops at its last slot; the pieces after it are simply not drawn
       widths: widths.slice(0, widths.length - trailing),
-      heights: (row) => (isWeekday && row === 0 ? 20 : 46),
+      heights: (row) => (isWeekday && row === 0 ? HEADER_HEIGHT : 46),
       body: isWeekday ? [header, ...body] : body,
     },
     layout: {
@@ -251,6 +251,36 @@ function weekTable(ctx, days) {
       paddingTop: () => 3,
       paddingBottom: () => 3,
     },
+  }
+}
+
+// Fixed so the corner diagonal can run exactly from corner to corner
+const HEADER_HEIGHT = 30
+
+/** Top-left corner split diagonally: time across the top, day down the side. */
+function cornerCell(theme, width) {
+  const inner = HEADER_HEIGHT - CELL_CHROME
+  const label = { bold: true, fontSize: 6, color: theme.headInk }
+  return {
+    fillColor: theme.headFill ?? undefined,
+    stack: [
+      {
+        canvas: [
+          {
+            type: 'line',
+            x1: -CELL_CHROME / 2,
+            y1: -CELL_CHROME / 2,
+            x2: width + CELL_CHROME / 2,
+            y2: inner + CELL_CHROME / 2,
+            lineWidth: 0.5,
+            lineColor: theme.headInk,
+          },
+        ],
+        relativePosition: { x: 0, y: 0 },
+      },
+      { ...label, text: 'Time', alignment: 'right' },
+      { ...label, text: 'Day', alignment: 'left', margin: [0, inner - 15, 0, 0] },
+    ],
   }
 }
 

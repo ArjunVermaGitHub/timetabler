@@ -122,7 +122,10 @@ export function TimetableGrid({
                   <thead>
                     <tr>
                       <th className="day-col">
-                        <span className="day-head">Day</span>
+                        <span className="day-head">
+                          <span className="day-head-time">Time</span>
+                          <span className="day-head-day">Day</span>
+                        </span>
                       </th>
                       {weekdaySlots.map((slot, i) => (
                         <SlotHead
