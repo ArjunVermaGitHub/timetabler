@@ -583,15 +583,6 @@ button {
 }
 
 /* Saturday shares the weekday columns; its slots span whichever columns they cover */
-.timetable .saturday-gap td {
-  height: 12px;
-  padding: 0;
-}
-
-.timetable .saturday-gap .day-col {
-  border-bottom: 0;
-}
-
 .timetable .is-saturday td.slot {
   width: auto;
   min-width: 0;

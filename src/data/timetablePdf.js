@@ -84,7 +84,6 @@ export function buildTimetableDoc({
         {
           unbreakable: true,
           stack: [
-            daySpineBridge(ctx.theme),
             saturday,
             ...abbreviationKey(ctx),
           ],
@@ -193,30 +192,6 @@ function pieceWidths(columns, cells) {
 const VOID = { text: '', border: [false, false, false, false] }
 
 const DAY_WIDTH = 30
-const SATURDAY_GAP = 8
-
-/** Fills the gap above Saturday in the day column so the day spine stays continuous. */
-function daySpineBridge(theme) {
-  const width = DAY_WIDTH + CELL_CHROME + RULE
-  const edge = (x) => ({
-    type: 'line',
-    x1: x,
-    y1: 0,
-    x2: x,
-    y2: SATURDAY_GAP,
-    lineWidth: RULE,
-    lineColor: theme.grid,
-  })
-  return {
-    canvas: [
-      ...(theme.headFill
-        ? [{ type: 'rect', x: 0, y: 0, w: width + RULE, h: SATURDAY_GAP, color: theme.headFill }]
-        : []),
-      edge(RULE / 2),
-      edge(width + RULE / 2),
-    ],
-  }
-}
 
 function weekTable(ctx, days) {
   const { theme, mode, group } = ctx
@@ -253,13 +228,7 @@ function weekTable(ctx, days) {
         bold: true,
         color: theme.headInk,
         fillColor: theme.headFill ?? rowFill,
-        alignment: 'center',
-        ...(isWeekday || row > 0
-          ? {}
-          : theme.headFill
-            ? { borderColor: [theme.grid, theme.headFill, theme.grid, theme.grid] }
-            : { border: [true, false, true, true] }),
-      },
+        alignment: 'center',      },
       ...spanned(VOID, lead),
       ...dayCells(ctx, rowFill, day, slots, spans, timed),
     ]
@@ -277,7 +246,8 @@ function weekTable(ctx, days) {
     layout: {
       hLineColor: () => theme.grid,
       vLineColor: () => theme.grid,
-      hLineWidth: (line) => (isWeekday && line === 1 ? 1.2 : 0.6),
+      // Saturday sits flush under Friday, whose bottom rule already closes the gap
+      hLineWidth: (line) => (isWeekday && line === 1 ? 1.2 : !isWeekday && line === 0 ? 0 : 0.6),
       vLineWidth: () => 0.6,
       paddingLeft: () => 3,
       paddingRight: () => 3,

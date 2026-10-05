@@ -158,10 +158,6 @@ export function TimetableGrid({
                     ))}
                   </tbody>
                   <tbody className="is-saturday">
-                    <tr className="saturday-gap" aria-hidden="true">
-                      <td className="day-col" />
-                      <td colSpan={timeGrid.cells.length} />
-                    </tr>
                     {WEEKEND_DAYS.map((day) => (
                       <DayRow
                         key={`${classroom}-${day}`}
