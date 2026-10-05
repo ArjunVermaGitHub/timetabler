@@ -81,6 +81,11 @@ export function TimetableGrid({
     return null
   }, [dragLesson, hoverTarget, lessons, placements])
 
+  const batchShades = useMemo(
+    () => buildBatchShades(lessons, placements),
+    [lessons, placements],
+  )
+
   if (classrooms.length === 0) {
     return (
       <div className="grid-empty">
@@ -132,6 +137,7 @@ export function TimetableGrid({
                         placements={placements}
                         dragLesson={dragLesson}
                         hoverPreview={hoverPreview}
+                        batchShades={batchShades}
                         onHoverTarget={setHoverTarget}
                         onDragStartLesson={onDragStartLesson}
                         onDragEndLesson={onDragEndLesson}
@@ -162,6 +168,7 @@ export function TimetableGrid({
                         placements={placements}
                         dragLesson={dragLesson}
                         hoverPreview={hoverPreview}
+                        batchShades={batchShades}
                         onHoverTarget={setHoverTarget}
                         onDragStartLesson={onDragStartLesson}
                         onDragEndLesson={onDragEndLesson}
@@ -187,6 +194,7 @@ function DayRow({
   placements,
   dragLesson,
   hoverPreview,
+  batchShades,
   onHoverTarget,
   onDragStartLesson,
   onDragEndLesson,
@@ -264,6 +272,7 @@ function DayRow({
         placements,
         dragLesson,
         hoverPreview,
+        batchShades,
         onDragStartLesson,
         onDragEndLesson,
       })}
@@ -279,6 +288,7 @@ function renderDaySlots({
   placements,
   dragLesson,
   hoverPreview,
+  batchShades,
   onDragStartLesson,
   onDragEndLesson,
 }) {
@@ -384,6 +394,13 @@ function renderDaySlots({
                   ? isBundle
                     ? 'lesson-stack is-elective'
                     : 'lesson-stack'
+                  : undefined
+              }
+              data-shade={
+                isBundle
+                  ? (batchShades.get(`${day}|${syncId}|${slot.id}`) ??
+                    batchShades.get(`${day}|${classroom}|${slot.id}`) ??
+                    0)
                   : undefined
               }
             >
@@ -537,4 +554,62 @@ function nearestPeriodSlotId(rowEl, clientX, slots) {
 
 function panelAccent() {
   return '#1a8a82'
+}
+
+const BATCH_SHADE_COUNT = 6
+
+/**
+ * Each batch (lessons sharing a clock cell) gets a grey shade that no other
+ * batch in the same class and day uses; a batch spanning several classes
+ * keeps one shade in all of them.
+ */
+function buildBatchShades(lessons, placements) {
+  const occurrences = new Map()
+  for (const lesson of lessons) {
+    const placement = placements[lesson.id]
+    if (!placement) continue
+    const { day, slotId } = placement
+    const key = lesson.syncGroupId
+      ? `${day}|${lesson.syncGroupId}|${slotId}`
+      : lesson.stream
+        ? `${day}|${lesson.classroom}|${slotId}`
+        : null
+    if (!key) continue
+    let entry = occurrences.get(key)
+    if (!entry) {
+      entry = { key, day, order: Infinity, classrooms: new Set() }
+      occurrences.set(key, entry)
+    }
+    entry.classrooms.add(lesson.classroom)
+    entry.order = Math.min(
+      entry.order,
+      slotsForClassroom(lesson.classroom, day).findIndex(
+        (slot) => slot.id === slotId,
+      ),
+    )
+  }
+
+  const ordered = [...occurrences.values()].sort(
+    (a, b) => a.order - b.order || a.key.localeCompare(b.key),
+  )
+  const usedByClassDay = new Map()
+  const shades = new Map()
+  for (const entry of ordered) {
+    const used = new Set()
+    for (const classroom of entry.classrooms) {
+      for (const shade of usedByClassDay.get(`${classroom}|${entry.day}`) ??
+        []) {
+        used.add(shade)
+      }
+    }
+    let shade = 0
+    while (used.has(shade) && shade < BATCH_SHADE_COUNT - 1) shade += 1
+    shades.set(entry.key, shade)
+    for (const classroom of entry.classrooms) {
+      const k = `${classroom}|${entry.day}`
+      if (!usedByClassDay.has(k)) usedByClassDay.set(k, new Set())
+      usedByClassDay.get(k).add(shade)
+    }
+  }
+  return shades
 }
