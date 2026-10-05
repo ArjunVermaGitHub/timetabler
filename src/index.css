@@ -59,8 +59,8 @@
     var(--day-w) + (8 * var(--period-min)) + (3 * var(--break-w))
   );
   --panel-side-w: 52px;
-  --slot-row-min: 76px;
-  --card-grid-min: 68px;
+  --slot-row-min: 48px;
+  --card-grid-min: 40px;
   --sans: 'Nunito Sans', system-ui, sans-serif;
   --mono: 'Source Sans 3', 'Nunito Sans', system-ui, sans-serif;
 }
@@ -111,8 +111,8 @@
     var(--day-w) + (8 * var(--period-min)) + (3 * var(--break-w))
   );
   --panel-side-w: 52px;
-  --slot-row-min: 76px;
-  --card-grid-min: 68px;
+  --slot-row-min: 48px;
+  --card-grid-min: 40px;
   --sans: 'Nunito Sans', system-ui, sans-serif;
   --mono: 'Source Sans 3', 'Nunito Sans', system-ui, sans-serif;
 }
@@ -842,14 +842,13 @@ button {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--break-ink);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
+  text-align: center;
 }
 
 .fixed-cell {
   --surface: color-mix(in srgb, var(--head-fill) 55%, var(--slot-empty));
   height: 100%;
-  min-height: 52px;
+  min-height: var(--card-grid-min);
   display: grid;
   place-items: center;
   border-radius: 14px;
@@ -884,8 +883,6 @@ button {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--head-ink);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
   text-align: center;
   max-height: 100%;
 }
@@ -1152,8 +1149,8 @@ button {
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  min-height: 72px;
-  padding: 8px 10px;
+  min-height: 56px;
+  padding: 4px 10px;
   border-radius: 10px;
   color: #fff;
   cursor: grab;
@@ -1224,8 +1221,8 @@ button {
 .lesson-card.is-coteach {
   min-height: var(--card-grid-min);
   height: auto;
-  padding: 8px 10px;
-  gap: 3px;
+  padding: 4px 10px;
+  gap: 2px;
 }
 
 .lesson-card-coteach-count {
