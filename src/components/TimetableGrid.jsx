@@ -398,9 +398,7 @@ function renderDaySlots({
               }
               data-shade={
                 isBundle
-                  ? (batchShades.get(`${day}|${syncId}|${slot.id}`) ??
-                    batchShades.get(`${day}|${classroom}|${slot.id}`) ??
-                    0)
+                  ? (batchShades.get(batchKind(starters.map((item) => item.lesson))) ?? 0)
                   : undefined
               }
             >
@@ -556,60 +554,90 @@ function panelAccent() {
   return '#1a8a82'
 }
 
-const BATCH_SHADE_COUNT = 6
+const BATCH_SHADE_COUNT = 8
+
+/** What a batch is called in its cell: its stream label, else the subjects its group teaches. */
+function batchKind(cellLessons) {
+  const stream = cellLessons.find((lesson) => lesson.stream)?.stream
+  if (stream) return stream
+  return [...new Set(cellLessons.map((lesson) => lesson.subject))].sort().join('/')
+}
 
 /**
- * Each batch (lessons sharing a clock cell) gets a tint that no other
- * batch in the same class and day uses; a batch spanning several classes
- * keeps one tint in all of them.
+ * Each kind of batch keeps one tint all week; kinds that meet in the same
+ * class never share a tint.
  */
 function buildBatchShades(lessons, placements) {
-  const occurrences = new Map()
+  const cells = new Map()
   for (const lesson of lessons) {
     const placement = placements[lesson.id]
-    if (!placement) continue
-    const { day, slotId } = placement
-    const key = lesson.syncGroupId
-      ? `${day}|${lesson.syncGroupId}|${slotId}`
-      : lesson.stream
-        ? `${day}|${lesson.classroom}|${slotId}`
-        : null
-    if (!key) continue
-    let entry = occurrences.get(key)
-    if (!entry) {
-      entry = { key, day, order: Infinity, classrooms: new Set() }
-      occurrences.set(key, entry)
-    }
-    entry.classrooms.add(lesson.classroom)
-    entry.order = Math.min(
-      entry.order,
-      slotsForClassroom(lesson.classroom, day).findIndex(
-        (slot) => slot.id === slotId,
-      ),
-    )
+    if (!placement || !(lesson.syncGroupId || lesson.stream)) continue
+    const key = `${lesson.classroom}|${placement.day}|${placement.slotId}`
+    if (!cells.has(key)) cells.set(key, [])
+    cells.get(key).push(lesson)
   }
 
-  const ordered = [...occurrences.values()].sort(
-    (a, b) => a.order - b.order || a.key.localeCompare(b.key),
-  )
-  const usedByClassDay = new Map()
-  const shades = new Map()
-  for (const entry of ordered) {
-    const used = new Set()
-    for (const classroom of entry.classrooms) {
-      for (const shade of usedByClassDay.get(`${classroom}|${entry.day}`) ??
-        []) {
-        used.add(shade)
+  const classesOf = new Map()
+  for (const cellLessons of cells.values()) {
+    // Same-subject groups render as one co-taught card, not a batch
+    if (new Set(cellLessons.map((lesson) => lesson.subject)).size < 2) continue
+    const kind = batchKind(cellLessons)
+    if (!classesOf.has(kind)) classesOf.set(kind, new Set())
+    classesOf.get(kind).add(cellLessons[0].classroom)
+  }
+
+  const kinds = [...classesOf.keys()]
+  const neighbours = new Map(kinds.map((k) => [k, new Set()]))
+  for (const a of kinds) {
+    for (const b of kinds) {
+      if (a === b) continue
+      for (const c of classesOf.get(a)) {
+        if (classesOf.get(b).has(c)) {
+          neighbours.get(a).add(b)
+          break
+        }
       }
     }
-    let shade = 0
-    while (used.has(shade) && shade < BATCH_SHADE_COUNT - 1) shade += 1
-    shades.set(entry.key, shade)
-    for (const classroom of entry.classrooms) {
-      const k = `${classroom}|${entry.day}`
-      if (!usedByClassDay.has(k)) usedByClassDay.set(k, new Set())
-      usedByClassDay.get(k).add(shade)
-    }
   }
-  return shades
+
+  // DSatur: always colour the kind whose neighbours already use the most tints
+  const shadeOf = new Map()
+  const saturation = (kind) => {
+    const used = new Set()
+    for (const n of neighbours.get(kind)) if (shadeOf.has(n)) used.add(shadeOf.get(n))
+    return used.size
+  }
+  const pending = new Set(kinds)
+  while (pending.size > 0) {
+    let next = null
+    for (const kind of pending) {
+      if (
+        next === null ||
+        saturation(kind) > saturation(next) ||
+        (saturation(kind) === saturation(next) &&
+          (neighbours.get(kind).size > neighbours.get(next).size ||
+            (neighbours.get(kind).size === neighbours.get(next).size &&
+              kind.localeCompare(next) < 0)))
+      ) {
+        next = kind
+      }
+    }
+    pending.delete(next)
+    const taken = new Map()
+    for (const n of neighbours.get(next)) {
+      if (!shadeOf.has(n)) continue
+      const shade = shadeOf.get(n)
+      taken.set(shade, (taken.get(shade) ?? 0) + 1)
+    }
+    let best = 0
+    for (let shade = 0; shade < BATCH_SHADE_COUNT; shade += 1) {
+      if (!taken.has(shade)) {
+        best = shade
+        break
+      }
+      if (taken.get(shade) < (taken.get(best) ?? 0)) best = shade
+    }
+    shadeOf.set(next, best)
+  }
+  return shadeOf
 }

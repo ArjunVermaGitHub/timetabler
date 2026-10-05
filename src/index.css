@@ -1260,31 +1260,38 @@ button {
 
 .lesson-stack.is-elective {
   --batch-hue: var(--panel-accent);
-  --surface: color-mix(in srgb, var(--panel-fill) 62%, var(--batch-hue));
+  --batch-wash: color-mix(in srgb, var(--panel-fill) 45%, white);
+  --surface: color-mix(in srgb, var(--batch-hue) 50%, var(--batch-wash));
   gap: 3px;
   padding: 4px;
   background: var(--surface);
   border-radius: 14px;
-  /* Recessed bevel cut from the batch's own tint, like the break wells */
+  /* Raised bevel cut from the batch's own tint: lit top-left, shaded bottom-right */
   border-style: solid;
   border-width: 1px;
   border-color:
+    color-mix(in srgb, var(--surface), white calc(var(--bevel-lift) + 8%))
     color-mix(in srgb, var(--surface), black calc(var(--bevel-sink) + 8%))
-    color-mix(in srgb, var(--surface), white var(--bevel-lift))
-    color-mix(in srgb, var(--surface), white var(--bevel-lift))
-    color-mix(in srgb, var(--surface), black calc(var(--bevel-sink) + 8%));
+    color-mix(in srgb, var(--surface), black calc(var(--bevel-sink) + 8%))
+    color-mix(in srgb, var(--surface), white calc(var(--bevel-lift) + 8%));
   box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--surface), black 12%),
-    inset -1px -1px 0 color-mix(in srgb, var(--surface), white 10%);
+    inset 1px 1px 0 color-mix(in srgb, var(--surface), white 14%),
+    inset -1px -1px 0 color-mix(in srgb, var(--surface), black 12%);
 }
 
-/* Muted hues, alternating cool and warm, so neighbouring batches never blur together */
-.lesson-stack.is-elective[data-shade='0'] { --batch-hue: #4f6d9a; }
-.lesson-stack.is-elective[data-shade='1'] { --batch-hue: #b08a3e; }
-.lesson-stack.is-elective[data-shade='2'] { --batch-hue: #3f8f8a; }
-.lesson-stack.is-elective[data-shade='3'] { --batch-hue: #8a5a8c; }
-.lesson-stack.is-elective[data-shade='4'] { --batch-hue: #6b8f5a; }
-.lesson-stack.is-elective[data-shade='5'] { --batch-hue: #a0564a; }
+[data-theme='dark'] .lesson-stack.is-elective {
+  --batch-wash: var(--panel-fill);
+}
+
+/* Hues spread round the wheel, most distinct first, so batch kinds never blur together */
+.lesson-stack.is-elective[data-shade='0'] { --batch-hue: #3f6fd1; }
+.lesson-stack.is-elective[data-shade='1'] { --batch-hue: #d69a1f; }
+.lesson-stack.is-elective[data-shade='2'] { --batch-hue: #3f9f4f; }
+.lesson-stack.is-elective[data-shade='3'] { --batch-hue: #b8479a; }
+.lesson-stack.is-elective[data-shade='4'] { --batch-hue: #1f9fb8; }
+.lesson-stack.is-elective[data-shade='5'] { --batch-hue: #c84a3a; }
+.lesson-stack.is-elective[data-shade='6'] { --batch-hue: #7a55c8; }
+.lesson-stack.is-elective[data-shade='7'] { --batch-hue: #8a9a2a; }
 
 /* A dark rim keeps each card distinct on any background, light or tinted */
 .lesson-stack.is-elective > .lesson-card {
