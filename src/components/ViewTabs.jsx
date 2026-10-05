@@ -1,8 +1,8 @@
 import { Link } from '../router'
 
 const VIEWS = [
-  ['classes', 'Classes', '/classes'],
-  ['teachers', 'Teachers', '/teachers'],
+  ['classes', 'Class view', '/classes'],
+  ['teachers', 'Teacher view', '/teachers'],
   ['manage', 'Manage', '/manage'],
 ]
 

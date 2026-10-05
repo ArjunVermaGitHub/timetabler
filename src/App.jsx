@@ -21,7 +21,7 @@ const ManagePanel = lazy(() =>
 )
 
 const MANAGE_TABS = ['teachers', 'classes', 'subjects', 'links']
-const TITLES = { classes: 'Classes', teachers: 'Teachers', manage: 'Manage' }
+const TITLES = { classes: 'Class view', teachers: 'Teacher view', manage: 'Manage' }
 
 /** `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route. */
 function routeFor(path) {

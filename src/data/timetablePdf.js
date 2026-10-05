@@ -75,6 +75,7 @@ export function buildTimetableDoc({
     const saturday = weekTable(ctx, WEEKEND_DAYS)
     return {
       stack: [
+        schoolTitle(),
         pageHeader(mode, group),
         weekdays,
         {
@@ -104,19 +105,33 @@ export function buildTimetableDoc({
       pageMargins: [24, 24, 24, 30],
       defaultStyle: { font: 'Roboto', fontSize: 7, color: theme.ink },
       styles: {
+        school: { fontSize: 11, bold: true, color: theme.title, characterSpacing: 1.2 },
         title: { fontSize: 15, bold: true, color: theme.title },
         meta: { fontSize: 8, color: theme.soft },
         section: { fontSize: 9, bold: true, color: theme.soft },
       },
-      footer: (page, count) => ({
-        columns: [
-          { text: `Generated ${stamp}`, style: 'meta' },
-          { text: `${page} / ${count}`, style: 'meta', alignment: 'right' },
-        ],
-        margin: [24, 8, 24, 0],
-      }),
+      footer: (page, count) =>
+        count > 1
+          ? {
+              text: `${page} / ${count}`,
+              style: 'meta',
+              alignment: 'right',
+              margin: [24, 8, 24, 0],
+            }
+          : null,
       content: pages,
     },
+  }
+}
+
+const SCHOOL_NAME = 'Rajghat Besant School'
+
+function schoolTitle() {
+  return {
+    text: `${SCHOOL_NAME.toUpperCase()}  ·  TIMETABLE ${new Date().getFullYear()}`,
+    style: 'school',
+    alignment: 'center',
+    margin: [0, 0, 0, 6],
   }
 }
 
@@ -178,7 +193,7 @@ function weekTable(ctx, days) {
     layout: {
       hLineColor: () => theme.grid,
       vLineColor: () => theme.grid,
-      hLineWidth: () => 0.6,
+      hLineWidth: (line) => (line === 1 ? 1.2 : 0.6),
       vLineWidth: () => 0.6,
       paddingLeft: () => 3,
       paddingRight: () => 3,
@@ -226,7 +241,7 @@ function dayCells(ctx, rowFill, day, slots) {
         bold: true,
         alignment: 'center',
         color: theme.breakInk,
-        italics: !theme.breakFill,
+        italics: true,
         fillColor: theme.breakFill ?? rowFill,
       })
       index += 1
