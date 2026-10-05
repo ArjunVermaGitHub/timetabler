@@ -1,5 +1,5 @@
 /** Column header for a period, break, or fixed (e.g. Self Study) slot. */
-export function SlotHead({ slot }) {
+export function SlotHead({ slot, colSpan = 1 }) {
   const isBlocked = slot.kind === 'break' || slot.kind === 'fixed'
   const headClass =
     slot.kind === 'fixed'
@@ -9,7 +9,7 @@ export function SlotHead({ slot }) {
         : 'slot-head'
 
   return (
-    <th className={headClass}>
+    <th className={headClass} colSpan={colSpan}>
       {isBlocked ? (
         <span className="slot-time is-stacked">
           <span>{slot.start}</span>

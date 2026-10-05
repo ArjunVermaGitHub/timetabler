@@ -580,11 +580,32 @@ button {
   font-size: 12px;
 }
 
-.timetable.is-saturday {
-  /* Keep break columns at --break-w; don’t let auto layout squash timestamps */
-  width: max-content;
+/* Saturday shares the weekday columns; its slots span whichever columns they cover */
+.timetable .saturday-gap td {
+  height: 12px;
+  padding: 0;
+}
+
+.timetable .saturday-head th {
+  text-align: left;
+  padding: 0;
+  font-weight: 600;
+}
+
+.timetable .saturday-head .day-col {
+  background: var(--day-fill);
+  vertical-align: bottom;
+}
+
+.timetable .saturday-head th.slot-head,
+.timetable .is-saturday td.slot {
+  width: auto;
   min-width: 0;
-  margin-top: 12px;
+  max-width: none;
+}
+
+.timetable .saturday-head .slot-head:last-child {
+  border-right: 0;
 }
 
 .timetable th,

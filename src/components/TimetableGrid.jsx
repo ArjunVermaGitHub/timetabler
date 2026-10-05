@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   DAYS,
   WEEKEND_DAYS,
+  alignToColumns,
   classroomDayEnd,
   fixedSessionAt,
   slotsForClassroom,
@@ -100,6 +101,7 @@ export function TimetableGrid({
         {classrooms.map((classroom) => {
           const weekdaySlots = slotsForClassroom(classroom, 'Mon')
           const saturdaySlots = slotsForClassroom(classroom, 'Sat')
+          const saturdayCols = alignToColumns(weekdaySlots, saturdaySlots)
           const dimmed =
             Boolean(dragLesson) && dragLesson.classroom !== classroom
 
@@ -145,25 +147,37 @@ export function TimetableGrid({
                       />
                     ))}
                   </tbody>
-                </table>
-                <table className="timetable is-saturday">
-                  <thead>
-                    <tr>
+                  <tbody className="is-saturday">
+                    <tr className="saturday-gap" aria-hidden="true">
+                      <td colSpan={weekdaySlots.length + 1} />
+                    </tr>
+                    <tr className="saturday-head">
                       <th className="day-col">
                         <span className="day-head">Day</span>
                       </th>
-                      {saturdaySlots.map((slot) => (
-                        <SlotHead key={slot.id} slot={slot} />
+                      {saturdaySlots.map((slot, i) => (
+                        <SlotHead
+                          key={slot.id}
+                          slot={slot}
+                          colSpan={saturdayCols.spans[i]}
+                        />
                       ))}
+                      {saturdayCols.trailing > 0 ? (
+                        <th
+                          className="slot-void"
+                          colSpan={saturdayCols.trailing}
+                          aria-hidden="true"
+                        />
+                      ) : null}
                     </tr>
-                  </thead>
-                  <tbody>
                     {WEEKEND_DAYS.map((day) => (
                       <DayRow
                         key={`${classroom}-${day}`}
                         classroom={classroom}
                         day={day}
                         slots={saturdaySlots}
+                        colSpans={saturdayCols.spans}
+                        trailing={saturdayCols.trailing}
                         lessons={lessons}
                         placements={placements}
                         dragLesson={dragLesson}
@@ -190,6 +204,8 @@ function DayRow({
   classroom,
   day,
   slots,
+  colSpans,
+  trailing = 0,
   lessons,
   placements,
   dragLesson,
@@ -268,6 +284,7 @@ function DayRow({
         classroom,
         day,
         slots,
+        colSpans,
         lessons,
         placements,
         dragLesson,
@@ -276,6 +293,9 @@ function DayRow({
         onDragStartLesson,
         onDragEndLesson,
       })}
+      {trailing > 0 ? (
+        <td className="slot is-void" colSpan={trailing} aria-hidden="true" />
+      ) : null}
     </tr>
   )
 }
@@ -284,6 +304,7 @@ function renderDaySlots({
   classroom,
   day,
   slots,
+  colSpans,
   lessons,
   placements,
   dragLesson,
@@ -294,6 +315,13 @@ function renderDaySlots({
 }) {
   const cells = []
   let index = 0
+  // Grid columns covered by `count` slots from `from` (Saturday slots may span several)
+  const columnsFor = (from, count = 1) => {
+    if (!colSpans) return count
+    let total = 0
+    for (let i = from; i < from + count && i < colSpans.length; i += 1) total += colSpans[i]
+    return total
+  }
 
   while (index < slots.length) {
     const slot = slots[index]
@@ -305,6 +333,7 @@ function renderDaySlots({
         <td
           key={`${classroom}-${day}-${slot.id}`}
           className="slot is-fixed"
+          colSpan={columnsFor(index)}
           title={`${session.parts
             .map((p) => (p.teacher ? `${p.label} · ${p.teacher}` : p.label))
             .join(' / ')} · ${slot.start}–${slot.end}`}
@@ -327,6 +356,7 @@ function renderDaySlots({
         <td
           key={`${classroom}-${day}-${slot.id}`}
           className={slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'}
+          colSpan={columnsFor(index)}
           title={`${slot.label} · ${slot.start}–${slot.end}${
             slot.kind === 'fixed' ? '' : ' · doubles cannot cross'
           }`}
@@ -377,7 +407,7 @@ function renderDaySlots({
               ? `slot has-lesson is-stack${isBundle ? ' is-elective-bundle' : ''}${sameSubject ? ' is-coteach' : ''}`
               : 'slot has-lesson'
           }
-          colSpan={colSpan}
+          colSpan={columnsFor(index, colSpan)}
           data-slot-id={slot.id}
         >
           {sameSubject ? (
@@ -475,6 +505,7 @@ function renderDaySlots({
       <td
         key={`${classroom}-${day}-${slot.id}`}
         className={['slot', stateClass].filter(Boolean).join(' ')}
+        colSpan={columnsFor(index)}
         title={`${classroom} · ${day} · ${slot.label} (${slot.start}–${slot.end})${titleExtra}`}
         data-slot-id={slot.id}
         data-empty="true"

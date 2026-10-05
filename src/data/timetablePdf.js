@@ -3,6 +3,7 @@ import vfs from 'pdfmake/build/vfs_fonts'
 import {
   DAYS,
   WEEKEND_DAYS,
+  alignToColumns,
   fixedDutyFor,
   fixedSessionAt,
   slotsForClassroom,
@@ -154,17 +155,49 @@ function pageHeader(mode, group) {
   }
 }
 
+/** Placeholders pdfmake expects after a cell spanning `n` columns. */
+function spanned(cell, n) {
+  if (n <= 0) return []
+  if (n === 1) return [{ ...cell }]
+  return [{ ...cell, colSpan: n }, ...Array.from({ length: n - 1 }, () => ({}))]
+}
+
+// A4 landscape minus page margins; table chrome is 3pt padding per side and 0.6pt rules
+const CONTENT_WIDTH = 841.89 - 48
+const CELL_CHROME = 6
+const RULE = 0.6
+
+/** Fixed point widths for the weekday columns, filling the page, so other tables can reuse them. */
+function columnWidths(columns) {
+  const fixed = [30, ...columns.map((slot) => (slot.kind === 'period' ? null : 34))]
+  const chrome = fixed.length * CELL_CHROME + (fixed.length + 1) * RULE
+  const taken = fixed.reduce((total, w) => total + (w ?? 0), 0)
+  const stars = fixed.filter((w) => w === null).length
+  const star = Math.floor(((CONTENT_WIDTH - chrome - taken) / stars) * 100) / 100
+  return fixed.map((w) => w ?? star)
+}
+
 function weekTable(ctx, days) {
   const { theme, mode, group } = ctx
-  const slots =
-    mode === 'teacher'
-      ? slotsForTeacherDay(days[0])
-      : slotsForClassroom(group, days[0])
+  const slotsFor = (day) =>
+    mode === 'teacher' ? slotsForTeacherDay(day) : slotsForClassroom(group, day)
+  // Every table on the page shares the weekday columns, so Saturday lines up beneath them
+  const columns = slotsFor(DAYS[0])
+  const slots = slotsFor(days[0])
+  const { spans, trailing } =
+    days[0] === DAYS[0]
+      ? { spans: slots.map(() => 1), trailing: 0 }
+      : alignToColumns(columns, slots)
+
+  const widths = columnWidths(columns)
 
   const header = [
     headCell(theme, 'Day'),
-    ...slots.map((slot) =>
-      headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
+    ...slots.flatMap((slot, i) =>
+      spanned(
+        headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
+        spans[i],
+      ),
     ),
   ]
 
@@ -178,7 +211,7 @@ function weekTable(ctx, days) {
         fillColor: theme.headFill ?? rowFill,
         alignment: 'center',
       },
-      ...dayCells(ctx, rowFill, day, slots),
+      ...dayCells(ctx, rowFill, day, slots, spans),
     ]
   })
 
@@ -186,7 +219,8 @@ function weekTable(ctx, days) {
     table: {
       headerRows: 1,
       dontBreakRows: true,
-      widths: [30, ...slots.map((slot) => (slot.kind === 'period' ? '*' : 34))],
+      // Saturday stops at its last slot; the weekday columns it skips are simply not drawn
+      widths: widths.slice(0, widths.length - trailing),
       heights: (row) => (row === 0 ? 20 : 46),
       body: [header, ...body],
     },
@@ -215,10 +249,12 @@ function headCell(theme, text, blocked = false) {
 }
 
 /** Mirrors the on-screen grid: breaks, fixed sessions, doubles span two columns, electives share a cell. */
-function dayCells(ctx, rowFill, day, slots) {
+function dayCells(ctx, rowFill, day, slots, spans) {
   const { theme, mode, group, lessons, placements } = ctx
   const cells = []
   let index = 0
+  const columnsFor = (from, count = 1) =>
+    spans.slice(from, from + count).reduce((total, n) => total + n, 0)
 
   while (index < slots.length) {
     const slot = slots[index]
@@ -235,15 +271,20 @@ function dayCells(ctx, rowFill, day, slots) {
         : mode === 'teacher'
           ? `${fixed.label}\n${fixed.classroom}`
           : fixed.parts.map((p) => p.label).join(' / ')
-      cells.push({
-        text: label,
-        fontSize: 6,
-        bold: true,
-        alignment: 'center',
-        color: theme.breakInk,
-        italics: true,
-        fillColor: theme.breakFill ?? rowFill,
-      })
+      cells.push(
+        ...spanned(
+          {
+            text: label,
+            fontSize: 6,
+            bold: true,
+            alignment: 'center',
+            color: theme.breakInk,
+            italics: true,
+            fillColor: theme.breakFill ?? rowFill,
+          },
+          columnsFor(index),
+        ),
+      )
       index += 1
       continue
     }
@@ -258,7 +299,7 @@ function dayCells(ctx, rowFill, day, slots) {
           )
 
     if (starters.length === 0) {
-      cells.push({ text: '', fillColor: theme.emptyFill ?? rowFill })
+      cells.push(...spanned({ text: '', fillColor: theme.emptyFill ?? rowFill }, columnsFor(index)))
       index += 1
       continue
     }
@@ -269,8 +310,7 @@ function dayCells(ctx, rowFill, day, slots) {
     )
     const cell = lessonCell(ctx, starters.map((item) => item.lesson))
     if (theme.zebra) cell.fillColor = rowFill
-    cells.push({ ...cell, colSpan: span })
-    for (let i = 1; i < span; i += 1) cells.push({})
+    cells.push(...spanned(cell, columnsFor(index, span)))
     index += span
   }
 

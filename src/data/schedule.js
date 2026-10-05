@@ -353,6 +353,42 @@ export function baseSlotsForDay(day) {
   return day === 'Sat' ? SATURDAY_SLOTS : WEEKDAY_SLOTS
 }
 
+function toMinutes(time) {
+  const [h, m] = time.split(':').map(Number)
+  return h * 60 + m
+}
+
+/**
+ * How many of `columns` each of `slots` spans when drawn beneath them, so a
+ * shorter day (Saturday) lines up under the weekday grid. A column belongs to
+ * the slot holding its midpoint; columns before the first slot stretch it
+ * leftward, and columns after the last slot are left blank (`trailing`).
+ */
+export function alignToColumns(columns, slots) {
+  const spans = slots.map(() => 0)
+  let trailing = 0
+  const firstStart = toMinutes(slots[0].start)
+  const lastEnd = toMinutes(slots[slots.length - 1].end)
+  for (const column of columns) {
+    const mid = (toMinutes(column.start) + toMinutes(column.end)) / 2
+    if (mid >= lastEnd) {
+      trailing += 1
+      continue
+    }
+    const index =
+      mid < firstStart ? 0 : slots.findIndex((slot) => mid < toMinutes(slot.end))
+    spans[index] += 1
+  }
+  // A slot too short to own any column can't be drawn aligned; fall back to one column each
+  if (spans.some((span) => span === 0)) {
+    return {
+      spans: slots.map(() => 1),
+      trailing: Math.max(0, columns.length - slots.length),
+    }
+  }
+  return { spans, trailing }
+}
+
 export function dualLabel(slot) {
   if (slot.junior.label === slot.senior.label) return slot.junior.label
   return `${slot.senior.label} / ${slot.junior.label}`
