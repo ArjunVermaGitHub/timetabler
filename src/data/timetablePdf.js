@@ -326,9 +326,9 @@ function lessonCell(ctx, list) {
       ...(i ? [{ text: '  ·  ' }] : []),
       { text: subjectAbbr(ctx, subject), bold: true },
       {
-        text: ` ${names
+        text: `\u00a0${names
           .map((name) => (mode === 'teacher' ? name : teacherAbbr(ctx, name)))
-          .join(', ')}`,
+          .join(',\u00a0')}`,
       },
     ])
     lines = [{ text: parts, fontSize: 6.5, color: theme.lessonInk, lineHeight: 1.15 }]

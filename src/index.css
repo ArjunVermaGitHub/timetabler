@@ -1279,6 +1279,49 @@ button {
   font-size: 10px;
 }
 
+/* Abbreviated names are short enough to share a row: "ACC AB" */
+.lesson-card.is-abbr {
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  align-content: center;
+  column-gap: 6px;
+  row-gap: 2px;
+}
+
+.lesson-card.is-abbr > .lesson-card-top,
+.lesson-card.is-abbr > .lesson-card-stream,
+.lesson-card.is-abbr > .lesson-card-lines {
+  flex-basis: 100%;
+}
+
+.lesson-card.is-abbr .lesson-card-subject,
+.lesson-card.is-abbr .lesson-card-teacher {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.lesson-stack .lesson-card.is-abbr,
+.lesson-card.is-compact.is-abbr {
+  min-height: 22px;
+  padding: 3px 8px;
+}
+
+/* Electives flow side by side, wrapping only when the cell runs out of width */
+.lesson-stack:has(> .lesson-card.is-abbr) {
+  flex-flow: row wrap;
+  align-content: flex-start;
+}
+
+.lesson-stack:has(> .lesson-card.is-abbr) > .elective-bundle-label {
+  flex-basis: 100%;
+}
+
+.lesson-stack > .lesson-card.is-abbr {
+  flex: 1 0 auto;
+  width: auto;
+}
+
 .slot.is-drop-hover .slot-placeholder {
   background: color-mix(in srgb, #3b82f6 30%, var(--slot-empty));
   border-color: color-mix(in srgb, #3b82f6 38%, var(--slot-empty));

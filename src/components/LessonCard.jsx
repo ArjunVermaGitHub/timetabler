@@ -27,6 +27,7 @@ export function LessonCard({
     lesson.span === 2 ? 'is-double' : '',
     variant === 'grid' ? 'is-grid' : 'is-tray',
     compact ? 'is-compact' : '',
+    names.abbreviate ? 'is-abbr' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -87,7 +88,7 @@ export function CoteachCard({
 
   return (
     <article
-      className="lesson-card is-grid is-coteach"
+      className={`lesson-card is-grid is-coteach${names.abbreviate ? ' is-abbr' : ''}`}
       style={{ background: lead.color }}
       title={`${lead.classroom} · ${lead.subject} · ${teachers.join(', ')}`}
       draggable
@@ -151,6 +152,7 @@ export function TrayUnitCard({ lessons, onDragStartLesson, onDragEndLesson }) {
     'is-tray',
     isDouble ? 'is-double' : '',
     lessons.length > 1 ? 'is-tray-bundle' : '',
+    names.abbreviate ? 'is-abbr' : '',
   ]
     .filter(Boolean)
     .join(' ')
