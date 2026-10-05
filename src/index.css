@@ -588,6 +588,11 @@ button {
   padding: 0;
 }
 
+.timetable .saturday-gap .day-col {
+  background: var(--day-fill);
+  border-right: 1px solid color-mix(in srgb, var(--day-fill), black 28%);
+}
+
 .timetable .is-saturday td.slot {
   width: auto;
   min-width: 0;
@@ -710,7 +715,7 @@ button {
   vertical-align: stretch;
 }
 
-.timetable tbody tr:last-child .day-pill {
+.timetable tbody:last-child tr:last-child .day-pill {
   border-bottom: 0;
 }
 
