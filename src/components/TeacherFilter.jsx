@@ -14,7 +14,7 @@ function summaryLabel(selected, allSelected, noneSelected) {
   return `${selected.length} teachers selected`
 }
 
-export function TeacherFilter({ selected, onChange }) {
+export function TeacherFilter({ selected, onChange, abbreviate, onAbbreviateChange }) {
   const panelId = useId()
   const [open, setOpen] = useState(false)
 
@@ -60,6 +60,13 @@ export function TeacherFilter({ selected, onChange }) {
           indeterminate={partial}
           onChange={toggleAll}
           className="is-all filter-accordion-all"
+        />
+        <Checkbox
+          id="filter-teacher-abbreviate"
+          label="Use abbreviations"
+          checked={abbreviate}
+          onChange={onAbbreviateChange}
+          className="is-abbreviate"
         />
       </div>
       {open ? (

@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
+import { AbbreviateContext } from './abbreviate'
 import { ClassroomFilter } from './components/ClassroomFilter'
 import { HeaderBar } from './components/HeaderBar'
 import { TeacherFilter } from './components/TeacherFilter'
@@ -41,6 +42,14 @@ function readStoredTheme() {
   }
 }
 
+function readStoredAbbreviate() {
+  try {
+    return localStorage.getItem('timetabler-abbreviate') !== 'off'
+  } catch {
+    return true
+  }
+}
+
 function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }) {
   const path = usePath()
   const route = routeFor(path)
@@ -52,6 +61,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   ])
   const [selectedTeachers, setSelectedTeachers] = useState(() => [...TEACHERS])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
+  const [abbreviate, setAbbreviate] = useState(readStoredAbbreviate)
   const [placements, setPlacements] = useState(() =>
     knownPlacements(savedSchedule?.placements),
   )
@@ -117,6 +127,14 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
       // Ignore storage failures (private mode, etc).
     }
   }, [darkMode])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('timetabler-abbreviate', abbreviate ? 'on' : 'off')
+    } catch {
+      // Ignore storage failures (private mode, etc).
+    }
+  }, [abbreviate])
 
   useEffect(() => {
     if (!placementError) return undefined
@@ -219,6 +237,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         lessons: UNSCHEDULED_LESSONS,
         placements,
         colour,
+        abbreviate,
       })
     } catch (err) {
       setPlacementError(`Couldn't create the PDF: ${err.message}`)
@@ -362,11 +381,15 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         <ClassroomFilter
           selected={selectedClassrooms}
           onChange={setSelectedClassrooms}
+          abbreviate={abbreviate}
+          onAbbreviateChange={setAbbreviate}
         />
       ) : (
         <TeacherFilter
           selected={selectedTeachers}
           onChange={setSelectedTeachers}
+          abbreviate={abbreviate}
+          onAbbreviateChange={setAbbreviate}
         />
       )}
       {placementError ? (
@@ -380,37 +403,39 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         </div>
       ) : null}
       {/* Stays mounted under Manage so returning to the grids is instant */}
-      <div className="workspace" hidden={view === 'manage'}>
-        {view !== 'teachers' ? (
-          <TimetableGrid
-            classrooms={visibleClassrooms}
-            lessons={UNSCHEDULED_LESSONS}
-            placements={placements}
-            dragLessonId={dragLessonId}
+      <AbbreviateContext.Provider value={abbreviate}>
+        <div className="workspace" hidden={view === 'manage'}>
+          {view !== 'teachers' ? (
+            <TimetableGrid
+              classrooms={visibleClassrooms}
+              lessons={UNSCHEDULED_LESSONS}
+              placements={placements}
+              dragLessonId={dragLessonId}
+              onDragStartLesson={handleDragStartLesson}
+              onDragEndLesson={handleDragEndLesson}
+              onDropLesson={handleDropLesson}
+            />
+          ) : (
+            <TeacherTimetableGrid
+              teachers={visibleTeachers}
+              lessons={UNSCHEDULED_LESSONS}
+              placements={placements}
+              dragLessonId={dragLessonId}
+              onDragStartLesson={handleDragStartLesson}
+              onDragEndLesson={handleDragEndLesson}
+              onDropLesson={handleDropLesson}
+            />
+          )}
+          <UnscheduledTray
+            groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
+            groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
+            lessons={trayLessons}
             onDragStartLesson={handleDragStartLesson}
             onDragEndLesson={handleDragEndLesson}
-            onDropLesson={handleDropLesson}
+            onDropUnschedule={handleUnschedule}
           />
-        ) : (
-          <TeacherTimetableGrid
-            teachers={visibleTeachers}
-            lessons={UNSCHEDULED_LESSONS}
-            placements={placements}
-            dragLessonId={dragLessonId}
-            onDragStartLesson={handleDragStartLesson}
-            onDragEndLesson={handleDragEndLesson}
-            onDropLesson={handleDropLesson}
-          />
-        )}
-        <UnscheduledTray
-          groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
-          groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
-          lessons={trayLessons}
-          onDragStartLesson={handleDragStartLesson}
-          onDragEndLesson={handleDragEndLesson}
-          onDropUnschedule={handleUnschedule}
-        />
-      </div>
+        </div>
+      </AbbreviateContext.Provider>
     </div>
   )
 }

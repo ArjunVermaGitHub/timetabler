@@ -428,6 +428,12 @@ button {
   font-weight: 600;
 }
 
+/* A display setting, not a filter: pushed to the far end of the row */
+.filter-check.is-abbreviate {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .filter-check-input {
   width: 16px;
   height: 16px;

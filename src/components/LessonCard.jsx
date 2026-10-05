@@ -1,3 +1,5 @@
+import { useNames } from '../abbreviate'
+
 export function LessonCard({
   lesson,
   variant = 'tray',
@@ -6,6 +8,8 @@ export function LessonCard({
   onDragStartLesson,
   onDragEndLesson,
 }) {
+  const names = useNames()
+
   function handleDragStart(event) {
     event.dataTransfer.setData('application/x-timetabler-lesson', lesson.id)
     event.dataTransfer.setData('text/plain', lesson.id)
@@ -43,10 +47,18 @@ export function LessonCard({
           <span className="lesson-card-room">{lesson.classroom}</span>
         </div>
       ) : null}
-      <strong className="lesson-card-subject">{lesson.subject}</strong>
-      <span className="lesson-card-teacher">{lesson.teacher}</span>
+      <strong className="lesson-card-subject">{names.subject(lesson.subject)}</strong>
+      <span className="lesson-card-teacher">{names.teacher(lesson.teacher)}</span>
     </article>
   )
+}
+
+/** Abbreviations are short enough to list every teacher; full names cap at three. */
+function teacherSummary(teachers, names) {
+  if (names.abbreviate) return teachers.map(names.teacher).join(', ')
+  return teachers.length <= 3
+    ? teachers.join(', ')
+    : `${teachers.slice(0, 2).join(', ')} +${teachers.length - 2} more`
 }
 
 /**
@@ -59,13 +71,11 @@ export function CoteachCard({
   onDragStartLesson,
   onDragEndLesson,
 }) {
+  const names = useNames()
   const lead = lessons[0]
   if (!lead) return null
   const teachers = lessons.map((lesson) => lesson.teacher)
-  const teacherLine =
-    teachers.length <= 3
-      ? teachers.join(', ')
-      : `${teachers.slice(0, 2).join(', ')} +${teachers.length - 2} more`
+  const teacherLine = teacherSummary(teachers, names)
 
   function handleDragStart(event) {
     event.dataTransfer.setData('application/x-timetabler-lesson', lead.id)
@@ -92,7 +102,7 @@ export function CoteachCard({
           {teachers.length} staff
         </span>
       </div>
-      <strong className="lesson-card-subject">{lead.subject}</strong>
+      <strong className="lesson-card-subject">{names.subject(lead.subject)}</strong>
       <span className="lesson-card-teacher">{teacherLine}</span>
     </article>
   )
@@ -103,6 +113,7 @@ export function CoteachCard({
  * sync group (elective stream, co-taught or cross-class joint session).
  */
 export function TrayUnitCard({ lessons, onDragStartLesson, onDragEndLesson }) {
+  const names = useNames()
   const lead = lessons[0]
   if (!lead) return null
   const isDouble = lead.span === 2
@@ -125,10 +136,7 @@ export function TrayUnitCard({ lessons, onDragStartLesson, onDragEndLesson }) {
           ],
         }))
       : null
-  const teacherLine =
-    teachers.length <= 3
-      ? teachers.join(', ')
-      : `${teachers.slice(0, 2).join(', ')} +${teachers.length - 2} more`
+  const teacherLine = teacherSummary(teachers, names)
 
   function handleDragStart(event) {
     event.dataTransfer.setData(LESSON_MIME, lead.id)
@@ -179,13 +187,14 @@ export function TrayUnitCard({ lessons, onDragStartLesson, onDragEndLesson }) {
         <ul className="lesson-card-lines">
           {rows.map((row) => (
             <li key={row.subject}>
-              <strong>{row.subject}</strong> {row.teachers.join(', ')}
+              <strong>{names.subject(row.subject)}</strong>{' '}
+              {row.teachers.map(names.teacher).join(', ')}
             </li>
           ))}
         </ul>
       ) : (
         <>
-          <strong className="lesson-card-subject">{lead.subject}</strong>
+          <strong className="lesson-card-subject">{names.subject(lead.subject)}</strong>
           <span className="lesson-card-teacher">{teacherLine}</span>
         </>
       )}

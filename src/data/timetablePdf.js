@@ -52,10 +52,25 @@ export function downloadTimetablePdf(options) {
   pdfMake.createPdf(definition).download(fileName)
 }
 
-export function buildTimetableDoc({ mode, groups, lessons, placements, colour = true }) {
+export function buildTimetableDoc({
+  mode,
+  groups,
+  lessons,
+  placements,
+  colour = true,
+  abbreviate = true,
+}) {
   const theme = colour ? THEMES.colour : THEMES.mono
   const pages = groups.map((group, index) => {
-    const ctx = { theme, mode, group, lessons, placements, used: { subjects: new Map(), teachers: new Map() } }
+    const ctx = {
+      theme,
+      mode,
+      group,
+      lessons,
+      placements,
+      abbreviate,
+      used: { subjects: new Map(), teachers: new Map() },
+    }
     const weekdays = weekTable(ctx, DAYS)
     const saturday = weekTable(ctx, WEEKEND_DAYS)
     return {
@@ -278,7 +293,20 @@ function lessonCell(ctx, list) {
   }
 
   let lines
-  if (bySubject.size > 1) {
+  if (bySubject.size > 1 && !ctx.abbreviate) {
+    lines = [...bySubject].map(([subject, names]) => ({
+      text: [
+        { text: subject, bold: true },
+        {
+          text: ` · ${names.map((n) => (mode === 'teacher' ? `Class ${n}` : n)).join(', ')}`,
+          fontSize: 5.5,
+        },
+      ],
+      fontSize: 6,
+      color: theme.lessonInk,
+      margin: [0, 0, 0, 1.5],
+    }))
+  } else if (bySubject.size > 1) {
     const parts = [...bySubject].flatMap(([subject, names], i) => [
       ...(i ? [{ text: '  ·  ' }] : []),
       { text: subjectAbbr(ctx, subject), bold: true },
@@ -294,7 +322,7 @@ function lessonCell(ctx, list) {
     const who =
       mode === 'teacher'
         ? `Class ${names.join(', ')}`
-        : names.length > MAX_FULL_NAMES
+        : ctx.abbreviate && names.length > MAX_FULL_NAMES
           ? names.map((name) => teacherAbbr(ctx, name)).join(', ')
           : names.join(', ')
     lines = [

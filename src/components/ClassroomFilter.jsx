@@ -6,7 +6,7 @@ function inClassroomOrder(ids) {
   return CLASSROOMS.filter((id) => selected.has(id))
 }
 
-export function ClassroomFilter({ selected, onChange }) {
+export function ClassroomFilter({ selected, onChange, abbreviate, onAbbreviateChange }) {
   const allSelected =
     CLASSROOMS.length > 0 && selected.length === CLASSROOMS.length
   const noneSelected = selected.length === 0
@@ -43,6 +43,13 @@ export function ClassroomFilter({ selected, onChange }) {
           onChange={(checked) => toggle(classroom, checked)}
         />
       ))}
+      <Checkbox
+        id="filter-abbreviate"
+        label="Use abbreviations"
+        checked={abbreviate}
+        onChange={onAbbreviateChange}
+        className="is-abbreviate"
+      />
     </div>
   )
 }
