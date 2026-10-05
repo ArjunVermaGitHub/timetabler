@@ -1,5 +1,6 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { AbbreviateContext } from './abbreviate'
+import { measureBoxes, playBoxes } from './animateBoxes'
 import { ClassroomFilter } from './components/ClassroomFilter'
 import { ErrorBoundary, useOnline } from './components/ErrorScreen'
 import { HeaderBar } from './components/HeaderBar'
@@ -66,6 +67,16 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   const [selectedTeachers, setSelectedTeachers] = useState(() => [...TEACHERS])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
   const [abbreviate, setAbbreviate] = useState(readStoredAbbreviate)
+  const boxesBefore = useRef(null)
+  const changeAbbreviate = (next) => {
+    boxesBefore.current = measureBoxes()
+    setAbbreviate(next)
+  }
+  useLayoutEffect(() => {
+    const snapshot = boxesBefore.current
+    boxesBefore.current = null
+    if (snapshot) playBoxes(snapshot)
+  }, [abbreviate])
   const [placements, setPlacements] = useState(() =>
     knownPlacements(savedSchedule?.placements),
   )
@@ -413,14 +424,14 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
           selected={selectedClassrooms}
           onChange={setSelectedClassrooms}
           abbreviate={abbreviate}
-          onAbbreviateChange={setAbbreviate}
+          onAbbreviateChange={changeAbbreviate}
         />
       ) : (
         <TeacherFilter
           selected={selectedTeachers}
           onChange={setSelectedTeachers}
           abbreviate={abbreviate}
-          onAbbreviateChange={setAbbreviate}
+          onAbbreviateChange={changeAbbreviate}
         />
       )}
       {placementError ? (
