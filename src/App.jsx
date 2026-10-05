@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { AbbreviateContext } from './abbreviate'
 import { ClassroomFilter } from './components/ClassroomFilter'
+import { ErrorBoundary, useOnline } from './components/ErrorScreen'
 import { HeaderBar } from './components/HeaderBar'
 import { TeacherFilter } from './components/TeacherFilter'
 import { TeacherTimetableGrid } from './components/TeacherTimetableGrid'
@@ -15,10 +16,10 @@ import { loadModule, preloadLazyModules } from './lazyModules'
 import { knownPlacements, useScheduleSync } from './useScheduleSync'
 import { navigate, usePath } from './router'
 
-// Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open
-const ManagePanel = lazy(() =>
-  loadModule('manage').then((m) => ({ default: m.ManagePanel })),
-)
+// Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open.
+// A failed lazy() import is cached for good, so each retry needs a fresh one.
+const lazyManagePanel = () =>
+  lazy(() => loadModule('manage').then((m) => ({ default: m.ManagePanel })))
 
 const MANAGE_TABS = ['teachers', 'classes', 'subjects', 'links']
 const TITLES = { classes: 'Class view', teachers: 'Teacher view', manage: 'Manage' }
@@ -52,6 +53,9 @@ function readStoredAbbreviate() {
 
 function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }) {
   const path = usePath()
+  const online = useOnline()
+  const [manageAttempt, setManageAttempt] = useState(0)
+  const ManagePanel = useMemo(lazyManagePanel, [manageAttempt])
   const route = routeFor(path)
   const { view } = route
 
@@ -373,10 +377,37 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         onSignOut={onSignOut}
         manageMode={view === 'manage'}
       />
+      {online ? null : (
+        <div className="offline-banner" role="status">
+          {user?.admin
+            ? "You're offline. You can keep working; changes will save once you're back online."
+            : "You're offline. The timetable may be out of date until you reconnect."}
+        </div>
+      )}
       {view === 'manage' ? (
-        <Suspense fallback={<p className="manage-empty manage">Loading…</p>}>
-          <ManagePanel user={user} tab={route.tab} onChanged={onCatalogChange} />
-        </Suspense>
+        <ErrorBoundary
+          key={manageAttempt}
+          fallback={() => (
+            <div className="manage-empty manage section-error" role="alert">
+              <p>
+                {online
+                  ? "Manage couldn't be loaded."
+                  : "Manage couldn't be loaded because you're offline."}
+              </p>
+              <button
+                type="button"
+                className="primary-button"
+                onClick={() => setManageAttempt((n) => n + 1)}
+              >
+                Try again
+              </button>
+            </div>
+          )}
+        >
+          <Suspense fallback={<p className="manage-empty manage">Loading…</p>}>
+            <ManagePanel user={user} tab={route.tab} onChanged={onCatalogChange} />
+          </Suspense>
+        </ErrorBoundary>
       ) : view === 'classes' ? (
         <ClassroomFilter
           selected={selectedClassrooms}

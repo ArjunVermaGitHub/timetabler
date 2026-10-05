@@ -35,6 +35,8 @@ function reloadForNewVersion() {
 export function loadModule(name) {
   cache[name] ??= loaders[name]().catch((error) => {
     delete cache[name]
+    // Offline looks just like a stale chunk, but reloading would only lose the page
+    if (!navigator.onLine) throw new Error("you're offline. Reconnect and try again")
     if (!isStaleChunk(error)) throw error
     if (reloadForNewVersion()) return new Promise(() => {})
     throw new Error('the app was updated since this page opened. Reload the page and try again')
