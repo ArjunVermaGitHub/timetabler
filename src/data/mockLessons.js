@@ -125,7 +125,9 @@ export let SUBJECT_ABBR = new Map()
 export function applyCatalog({ classrooms, teachers, lessons, abbreviations = {} }) {
   setClassrooms(classrooms)
   CLASS_TEACHERS = Object.fromEntries(
-    classrooms.filter((c) => c.classTeacher).map((c) => [c.name, c.classTeacher]),
+    classrooms
+      .filter((c) => c.classTeachers?.length)
+      .map((c) => [c.name, c.classTeachers]),
   )
   assignGreys(lessons.map((l) => l.subject))
   UNSCHEDULED_LESSONS = lessons.map((lesson) => ({

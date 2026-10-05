@@ -9,14 +9,17 @@ async function parseClass(db, body) {
   if (dayEnd && !/^([01]\d|2[0-3]):[0-5]\d$/.test(dayEnd)) {
     throw new HttpError(400, 'Day end must look like 12:30')
   }
-  const classTeacherId = body.classTeacherId ? String(body.classTeacherId) : null
-  if (
-    classTeacherId &&
-    !(await db.collection('teachers').findOne({ _id: toId(classTeacherId) }))
-  ) {
-    throw new HttpError(400, 'Class teacher not found')
+  const teacherId = async (value) => {
+    const id = value ? String(value) : null
+    if (id && !(await db.collection('teachers').findOne({ _id: toId(id) }))) {
+      throw new HttpError(400, 'Class teacher not found')
+    }
+    return id
   }
-  return { name, nameKey: nameKey(name), dayEnd, classTeacherId }
+  const classTeacherId = await teacherId(body.classTeacherId)
+  const second = await teacherId(body.coClassTeacherId)
+  const coClassTeacherId = second && second !== classTeacherId ? second : null
+  return { name, nameKey: nameKey(name), dayEnd, classTeacherId, coClassTeacherId }
 }
 
 async function guardDuplicate(error) {

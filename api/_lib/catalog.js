@@ -54,7 +54,9 @@ export async function loadCatalog(db) {
     classrooms: classes.map((c) => ({
       name: c.name,
       dayEnd: c.dayEnd ?? null,
-      classTeacher: teacherName.get(c.classTeacherId) ?? null,
+      classTeachers: [c.classTeacherId, c.coClassTeacherId]
+        .map((id) => teacherName.get(id))
+        .filter(Boolean),
     })),
     teachers: teachers.map((t) => t.name),
     lessons: buildLessons(classes, teachers, links),

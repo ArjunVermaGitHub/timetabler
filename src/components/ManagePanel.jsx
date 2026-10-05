@@ -328,7 +328,7 @@ function TeachersTab({ data, readOnly, mutate, confirm }) {
 }
 
 function ClassesTab({ data, readOnly, mutate, confirm }) {
-  const blank = { name: '', dayEnd: '', classTeacherId: '' }
+  const blank = { name: '', dayEnd: '', classTeacherId: '', coClassTeacherId: '' }
   const [form, setForm] = useState(blank)
   const teacherName = useMemo(
     () => new Map(data.teachers.map((t) => [t.id, t.name])),
@@ -356,7 +356,10 @@ function ClassesTab({ data, readOnly, mutate, confirm }) {
     () =>
       data.classes.map((c) => ({
         ...c,
-        classTeacher: teacherName.get(c.classTeacherId) ?? '',
+        classTeacher: [c.classTeacherId, c.coClassTeacherId]
+          .map((id) => teacherName.get(id))
+          .filter(Boolean)
+          .join(' & '),
         dayEnd: c.dayEnd ?? '',
         links: load.get(c.id)?.links ?? 0,
         periods: load.get(c.id)?.periods ?? 0,
@@ -379,7 +382,7 @@ function ClassesTab({ data, readOnly, mutate, confirm }) {
 
   const columns = [
     { field: 'name', header: 'Class', width: 120 },
-    { field: 'classTeacher', header: 'Class teacher', width: 220 },
+    { field: 'classTeacher', header: 'Class teacher', width: 300 },
     { field: 'dayEnd', header: 'Ends early', width: 120 },
     { field: 'periods', header: 'Periods / week', width: 140 },
     ...(readOnly
@@ -398,6 +401,7 @@ function ClassesTab({ data, readOnly, mutate, confirm }) {
                     name: row.name,
                     dayEnd: row.dayEnd,
                     classTeacherId: row.classTeacherId ?? '',
+                    coClassTeacherId: row.coClassTeacherId ?? '',
                   })
                 }
                 onDelete={() =>
@@ -447,6 +451,13 @@ function ClassesTab({ data, readOnly, mutate, confirm }) {
             value={form.classTeacherId}
             options={teacherOptions}
             onChange={(classTeacherId) => setForm({ ...form, classTeacherId })}
+          />
+          <Pick
+            label="Second class teacher"
+            placeholder="None"
+            value={form.coClassTeacherId}
+            options={teacherOptions.filter((o) => o.value !== form.classTeacherId)}
+            onChange={(coClassTeacherId) => setForm({ ...form, coClassTeacherId })}
           />
           <Input
             type="time"

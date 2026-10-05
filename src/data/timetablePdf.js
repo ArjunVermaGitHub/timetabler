@@ -146,7 +146,9 @@ function pageHeader(mode, group) {
         style: 'title',
       },
       {
-        text: classTeacher ? `Class teacher: ${classTeacher}` : '',
+        text: classTeacher
+          ? `Class teacher${classTeacher.length > 1 ? 's' : ''}: ${classTeacher.join(' & ')}`
+          : '',
         style: 'meta',
         alignment: 'right',
         margin: [0, 5, 0, 0],

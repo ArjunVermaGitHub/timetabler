@@ -91,6 +91,9 @@ export default handle({
     await db
       .collection('classes')
       .updateMany({ classTeacherId: id }, { $set: { classTeacherId: null } })
+    await db
+      .collection('classes')
+      .updateMany({ coClassTeacherId: id }, { $set: { coClassTeacherId: null } })
     await db.collection('teachers').deleteOne({ _id })
     return { ok: true }
   },

@@ -43,6 +43,7 @@ try {
       nameKey: key(name),
       dayEnd: DAY_END[name] ?? null,
       classTeacherId: teacherIds.get(catalog.classTeachers[name]) ?? null,
+      coClassTeacherId: teacherIds.get(catalog.coClassTeachers?.[name]) ?? null,
       order,
       createdAt: now,
     })
