@@ -589,8 +589,7 @@ button {
 }
 
 .timetable .saturday-gap .day-col {
-  background: var(--day-fill);
-  border-right: 1px solid color-mix(in srgb, var(--day-fill), black 28%);
+  border-bottom: 0;
 }
 
 .timetable .is-saturday td.slot {
@@ -706,16 +705,22 @@ button {
   text-transform: uppercase;
   color: var(--day-ink);
   border: 0;
+  box-shadow: none;
+}
+
+/* The cell carries the fill and rules so the spine stays solid when a row grows taller */
+.timetable tbody .day-col {
+  background: var(--day-fill);
+  vertical-align: middle;
   border-right: 1px solid color-mix(in srgb, var(--day-fill), black 28%);
   border-bottom: 1px solid color-mix(in srgb, var(--day-fill), white 10%);
-  box-shadow: none;
 }
 
 .timetable tbody td.slot {
   vertical-align: stretch;
 }
 
-.timetable tbody:last-child tr:last-child .day-pill {
+.timetable tbody:last-child tr:last-child .day-col {
   border-bottom: 0;
 }
 
