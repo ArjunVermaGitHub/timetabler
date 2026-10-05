@@ -1662,6 +1662,24 @@ button {
   flex: 0 0 240px;
 }
 
+.manage-add > div.manage-abbr {
+  flex: 0 0 150px;
+}
+
+.manage-hint {
+  margin: 0;
+}
+
+.abbr-cell {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.abbr-cell.is-auto {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
 .inline-field {
   display: inline-flex;
   align-items: center;

@@ -43,10 +43,11 @@ export function buildLessons(classes, teachers, links) {
 }
 
 export async function loadCatalog(db) {
-  const [classes, teachers, links] = await Promise.all([
+  const [classes, teachers, links, subjects] = await Promise.all([
     db.collection('classes').find().sort({ order: 1 }).toArray(),
     db.collection('teachers').find().sort({ nameKey: 1 }).toArray(),
     db.collection('links').find().sort({ order: 1, _id: 1 }).toArray(),
+    db.collection('subjects').find().toArray(),
   ])
   const teacherName = new Map(teachers.map((t) => [String(t._id), t.name]))
   return {
@@ -57,5 +58,12 @@ export async function loadCatalog(db) {
     })),
     teachers: teachers.map((t) => t.name),
     lessons: buildLessons(classes, teachers, links),
+    // Only abbreviations set by hand; the client fills in automatic ones
+    abbreviations: {
+      teachers: Object.fromEntries(
+        teachers.filter((t) => t.abbr).map((t) => [t.name, t.abbr]),
+      ),
+      subjects: Object.fromEntries(subjects.map((s) => [s.name, s.abbr])),
+    },
   }
 }

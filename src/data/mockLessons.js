@@ -1,3 +1,4 @@
+import { resolveSubjectAbbreviations, resolveTeacherAbbreviations } from './abbreviations'
 import { setClassrooms } from './schedule'
 
 const COLOR_BY_SUBJECT = {
@@ -88,12 +89,15 @@ export function colorFor(subject, teacher) {
 export let UNSCHEDULED_LESSONS = []
 export let TEACHERS = []
 export let CLASS_TEACHERS = {}
+/** Name → abbreviation, set by hand or generated (see abbreviations.js). */
+export let TEACHER_ABBR = new Map()
+export let SUBJECT_ABBR = new Map()
 
 /**
  * Install a catalog from `/api/catalog`. Fresh arrays every time, so caches
  * keyed on the lesson list (placement lookups) never serve stale data.
  */
-export function applyCatalog({ classrooms, teachers, lessons }) {
+export function applyCatalog({ classrooms, teachers, lessons, abbreviations = {} }) {
   setClassrooms(classrooms)
   CLASS_TEACHERS = Object.fromEntries(
     classrooms.filter((c) => c.classTeacher).map((c) => [c.name, c.classTeacher]),
@@ -105,4 +109,14 @@ export function applyCatalog({ classrooms, teachers, lessons }) {
   TEACHERS = [
     ...new Set([...teachers, ...UNSCHEDULED_LESSONS.map((l) => l.teacher)]),
   ].sort((a, b) => a.localeCompare(b))
+  const ownTeacherAbbr = abbreviations.teachers ?? {}
+  TEACHER_ABBR = resolveTeacherAbbreviations(
+    TEACHERS.map((name) => ({ name, abbr: ownTeacherAbbr[name] })),
+  )
+  SUBJECT_ABBR = resolveSubjectAbbreviations(
+    [...new Set(UNSCHEDULED_LESSONS.map((l) => l.subject))].sort((a, b) =>
+      a.localeCompare(b),
+    ),
+    abbreviations.subjects,
+  )
 }

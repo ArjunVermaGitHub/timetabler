@@ -7,7 +7,22 @@ function parseTeacher(body) {
   if (!name || name.length > 80) throw new HttpError(400, 'Teacher needs a name')
   const email = normalizeEmail(body.email)
   if (email && !isValidEmail(email)) throw new HttpError(400, 'Invalid email')
-  return { name, nameKey: nameKey(name), email: email || null }
+  const abbr = String(body.abbr ?? '').trim().replace(/\s+/g, ' ')
+  if (abbr.length > 8) throw new HttpError(400, 'Abbreviation can be at most 8 characters')
+  return { name, nameKey: nameKey(name), email: email || null, abbr: abbr || null }
+}
+
+const CASE_INSENSITIVE = { locale: 'en', strength: 2 }
+
+async function guardAbbr(db, fields, excludeId) {
+  if (!fields.abbr) return
+  const clash = await db
+    .collection('teachers')
+    .findOne(
+      { abbr: fields.abbr, ...(excludeId ? { _id: { $ne: excludeId } } : {}) },
+      { collation: CASE_INSENSITIVE },
+    )
+  if (clash) throw new HttpError(409, `${clash.name} already uses ${fields.abbr}`)
 }
 
 async function guardDuplicate(error) {
@@ -33,6 +48,7 @@ export default handle({
     await requireAdmin(req)
     const doc = { ...parseTeacher(await readJson(req)), createdAt: new Date() }
     const db = await getDb()
+    await guardAbbr(db, doc)
     const { insertedId } = await db
       .collection('teachers')
       .insertOne(doc)
@@ -44,11 +60,13 @@ export default handle({
     await requireAdmin(req)
     const _id = toId(query(req).id)
     const db = await getDb()
+    const fields = parseTeacher(await readJson(req))
+    await guardAbbr(db, fields, _id)
     const doc = await db
       .collection('teachers')
       .findOneAndUpdate(
         { _id },
-        { $set: parseTeacher(await readJson(req)) },
+        { $set: fields },
         { returnDocument: 'after' },
       )
       .catch(guardDuplicate)

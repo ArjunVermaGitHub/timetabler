@@ -9,7 +9,7 @@ import {
   slotsForTeacherDay,
 } from './schedule'
 import { lessonAtTeacher, lessonsAt } from './placement'
-import { CLASS_TEACHERS } from './mockLessons'
+import { CLASS_TEACHERS, SUBJECT_ABBR, TEACHER_ABBR } from './mockLessons'
 
 pdfMake.addVirtualFileSystem(vfs)
 
@@ -54,20 +54,26 @@ export function downloadTimetablePdf(options) {
 
 export function buildTimetableDoc({ mode, groups, lessons, placements, colour = true }) {
   const theme = colour ? THEMES.colour : THEMES.mono
-  const pages = groups.map((group, index) => ({
-    stack: [
-      pageHeader(mode, group),
-      weekTable(theme, mode, group, DAYS, lessons, placements),
-      {
-        unbreakable: true,
-        stack: [
-          { text: 'Saturday', style: 'section', margin: [0, 12, 0, 4] },
-          weekTable(theme, mode, group, WEEKEND_DAYS, lessons, placements),
-        ],
-      },
-    ],
-    pageBreak: index === 0 ? undefined : 'before',
-  }))
+  const pages = groups.map((group, index) => {
+    const ctx = { theme, mode, group, lessons, placements, used: { subjects: new Map(), teachers: new Map() } }
+    const weekdays = weekTable(ctx, DAYS)
+    const saturday = weekTable(ctx, WEEKEND_DAYS)
+    return {
+      stack: [
+        pageHeader(mode, group),
+        weekdays,
+        {
+          unbreakable: true,
+          stack: [
+            { text: 'Saturday', style: 'section', margin: [0, 12, 0, 4] },
+            saturday,
+            ...abbreviationKey(ctx),
+          ],
+        },
+      ],
+      pageBreak: index === 0 ? undefined : 'before',
+    }
+  })
 
   const stamp = new Date().toISOString().slice(0, 10)
   const scope =
@@ -118,7 +124,8 @@ function pageHeader(mode, group) {
   }
 }
 
-function weekTable(theme, mode, group, days, lessons, placements) {
+function weekTable(ctx, days) {
+  const { theme, mode, group } = ctx
   const slots =
     mode === 'teacher'
       ? slotsForTeacherDay(days[0])
@@ -141,7 +148,7 @@ function weekTable(theme, mode, group, days, lessons, placements) {
         fillColor: theme.headFill ?? rowFill,
         alignment: 'center',
       },
-      ...dayCells(theme, rowFill, mode, group, day, slots, lessons, placements),
+      ...dayCells(ctx, rowFill, day, slots),
     ]
   })
 
@@ -177,8 +184,9 @@ function headCell(theme, text, blocked = false) {
   }
 }
 
-/** Mirrors the on-screen grid: breaks, fixed sessions, doubles span two columns, electives stack. */
-function dayCells(theme, rowFill, mode, group, day, slots, lessons, placements) {
+/** Mirrors the on-screen grid: breaks, fixed sessions, doubles span two columns, electives share a cell. */
+function dayCells(ctx, rowFill, day, slots) {
+  const { theme, mode, group, lessons, placements } = ctx
   const cells = []
   let index = 0
 
@@ -229,7 +237,7 @@ function dayCells(theme, rowFill, mode, group, day, slots, lessons, placements) 
       Math.max(...starters.map((item) => item.lesson.span)),
       slots.length - index,
     )
-    const cell = lessonCell(theme, mode, starters.map((item) => item.lesson))
+    const cell = lessonCell(ctx, starters.map((item) => item.lesson))
     if (theme.zebra) cell.fillColor = rowFill
     cells.push({ ...cell, colSpan: span })
     for (let i = 1; i < span; i += 1) cells.push({})
@@ -239,37 +247,103 @@ function dayCells(theme, rowFill, mode, group, day, slots, lessons, placements) 
   return cells
 }
 
-function lessonCell(theme, mode, list) {
+/** Teachers in a cell beyond this many are written as abbreviations. */
+const MAX_FULL_NAMES = 2
+
+function subjectAbbr(ctx, subject) {
+  const abbr = SUBJECT_ABBR.get(subject) ?? subject
+  if (abbr !== subject) ctx.used.subjects.set(abbr, subject)
+  return abbr
+}
+
+function teacherAbbr(ctx, teacher) {
+  const abbr = TEACHER_ABBR.get(teacher) ?? teacher
+  if (abbr !== teacher) ctx.used.teachers.set(abbr, teacher)
+  return abbr
+}
+
+/**
+ * One subject with a couple of teachers reads in full. Parallel electives, or
+ * a long list of co-teachers, collapse to abbreviations on a single line
+ * ("ACC AB · BN SUB · PHY NT") explained by the key under the page.
+ */
+function lessonCell(ctx, list) {
+  const { theme, mode } = ctx
   const bySubject = new Map()
   for (const lesson of list) {
-    const who = mode === 'teacher' ? `Class ${lesson.classroom}` : lesson.teacher
     const names = bySubject.get(lesson.subject) ?? []
+    const who = mode === 'teacher' ? lesson.classroom : lesson.teacher
     if (!names.includes(who)) names.push(who)
     bySubject.set(lesson.subject, names)
   }
-  const stacked = bySubject.size > 1
-  const lines = [...bySubject].map(([subject, names]) => ({
-    text: stacked
-      ? [
-          { text: subject, bold: true },
-          { text: ` · ${names.join(', ')}`, fontSize: 5.5 },
-        ]
-      : [
+
+  let lines
+  if (bySubject.size > 1) {
+    const parts = [...bySubject].flatMap(([subject, names], i) => [
+      ...(i ? [{ text: '  ·  ' }] : []),
+      { text: subjectAbbr(ctx, subject), bold: true },
+      {
+        text: ` ${names
+          .map((name) => (mode === 'teacher' ? name : teacherAbbr(ctx, name)))
+          .join(', ')}`,
+      },
+    ])
+    lines = [{ text: parts, fontSize: 6.5, color: theme.lessonInk, lineHeight: 1.15 }]
+  } else {
+    const [[subject, names]] = bySubject
+    const who =
+      mode === 'teacher'
+        ? `Class ${names.join(', ')}`
+        : names.length > MAX_FULL_NAMES
+          ? names.map((name) => teacherAbbr(ctx, name)).join(', ')
+          : names.join(', ')
+    lines = [
+      {
+        text: [
           { text: `${subject}\n`, bold: true, fontSize: 7.5 },
-          { text: names.join(', '), fontSize: 6.5 },
+          { text: who, fontSize: 6.5 },
         ],
-    fontSize: stacked ? 6 : undefined,
-    color: theme.lessonInk,
-    margin: [0, 0, 0, stacked ? 1.5 : 0],
-  }))
+        color: theme.lessonInk,
+      },
+    ]
+  }
+
   const stream = list.find((lesson) => lesson.stream)?.stream
   return {
     stack: stream
-      ? [{ text: stream, fontSize: 5.5, bold: true, color: theme.lessonInk }, ...lines]
+      ? [
+          { text: stream, fontSize: 5.5, bold: true, color: theme.lessonInk, margin: [0, 0, 0, 1] },
+          ...lines,
+        ]
       : lines,
     // Parallel electives get one neutral fill rather than the first subject's colour
     fillColor: list.every((lesson) => lesson.subject === list[0].subject)
       ? list[0].color
       : '#4a6570',
   }
+}
+
+/** One wrapped line under each page spelling out every abbreviation used on it. */
+function abbreviationKey(ctx) {
+  const entries = (map) =>
+    [...map]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([abbr, full]) => `${abbr} ${full}`)
+      .join('  ·  ')
+  const groups = [
+    ['Subjects', entries(ctx.used.subjects)],
+    ['Teachers', entries(ctx.used.teachers)],
+  ].filter(([, text]) => text)
+  if (groups.length === 0) return []
+  return [
+    {
+      text: groups.flatMap(([label, text], i) => [
+        { text: `${i ? '     ' : ''}${label}: `, bold: true, color: ctx.theme.soft },
+        { text },
+      ]),
+      fontSize: 6.5,
+      lineHeight: 1.2,
+      margin: [0, 8, 0, 0],
+    },
+  ]
 }

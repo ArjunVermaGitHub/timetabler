@@ -4,6 +4,10 @@ import IconProvider from '@/app/components/IconProvider'
 import Input from '@/app/components/Input'
 import Select from '@/app/components/Select'
 import { api } from '../api'
+import {
+  resolveSubjectAbbreviations,
+  resolveTeacherAbbreviations,
+} from '../data/abbreviations'
 import { Link } from '../router'
 import { ConfirmDialog } from './ConfirmDialog'
 import { DataTable } from './DataTable'
@@ -36,6 +40,7 @@ function Pick({ options, onChange, ...props }) {
 const TABS = [
   ['teachers', 'Teachers'],
   ['classes', 'Classes'],
+  ['subjects', 'Subjects'],
   ['links', 'Links'],
 ]
 
@@ -56,12 +61,13 @@ export function ManagePanel({ user, tab, onChanged }) {
   }, [])
 
   const reload = useCallback(async () => {
-    const [t, c, l] = await Promise.all([
+    const [t, c, l, s] = await Promise.all([
       api('/api/teachers'),
       api('/api/classes'),
       api('/api/links'),
+      api('/api/subjects'),
     ])
-    setData({ teachers: t.teachers, classes: c.classes, links: l.links })
+    setData({ teachers: t.teachers, classes: c.classes, links: l.links, subjects: s.subjects })
   }, [])
 
   useEffect(() => {
@@ -139,6 +145,8 @@ export function ManagePanel({ user, tab, onChanged }) {
         <TeachersTab data={data} readOnly={readOnly} mutate={mutate} confirm={setConfirmRequest} />
       ) : tab === 'classes' ? (
         <ClassesTab data={data} readOnly={readOnly} mutate={mutate} confirm={setConfirmRequest} />
+      ) : tab === 'subjects' ? (
+        <SubjectsTab data={data} readOnly={readOnly} mutate={mutate} />
       ) : (
         <LinksTab data={data} readOnly={readOnly} mutate={mutate} confirm={setConfirmRequest} />
       )}
@@ -157,8 +165,19 @@ function periodsFor(link) {
 }
 
 function TeachersTab({ data, readOnly, mutate, confirm }) {
-  const blank = { name: '', email: '' }
+  const blank = { name: '', email: '', abbr: '' }
   const [form, setForm] = useState(blank)
+  const abbreviations = useMemo(
+    () => resolveTeacherAbbreviations(data.teachers),
+    [data.teachers],
+  )
+  const autoAbbr = useMemo(() => {
+    if (!form.name.trim()) return ''
+    const others = data.teachers.filter((t) => t.id !== form.id)
+    return resolveTeacherAbbreviations([...others, { name: form.name.trim() }]).get(
+      form.name.trim(),
+    )
+  }, [data.teachers, form.id, form.name])
 
   const load = useMemo(() => {
     const map = new Map()
@@ -178,10 +197,12 @@ function TeachersTab({ data, readOnly, mutate, confirm }) {
       data.teachers.map((t) => ({
         ...t,
         email: t.email ?? '',
+        abbr: t.abbr ?? '',
+        shortName: abbreviations.get(t.name) ?? '',
         links: load.get(t.id)?.links ?? 0,
         periods: load.get(t.id)?.periods ?? 0,
       })),
-    [data.teachers, load],
+    [data.teachers, load, abbreviations],
   )
 
   async function submit(event) {
@@ -199,6 +220,12 @@ function TeachersTab({ data, readOnly, mutate, confirm }) {
 
   const columns = [
     { field: 'name', header: 'Name', width: 220 },
+    {
+      field: 'shortName',
+      header: 'Abbr.',
+      width: 90,
+      renderFunction: (value, _index, row) => <AbbrCell value={value} auto={!row.abbr} />,
+    },
     { field: 'email', header: 'Email', width: 220 },
     { field: 'links', header: 'Links', width: 90 },
     { field: 'periods', header: 'Periods / week', width: 140 },
@@ -212,7 +239,9 @@ function TeachersTab({ data, readOnly, mutate, confirm }) {
             hideInExcel: true,
             renderFunction: (_value, _index, row) => (
               <RowActions
-                onEdit={() => setForm({ id: row.id, name: row.name, email: row.email })}
+                onEdit={() =>
+                  setForm({ id: row.id, name: row.name, email: row.email, abbr: row.abbr })
+                }
                 onDelete={() =>
                   confirm(
                     row.links
@@ -266,6 +295,15 @@ function TeachersTab({ data, readOnly, mutate, confirm }) {
             placeholder="Optional"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <Input
+            className="manage-abbr"
+            voiceInput={false}
+            label="Abbreviation"
+            placeholder={autoAbbr ? `Auto: ${autoAbbr}` : 'Auto'}
+            maxLength={8}
+            value={form.abbr}
+            onChange={(e) => setForm({ ...form, abbr: e.target.value.toUpperCase() })}
           />
           <Button type="submit" disabled={!form.name.trim()}>
             {form.id ? 'Save changes' : 'Add teacher'}
@@ -435,6 +473,132 @@ function ClassesTab({ data, readOnly, mutate, confirm }) {
         noDataMessage="No classes yet."
       />
     </section>
+  )
+}
+
+/**
+ * Subjects come from the links that use them, so there's nothing to add or
+ * delete here — only the abbreviation printed in compact timetable cells.
+ */
+function SubjectsTab({ data, readOnly, mutate }) {
+  const [form, setForm] = useState(null)
+  const abbreviations = useMemo(
+    () =>
+      resolveSubjectAbbreviations(
+        data.subjects.map((s) => s.name),
+        Object.fromEntries(data.subjects.filter((s) => s.abbr).map((s) => [s.name, s.abbr])),
+      ),
+    [data.subjects],
+  )
+  const rows = useMemo(
+    () =>
+      data.subjects.map((s) => ({
+        ...s,
+        abbr: s.abbr ?? '',
+        shortName: abbreviations.get(s.name) ?? '',
+      })),
+    [data.subjects, abbreviations],
+  )
+  const autoAbbr = useMemo(() => {
+    if (!form) return ''
+    const others = data.subjects.filter((s) => s.id !== form.id && s.abbr)
+    return resolveSubjectAbbreviations(
+      data.subjects.map((s) => s.name),
+      Object.fromEntries(others.map((s) => [s.name, s.abbr])),
+    ).get(form.name)
+  }, [data.subjects, form])
+
+  async function submit(event) {
+    event.preventDefault()
+    const abbr = form.abbr.trim()
+    const ok = await mutate(
+      '/api/subjects',
+      'PUT',
+      { name: form.name, abbr },
+      abbr
+        ? `${form.name} is now ${abbr}`
+        : `${form.name} is back to its automatic abbreviation`,
+    )
+    if (ok) setForm(null)
+  }
+
+  const columns = [
+    { field: 'name', header: 'Subject', width: 240 },
+    {
+      field: 'shortName',
+      header: 'Abbr.',
+      width: 110,
+      renderFunction: (value, _index, row) => <AbbrCell value={value} auto={!row.abbr} />,
+    },
+    { field: 'links', header: 'Links', width: 90 },
+    ...(readOnly
+      ? []
+      : [
+          {
+            field: 'actions',
+            header: 'Actions',
+            width: 90,
+            hideInExcel: true,
+            renderFunction: (_value, _index, row) => (
+              <div className="row-actions">
+                <button
+                  type="button"
+                  className="icon-action"
+                  onClick={() => setForm({ id: row.id, name: row.name, abbr: row.abbr })}
+                  aria-label={`Edit abbreviation for ${row.name}`}
+                  title="Edit abbreviation"
+                >
+                  <IconProvider name="edit" size={22} color={EDIT_COLOR} />
+                </button>
+              </div>
+            ),
+          },
+        ]),
+  ]
+
+  return (
+    <section className="manage-section is-table">
+      {readOnly ? null : form ? (
+        <form className="manage-add is-editing" onSubmit={submit}>
+          <strong className="manage-editing-label">Editing</strong>
+          <Input label="Subject" value={form.name} readOnly voiceInput={false} />
+          <Input
+            className="manage-abbr"
+            voiceInput={false}
+            label="Abbreviation"
+            placeholder={autoAbbr ? `Auto: ${autoAbbr}` : 'Auto'}
+            maxLength={12}
+            value={form.abbr}
+            onChange={(e) => setForm({ ...form, abbr: e.target.value.toUpperCase() })}
+          />
+          <Button type="submit">Save changes</Button>
+          <Button variant="secondary" onClick={() => setForm(null)}>
+            Cancel
+          </Button>
+        </form>
+      ) : (
+        <p className="muted manage-hint">
+          Abbreviations shorten busy cells in the PDF, with a key under each page.
+          Leave one blank to use the automatic version.
+        </p>
+      )}
+      <DataTable
+        name="manage-subjects"
+        tableTitle="RBS Subjects"
+        columns={columns}
+        data={rows}
+        searchableFields={['name', 'shortName']}
+        noDataMessage="Subjects appear here once a link uses them."
+      />
+    </section>
+  )
+}
+
+function AbbrCell({ value, auto }) {
+  return (
+    <span className={auto ? 'abbr-cell is-auto' : 'abbr-cell'} title={auto ? 'Automatic' : 'Set by hand'}>
+      {value}
+    </span>
   )
 }
 

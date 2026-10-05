@@ -19,7 +19,7 @@ const ManagePanel = lazy(() =>
   loadModule('manage').then((m) => ({ default: m.ManagePanel })),
 )
 
-const MANAGE_TABS = ['teachers', 'classes', 'links']
+const MANAGE_TABS = ['teachers', 'classes', 'subjects', 'links']
 const TITLES = { classes: 'Classes', teachers: 'Teachers', manage: 'Manage' }
 
 /** `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route. */
