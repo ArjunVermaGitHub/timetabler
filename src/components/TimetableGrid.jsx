@@ -157,32 +157,6 @@ export function TimetableGrid({
                     <tr className="saturday-gap" aria-hidden="true">
                       <td colSpan={timeGrid.cells.length + 1} />
                     </tr>
-                    <tr className="saturday-head">
-                      <th className="day-col">
-                        <span className="day-head">Day</span>
-                      </th>
-                      {timeGrid.lead > 0 ? (
-                        <th
-                          className="slot-void"
-                          colSpan={timeGrid.lead}
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                      {saturdaySlots.map((slot, i) => (
-                        <SlotHead
-                          key={slot.id}
-                          slot={slot}
-                          colSpan={timeGrid.slotSpans[i]}
-                        />
-                      ))}
-                      {timeGrid.trailing > 0 ? (
-                        <th
-                          className="slot-void"
-                          colSpan={timeGrid.trailing}
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                    </tr>
                     {WEEKEND_DAYS.map((day) => (
                       <DayRow
                         key={`${classroom}-${day}`}
@@ -190,6 +164,7 @@ export function TimetableGrid({
                         day={day}
                         slots={saturdaySlots}
                         colSpans={timeGrid.slotSpans}
+                        timed={timeGrid.slotOffGrid}
                         lead={timeGrid.lead}
                         trailing={timeGrid.trailing}
                         lessons={lessons}
@@ -219,6 +194,7 @@ function DayRow({
   day,
   slots,
   colSpans,
+  timed,
   lead = 0,
   trailing = 0,
   lessons,
@@ -303,6 +279,7 @@ function DayRow({
         day,
         slots,
         colSpans,
+        timed,
         lessons,
         placements,
         dragLesson,
@@ -323,6 +300,7 @@ function renderDaySlots({
   day,
   slots,
   colSpans,
+  timed,
   lessons,
   placements,
   dragLesson,
@@ -333,6 +311,13 @@ function renderDaySlots({
 }) {
   const cells = []
   let index = 0
+  // Saturday has no header row; slots off the weekday times carry their own
+  const timeOf = (slot, i) =>
+    timed?.[i] ? (
+      <span className="cell-time">
+        {slot.start}–{slot.end}
+      </span>
+    ) : null
   // Grid columns covered by `count` slots from `from` (Saturday slots may span several)
   const columnsFor = (from, count = 1) => {
     if (!colSpans) return count
@@ -355,14 +340,13 @@ function renderDaySlots({
           colSpan={columnsFor(index)}
           title={`${session.parts
             .map((p) => (p.teacher ? `${p.label} · ${p.teacher}` : p.label))
-            .join(' / ')} · ${slot.start}–${slot.end}`}
+            .join(' + ')} · ${slot.start}–${slot.end}`}
         >
-          <div className="fixed-cell is-split">
-            {session.parts.map((p) => (
-              <span key={p.label} className="fixed-label">
-                {p.label}
-              </span>
-            ))}
+          <div className="fixed-cell">
+            {timeOf(slot, index)}
+            <span className="fixed-label">
+              {session.parts.map((p) => p.label).join(' + ')}
+            </span>
           </div>
         </td>,
       )
@@ -381,6 +365,7 @@ function renderDaySlots({
           }`}
         >
           <div className={slot.kind === 'fixed' ? 'fixed-cell' : 'break-cell'}>
+            {timeOf(slot, index)}
             <span
               className={slot.kind === 'fixed' ? 'fixed-label' : 'break-label'}
             >

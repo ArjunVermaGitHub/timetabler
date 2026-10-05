@@ -586,27 +586,12 @@ button {
   padding: 0;
 }
 
-.timetable .saturday-head th {
-  text-align: left;
-  padding: 0;
-  font-weight: 600;
-}
-
-.timetable .saturday-head .day-col {
-  background: var(--day-fill);
-  vertical-align: bottom;
-}
-
-.timetable .saturday-head th.slot-head,
 .timetable .is-saturday td.slot {
   width: auto;
   min-width: 0;
   max-width: none;
 }
 
-.timetable .saturday-head .slot-head:last-child {
-  border-right: 0;
-}
 
 .timetable th,
 .timetable td {
@@ -883,15 +868,25 @@ button {
     color-mix(in srgb, var(--surface), black 18%);
 }
 
-.fixed-cell.is-split {
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  padding: 0 1px;
+.break-cell:has(.cell-time),
+.fixed-cell:has(.cell-time) {
+  align-content: center;
+  gap: 1px;
 }
 
-.fixed-cell.is-split .fixed-label + .fixed-label {
-  border-right: 1px solid color-mix(in srgb, var(--surface), black 16%);
-  padding-right: 1px;
+.cell-time {
+  font-size: 9px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.break-cell .cell-time {
+  color: var(--break-ink);
+}
+
+.fixed-cell .cell-time {
+  color: var(--head-ink);
 }
 
 .fixed-cell.is-duty {

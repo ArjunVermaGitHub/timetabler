@@ -82,7 +82,7 @@ export function buildTimetableDoc({
         {
           unbreakable: true,
           stack: [
-            { text: 'Saturday', style: 'section', margin: [0, 12, 0, 4] },
+            { text: '', margin: [0, 8, 0, 0] },
             saturday,
             ...abbreviationKey(ctx),
           ],
@@ -204,6 +204,8 @@ function weekTable(ctx, days) {
   const trailing = isWeekday ? 0 : grid.trailing
   const widths = pieceWidths(columns, grid.cells)
 
+  // Saturday borrows the weekday header; only its off-schedule slots show their own times
+  const timed = isWeekday ? slots.map(() => false) : grid.slotOffGrid
   const header = [
     headCell(theme, 'Day'),
     ...spanned(VOID, lead),
@@ -226,23 +228,23 @@ function weekTable(ctx, days) {
         alignment: 'center',
       },
       ...spanned(VOID, lead),
-      ...dayCells(ctx, rowFill, day, slots, spans),
+      ...dayCells(ctx, rowFill, day, slots, spans, timed),
     ]
   })
 
   return {
     table: {
-      headerRows: 1,
+      headerRows: isWeekday ? 1 : 0,
       dontBreakRows: true,
       // Saturday stops at its last slot; the pieces after it are simply not drawn
       widths: widths.slice(0, widths.length - trailing),
-      heights: (row) => (row === 0 ? 20 : 46),
-      body: [header, ...body],
+      heights: (row) => (isWeekday && row === 0 ? 20 : 46),
+      body: isWeekday ? [header, ...body] : body,
     },
     layout: {
       hLineColor: () => theme.grid,
       vLineColor: () => theme.grid,
-      hLineWidth: (line) => (line === 1 ? 1.2 : 0.6),
+      hLineWidth: (line) => (isWeekday && line === 1 ? 1.2 : 0.6),
       vLineWidth: () => 0.6,
       paddingLeft: () => 3,
       paddingRight: () => 3,
@@ -264,7 +266,7 @@ function headCell(theme, text, blocked = false) {
 }
 
 /** Mirrors the on-screen grid: breaks, fixed sessions, doubles span two columns, electives share a cell. */
-function dayCells(ctx, rowFill, day, slots, spans) {
+function dayCells(ctx, rowFill, day, slots, spans, timed) {
   const { theme, mode, group, lessons, placements } = ctx
   const cells = []
   let index = 0
@@ -285,11 +287,13 @@ function dayCells(ctx, rowFill, day, slots, spans) {
         ? slot.label
         : mode === 'teacher'
           ? `${fixed.label}\n${fixed.classroom}`
-          : fixed.parts.map((p) => p.label).join(' / ')
+          : fixed.parts.map((p) => p.label).join(' + ')
       cells.push(
         ...spanned(
           {
-            text: label,
+            text: timed?.[index]
+              ? [{ text: `${slot.start}–${slot.end}\n`, italics: false }, label]
+              : label,
             fontSize: 6,
             bold: true,
             alignment: 'center',

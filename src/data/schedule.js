@@ -392,7 +392,11 @@ export function buildTimeGrid(columns, slots) {
   const slotSpans = slots.map((s) => piecesIn(clip(s.start), clip(s.end)))
   const lead = piecesIn(dayStart, clip(slots[0].start))
   const trailing = piecesIn(clip(slots[slots.length - 1].end), dayEnd)
-  return { cells, columnSpans, slotSpans, lead, trailing }
+  // Slots whose times differ from the weekday column above can't borrow its header
+  const slotOffGrid = slots.map(
+    (s) => !columns.some((c) => c.start === s.start && c.end === s.end),
+  )
+  return { cells, columnSpans, slotSpans, slotOffGrid, lead, trailing }
 }
 
 export function dualLabel(slot) {
