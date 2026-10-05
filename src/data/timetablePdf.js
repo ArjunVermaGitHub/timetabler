@@ -6,6 +6,7 @@ import {
   buildTimeGrid,
   fixedDutyFor,
   fixedSessionAt,
+  isBreakfast,
   slotsForClassroom,
   slotsForTeacherDay,
 } from './schedule'
@@ -22,6 +23,7 @@ const THEMES = {
     headFill: '#1a6b66',
     headInk: '#e8fffa',
     breakFill: '#f3d9a4',
+    breakfastFill: '#f1cfa8',
     breakInk: '#5a3a08',
     emptyFill: '#f7ede4',
     grid: '#e2cdbd',
@@ -211,7 +213,7 @@ function weekTable(ctx, days) {
     ...spanned(VOID, lead),
     ...slots.flatMap((slot, i) =>
       spanned(
-        headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
+        headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period', slot),
         spans[i],
       ),
     ),
@@ -260,7 +262,7 @@ const HEADER_HEIGHT = 30
 /** Top-left corner split diagonally: time across the top, day down the side. */
 function cornerCell(theme, width) {
   const inner = HEADER_HEIGHT - CELL_CHROME
-  const label = { bold: true, fontSize: 6, color: theme.headInk }
+  const label = { bold: true, fontSize: 7, color: theme.headInk }
   return {
     fillColor: theme.headFill ?? undefined,
     stack: [
@@ -279,19 +281,23 @@ function cornerCell(theme, width) {
         relativePosition: { x: 0, y: 0 },
       },
       { ...label, text: 'Time', alignment: 'right' },
-      { ...label, text: 'Day', alignment: 'left', margin: [0, inner - 15, 0, 0] },
+      { ...label, text: 'Day', alignment: 'left', margin: [0, inner - 17, 0, 0] },
     ],
   }
 }
 
-function headCell(theme, text, blocked = false) {
+function breakFillFor(theme, slot) {
+  return isBreakfast(slot) ? (theme.breakfastFill ?? theme.breakFill) : theme.breakFill
+}
+
+function headCell(theme, text, blocked = false, slot = null) {
   return {
     text,
     bold: true,
     fontSize: 6.5,
     alignment: 'center',
     color: blocked ? theme.breakInk : theme.headInk,
-    fillColor: (blocked ? theme.breakFill : theme.headFill) ?? undefined,
+    fillColor: (blocked ? breakFillFor(theme, slot) : theme.headFill) ?? undefined,
   }
 }
 
@@ -329,7 +335,7 @@ function dayCells(ctx, rowFill, day, slots, spans, timed) {
             alignment: 'center',
             color: theme.breakInk,
             italics: true,
-            fillColor: theme.breakFill ?? rowFill,
+            fillColor: breakFillFor(theme, slot) ?? rowFill,
           },
           columnsFor(index),
         ),

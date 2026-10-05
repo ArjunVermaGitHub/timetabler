@@ -5,6 +5,7 @@ import {
   buildTimeGrid,
   classroomDayEnd,
   fixedSessionAt,
+  isBreakfast,
   slotsForClassroom,
 } from '../data/schedule'
 import { evaluatePlacement, lessonsAt, occupiedSlots } from '../data/placement'
@@ -361,7 +362,11 @@ function renderDaySlots({
       cells.push(
         <td
           key={`${classroom}-${day}-${slot.id}`}
-          className={slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'}
+          className={
+            slot.kind === 'fixed'
+              ? 'slot is-fixed'
+              : `slot is-break${isBreakfast(slot) ? ' is-breakfast' : ''}`
+          }
           colSpan={columnsFor(index)}
           title={`${slot.label} · ${slot.start}–${slot.end}${
             slot.kind === 'fixed' ? '' : ' · doubles cannot cross'

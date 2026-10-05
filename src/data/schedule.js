@@ -88,6 +88,8 @@ export function trackForClassroom(classroom) {
  * Junior & senior share clock times but period names / lunch differ.
  * 08:00–08:40 is Jr P-1 for juniors; seniors are at Breakfast (not taught).
  */
+export const isBreakfast = (slot) => slot?.kind === 'break' && /breakfast/i.test(slot.label)
+
 export const WEEKDAY_SLOTS = [
   {
     id: 'wd_0800',

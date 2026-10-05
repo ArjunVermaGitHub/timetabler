@@ -1,3 +1,5 @@
+import { isBreakfast } from '../data/schedule'
+
 /** Column header for a period, break, or fixed (e.g. Self Study) slot. */
 export function SlotHead({ slot, colSpan = 1 }) {
   const isBlocked = slot.kind === 'break' || slot.kind === 'fixed'
@@ -5,7 +7,7 @@ export function SlotHead({ slot, colSpan = 1 }) {
     slot.kind === 'fixed'
       ? 'slot-head is-fixed'
       : slot.kind === 'break'
-        ? 'slot-head is-break'
+        ? `slot-head is-break${isBreakfast(slot) ? ' is-breakfast' : ''}`
         : 'slot-head'
 
   return (

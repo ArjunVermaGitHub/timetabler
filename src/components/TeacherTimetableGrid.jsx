@@ -5,6 +5,7 @@ import {
   buildTimeGrid,
   classroomDayEnd,
   fixedDutyFor,
+  isBreakfast,
   slotsForTeacherDay,
 } from '../data/schedule'
 import {
@@ -397,7 +398,11 @@ function renderDaySlots({
       cells.push(
         <td
           key={`${teacher}-${day}-${slot.id}`}
-          className={slot.kind === 'fixed' ? 'slot is-fixed' : 'slot is-break'}
+          className={
+            slot.kind === 'fixed'
+              ? 'slot is-fixed'
+              : `slot is-break${isBreakfast(slot) ? ' is-breakfast' : ''}`
+          }
           colSpan={columnsFor(index)}
           title={`${slot.label} · ${slot.start}–${slot.end}`}
         >

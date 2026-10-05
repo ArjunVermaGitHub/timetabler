@@ -46,6 +46,7 @@
   --positive-bright-ink: #06302a;
 
   --break-fill: #e8a838;
+  --breakfast-fill: #e3944a;
   --break-ink: #5a3a08;
 
   --bevel-lift: 18%;
@@ -100,6 +101,7 @@
   --positive-bright-ink: #04201c;
 
   --break-fill: #b87820;
+  --breakfast-fill: #b2622a;
   --break-ink: #ffe8b0;
 
   --bevel-lift: 14%;
@@ -491,7 +493,7 @@ button {
 .grid-stage {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
   padding: 12px 14px 16px;
   width: max-content;
   min-width: 100%;
@@ -662,7 +664,7 @@ button {
       transparent calc(50% + 0.6px)
     ),
     var(--day-fill);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .day-head-time,
@@ -672,13 +674,13 @@ button {
 }
 
 .day-head-time {
-  top: 7px;
-  right: 6px;
+  top: 6px;
+  right: 5px;
 }
 
 .day-head-day {
-  bottom: 7px;
-  left: 6px;
+  bottom: 6px;
+  left: 5px;
 }
 
 .day-pill {
@@ -726,6 +728,10 @@ button {
   background: var(--head-fill);
   border-right: 1px solid color-mix(in srgb, var(--head-fill), black 26%);
   border-bottom: 1px solid color-mix(in srgb, var(--head-fill), black 22%);
+}
+
+.is-breakfast {
+  --break-fill: var(--breakfast-fill);
 }
 
 .timetable th.slot-head.is-break {
