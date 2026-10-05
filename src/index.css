@@ -20,7 +20,7 @@
   --banner: #1a6b66;
   --banner-ink: #e8fffa;
   --tray: #155e59;
-  --tray-well: #0c403c;
+  --tray-well: #0f4a46;
   --tray-ink: #e8fffa;
   --tray-muted: #7ec4bc;
   --panel-head-base: #1f7570;
@@ -963,18 +963,28 @@ button {
   min-height: 0;
   padding: 8px 12px 10px;
   border-radius: 16px 16px 12px 12px;
-  background: var(--tray);
+  border-width: 2px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tray), white 12%) 0%,
+    var(--tray) 38%,
+    color-mix(in srgb, var(--tray), black 10%) 100%
+  );
   color: var(--tray-ink);
-  box-shadow: 0 -6px 18px rgba(20, 8, 2, 0.22);
+  box-shadow:
+    0 -8px 24px rgba(20, 8, 2, 0.28),
+    0 -1px 0 color-mix(in srgb, var(--tray), black 35%),
+    inset 0 1px 0 color-mix(in srgb, white 30%, transparent);
 }
 
 .tray-grip {
   --surface: #2a9d8f;
   align-self: center;
-  width: 48px;
-  height: 5px;
+  width: 56px;
+  height: 6px;
   border-radius: 999px;
-  background: #2a9d8f;
+  background: linear-gradient(180deg, #5fd3bf, #2a9d8f);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   cursor: ns-resize;
   touch-action: none;
   flex-shrink: 0;
@@ -1018,10 +1028,19 @@ button {
   overflow-y: auto;
   padding: 8px 10px 10px;
   border-radius: 10px;
-  background: var(--tray-well);
-  border: 1px solid color-mix(in srgb, var(--tray-well), black 30%);
-  border-bottom-color: color-mix(in srgb, var(--tray), white 12%);
-  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tray-well), black 18%) 0%,
+    var(--tray-well) 22%
+  );
+  /* Carved in: dark top/left edge, lit bottom/right edge */
+  border: 2px solid;
+  border-color:
+    color-mix(in srgb, var(--tray-well), black 40%)
+    color-mix(in srgb, var(--tray), white 18%)
+    color-mix(in srgb, var(--tray), white 18%)
+    color-mix(in srgb, var(--tray-well), black 40%);
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.4);
   scrollbar-width: thin;
 }
 
@@ -1049,7 +1068,14 @@ button {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tray-ink);
-  background: color-mix(in srgb, var(--tray-muted) 22%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tray-muted) 38%, var(--tray-well)),
+    color-mix(in srgb, var(--tray-muted) 22%, var(--tray-well))
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 25%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .tray-cards {
