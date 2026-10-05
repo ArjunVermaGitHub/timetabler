@@ -20,6 +20,7 @@
   --banner: #1a6b66;
   --banner-ink: #e8fffa;
   --tray: #155e59;
+  --tray-well: #0c403c;
   --tray-ink: #e8fffa;
   --tray-muted: #7ec4bc;
   --panel-head-base: #1f7570;
@@ -75,6 +76,7 @@
   --banner: #0f5c58;
   --banner-ink: #d8fffa;
   --tray: #0a2e2c;
+  --tray-well: #051a19;
   --tray-ink: #d8fffa;
   --tray-muted: #5aaba4;
   --panel-head-base: #0f4a46;
@@ -963,6 +965,7 @@ button {
   border-radius: 16px 16px 12px 12px;
   background: var(--tray);
   color: var(--tray-ink);
+  box-shadow: 0 -6px 18px rgba(20, 8, 2, 0.22);
 }
 
 .tray-grip {
@@ -1004,15 +1007,21 @@ button {
   color: var(--tray-muted);
 }
 
+/* Sunken well for the cards, set apart from the frame holding the grip and title */
 .tray-body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 2px 2px 4px;
+  padding: 8px 10px 10px;
+  border-radius: 10px;
+  background: var(--tray-well);
+  border: 1px solid color-mix(in srgb, var(--tray-well), black 30%);
+  border-bottom-color: color-mix(in srgb, var(--tray), white 12%);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.35);
   scrollbar-width: thin;
 }
 
@@ -1020,18 +1029,27 @@ button {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   min-width: 0;
   width: 100%;
 }
 
+.tray-group + .tray-group {
+  padding-top: 8px;
+  border-top: 1px dashed color-mix(in srgb, var(--tray-muted) 35%, transparent);
+}
+
 .tray-group h3 {
+  align-self: flex-start;
   margin: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
   font-size: 10px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tray-muted);
-  padding-left: 2px;
+  color: var(--tray-ink);
+  background: color-mix(in srgb, var(--tray-muted) 22%, transparent);
 }
 
 .tray-cards {

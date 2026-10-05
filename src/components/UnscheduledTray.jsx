@@ -7,8 +7,8 @@ const MIN_TRAY_PX = 118
 const EMPTY_TRAY_PX = 36
 const MAX_TRAY_RATIO = 0.55
 /** Approx. group row height (label + cards + gaps). */
-const ROW_PX = 96
-const CHROME_PX = 52
+const ROW_PX = 104
+const CHROME_PX = 72
 
 export function UnscheduledTray({
   groups,
