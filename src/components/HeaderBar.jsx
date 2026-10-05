@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useClerk } from '@clerk/react'
 
 const SAVE_LABELS = {
@@ -83,15 +83,7 @@ export function HeaderBar({
                 {SAVE_LABELS[saveStatus]}
               </span>
             ) : null}
-            <button
-              type="button"
-              className="clear-schedule"
-              onClick={onDownloadPdf}
-              disabled={pdfDisabled}
-              title="Download the timetables on screen as a PDF"
-            >
-              Download PDF
-            </button>
+            <PdfMenu onDownload={onDownloadPdf} disabled={pdfDisabled} />
             <button
               type="button"
               className="clear-schedule"
@@ -112,5 +104,57 @@ export function HeaderBar({
         )}
       </div>
     </header>
+  )
+}
+
+function PdfMenu({ onDownload, disabled }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const close = (event) => {
+      if (event.type === 'keydown' ? event.key === 'Escape' : !ref.current?.contains(event.target)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', close)
+    return () => {
+      document.removeEventListener('pointerdown', close)
+      document.removeEventListener('keydown', close)
+    }
+  }, [open])
+
+  function pick(colour) {
+    setOpen(false)
+    onDownload(colour)
+  }
+
+  return (
+    <div className="pdf-menu" ref={ref}>
+      <button
+        type="button"
+        className="clear-schedule"
+        onClick={() => setOpen((value) => !value)}
+        disabled={disabled}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title="Download the timetables on screen as a PDF"
+      >
+        Download PDF ▾
+      </button>
+      {open ? (
+        <div className="pdf-menu-list" role="menu">
+          <button type="button" role="menuitem" onClick={() => pick(true)}>
+            Colour
+          </button>
+          <button type="button" role="menuitem" onClick={() => pick(false)}>
+            Black &amp; white
+            <span>Best for printing</span>
+          </button>
+        </div>
+      ) : null}
+    </div>
   )
 }

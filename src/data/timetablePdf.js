@@ -13,14 +13,35 @@ import { CLASS_TEACHERS } from './mockLessons'
 
 pdfMake.addVirtualFileSystem(vfs)
 
-const INK = '#3b2418'
-const SOFT = '#8a6a55'
-const HEAD_FILL = '#1a6b66'
-const HEAD_INK = '#e8fffa'
-const BREAK_FILL = '#f3d9a4'
-const BREAK_INK = '#5a3a08'
-const EMPTY_FILL = '#f7ede4'
-const GRID_LINE = '#e2cdbd'
+const THEMES = {
+  colour: {
+    ink: '#3b2418',
+    soft: '#8a6a55',
+    title: '#1a6b66',
+    headFill: '#1a6b66',
+    headInk: '#e8fffa',
+    breakFill: '#f3d9a4',
+    breakInk: '#5a3a08',
+    emptyFill: '#f7ede4',
+    grid: '#e2cdbd',
+    lessonInk: '#ffffff',
+    zebra: null,
+  },
+  // Print-friendly: no fills except a light zebra on alternate day rows
+  mono: {
+    ink: '#000000',
+    soft: '#444444',
+    title: '#000000',
+    headFill: null,
+    headInk: '#000000',
+    breakFill: null,
+    breakInk: '#444444',
+    emptyFill: null,
+    grid: '#8a8a8a',
+    lessonInk: '#000000',
+    zebra: '#efefef',
+  },
+}
 
 /**
  * Downloads the grids currently on screen as a PDF: one landscape A4 page per
@@ -31,16 +52,17 @@ export function downloadTimetablePdf(options) {
   pdfMake.createPdf(definition).download(fileName)
 }
 
-export function buildTimetableDoc({ mode, groups, lessons, placements }) {
+export function buildTimetableDoc({ mode, groups, lessons, placements, colour = true }) {
+  const theme = colour ? THEMES.colour : THEMES.mono
   const pages = groups.map((group, index) => ({
     stack: [
       pageHeader(mode, group),
-      weekTable(mode, group, DAYS, lessons, placements),
+      weekTable(theme, mode, group, DAYS, lessons, placements),
       {
         unbreakable: true,
         stack: [
           { text: 'Saturday', style: 'section', margin: [0, 12, 0, 4] },
-          weekTable(mode, group, WEEKEND_DAYS, lessons, placements),
+          weekTable(theme, mode, group, WEEKEND_DAYS, lessons, placements),
         ],
       },
     ],
@@ -50,19 +72,20 @@ export function buildTimetableDoc({ mode, groups, lessons, placements }) {
   const stamp = new Date().toISOString().slice(0, 10)
   const scope =
     groups.length === 1 ? groups[0] : mode === 'teacher' ? 'teachers' : 'classes'
+  const suffix = colour ? '' : '-bw'
 
   return {
-    fileName: `timetable-${scope.replace(/\s+/g, '-').toLowerCase()}-${stamp}.pdf`,
+    fileName: `timetable-${scope.replace(/\s+/g, '-').toLowerCase()}-${stamp}${suffix}.pdf`,
     definition: {
       info: { title: `Timetable · ${scope}` },
       pageSize: 'A4',
       pageOrientation: 'landscape',
       pageMargins: [24, 24, 24, 30],
-      defaultStyle: { font: 'Roboto', fontSize: 7, color: INK },
+      defaultStyle: { font: 'Roboto', fontSize: 7, color: theme.ink },
       styles: {
-        title: { fontSize: 15, bold: true, color: HEAD_FILL },
-        meta: { fontSize: 8, color: SOFT },
-        section: { fontSize: 9, bold: true, color: SOFT },
+        title: { fontSize: 15, bold: true, color: theme.title },
+        meta: { fontSize: 8, color: theme.soft },
+        section: { fontSize: 9, bold: true, color: theme.soft },
       },
       footer: (page, count) => ({
         columns: [
@@ -95,23 +118,32 @@ function pageHeader(mode, group) {
   }
 }
 
-function weekTable(mode, group, days, lessons, placements) {
+function weekTable(theme, mode, group, days, lessons, placements) {
   const slots =
     mode === 'teacher'
       ? slotsForTeacherDay(days[0])
       : slotsForClassroom(group, days[0])
 
   const header = [
-    headCell('Day'),
+    headCell(theme, 'Day'),
     ...slots.map((slot) =>
-      headCell(`${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
+      headCell(theme, `${slot.label}\n${slot.start}–${slot.end}`, slot.kind !== 'period'),
     ),
   ]
 
-  const body = days.map((day) => [
-    { text: day, bold: true, color: HEAD_INK, fillColor: HEAD_FILL, alignment: 'center' },
-    ...dayCells(mode, group, day, slots, lessons, placements),
-  ])
+  const body = days.map((day, row) => {
+    const rowFill = theme.zebra && row % 2 === 1 ? theme.zebra : undefined
+    return [
+      {
+        text: day,
+        bold: true,
+        color: theme.headInk,
+        fillColor: theme.headFill ?? rowFill,
+        alignment: 'center',
+      },
+      ...dayCells(theme, rowFill, mode, group, day, slots, lessons, placements),
+    ]
+  })
 
   return {
     table: {
@@ -122,8 +154,8 @@ function weekTable(mode, group, days, lessons, placements) {
       body: [header, ...body],
     },
     layout: {
-      hLineColor: () => GRID_LINE,
-      vLineColor: () => GRID_LINE,
+      hLineColor: () => theme.grid,
+      vLineColor: () => theme.grid,
       hLineWidth: () => 0.6,
       vLineWidth: () => 0.6,
       paddingLeft: () => 3,
@@ -134,19 +166,19 @@ function weekTable(mode, group, days, lessons, placements) {
   }
 }
 
-function headCell(text, blocked = false) {
+function headCell(theme, text, blocked = false) {
   return {
     text,
     bold: true,
     fontSize: 6.5,
     alignment: 'center',
-    color: blocked ? BREAK_INK : HEAD_INK,
-    fillColor: blocked ? BREAK_FILL : HEAD_FILL,
+    color: blocked ? theme.breakInk : theme.headInk,
+    fillColor: (blocked ? theme.breakFill : theme.headFill) ?? undefined,
   }
 }
 
 /** Mirrors the on-screen grid: breaks, fixed sessions, doubles span two columns, electives stack. */
-function dayCells(mode, group, day, slots, lessons, placements) {
+function dayCells(theme, rowFill, mode, group, day, slots, lessons, placements) {
   const cells = []
   let index = 0
 
@@ -170,8 +202,9 @@ function dayCells(mode, group, day, slots, lessons, placements) {
         fontSize: 6,
         bold: true,
         alignment: 'center',
-        color: BREAK_INK,
-        fillColor: BREAK_FILL,
+        color: theme.breakInk,
+        italics: !theme.breakFill,
+        fillColor: theme.breakFill ?? rowFill,
       })
       index += 1
       continue
@@ -187,7 +220,7 @@ function dayCells(mode, group, day, slots, lessons, placements) {
           )
 
     if (starters.length === 0) {
-      cells.push({ text: '', fillColor: EMPTY_FILL })
+      cells.push({ text: '', fillColor: theme.emptyFill ?? rowFill })
       index += 1
       continue
     }
@@ -196,7 +229,9 @@ function dayCells(mode, group, day, slots, lessons, placements) {
       Math.max(...starters.map((item) => item.lesson.span)),
       slots.length - index,
     )
-    cells.push({ ...lessonCell(mode, starters.map((item) => item.lesson)), colSpan: span })
+    const cell = lessonCell(theme, mode, starters.map((item) => item.lesson))
+    if (theme.zebra) cell.fillColor = rowFill
+    cells.push({ ...cell, colSpan: span })
     for (let i = 1; i < span; i += 1) cells.push({})
     index += span
   }
@@ -204,7 +239,7 @@ function dayCells(mode, group, day, slots, lessons, placements) {
   return cells
 }
 
-function lessonCell(mode, list) {
+function lessonCell(theme, mode, list) {
   const bySubject = new Map()
   for (const lesson of list) {
     const who = mode === 'teacher' ? `Class ${lesson.classroom}` : lesson.teacher
@@ -224,13 +259,13 @@ function lessonCell(mode, list) {
           { text: names.join(', '), fontSize: 6.5 },
         ],
     fontSize: stacked ? 6 : undefined,
-    color: '#ffffff',
+    color: theme.lessonInk,
     margin: [0, 0, 0, stacked ? 1.5 : 0],
   }))
   const stream = list.find((lesson) => lesson.stream)?.stream
   return {
     stack: stream
-      ? [{ text: stream, fontSize: 5.5, bold: true, color: '#ffffff' }, ...lines]
+      ? [{ text: stream, fontSize: 5.5, bold: true, color: theme.lessonInk }, ...lines]
       : lines,
     // Parallel electives get one neutral fill rather than the first subject's colour
     fillColor: list.every((lesson) => lesson.subject === list[0].subject)

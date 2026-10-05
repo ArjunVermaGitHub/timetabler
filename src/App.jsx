@@ -209,7 +209,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
 
   const [exportingPdf, setExportingPdf] = useState(false)
 
-  async function handleDownloadPdf() {
+  async function handleDownloadPdf(colour = true) {
     setExportingPdf(true)
     try {
       const { downloadTimetablePdf } = await loadModule('pdf')
@@ -218,6 +218,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         groups: view === 'teachers' ? visibleTeachers : visibleClassrooms,
         lessons: UNSCHEDULED_LESSONS,
         placements,
+        colour,
       })
     } catch (err) {
       setPlacementError(`Couldn't create the PDF: ${err.message}`)
