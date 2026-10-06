@@ -154,9 +154,11 @@ const TeacherPanel = memo(function TeacherPanel({
       data-teacher={teacher}
       style={{ '--panel-accent': panelAccent() }}
     >
-      <aside className="class-panel-side" aria-label={teacher}>
-        <span className="class-panel-badge is-teacher">{teacher}</span>
-      </aside>
+      <header className="class-panel-head" aria-label={teacher}>
+        <span className="class-panel-title">
+          <span className="class-panel-badge is-teacher">{teacher}</span>
+        </span>
+      </header>
       <div className="class-panel-body">
         <table className="timetable">
           <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />

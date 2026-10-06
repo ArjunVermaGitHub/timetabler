@@ -59,7 +59,6 @@
   --grid-table-width: calc(
     var(--day-w) + (8 * var(--period-min)) + (3 * var(--break-w))
   );
-  --panel-side-w: 52px;
   --slot-row-min: 48px;
   --card-grid-min: 40px;
   --sans: 'Nunito Sans', system-ui, sans-serif;
@@ -112,7 +111,6 @@
   --grid-table-width: calc(
     var(--day-w) + (8 * var(--period-min)) + (3 * var(--break-w))
   );
-  --panel-side-w: 52px;
   --slot-row-min: 48px;
   --card-grid-min: 40px;
   --sans: 'Nunito Sans', system-ui, sans-serif;
@@ -519,13 +517,13 @@ button {
   content-visibility: auto;
   contain-intrinsic-size: auto 760px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: stretch;
   background: var(--panel-fill);
   border-radius: 14px;
   overflow: hidden;
   width: max-content;
-  min-width: calc(var(--grid-table-width) + var(--panel-side-w));
+  min-width: calc(var(--grid-table-width) + 20px);
   transition:
     opacity 140ms ease,
     filter 140ms ease;
@@ -537,18 +535,23 @@ button {
   pointer-events: none;
 }
 
-.class-panel-side {
-  flex: 0 0 var(--panel-side-w);
-  width: var(--panel-side-w);
+.class-panel-head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-  padding: 8px 0;
+  padding: 7px 12px;
   background: color-mix(in srgb, var(--panel-accent) 55%, var(--panel-head-base));
-  border-right: 1px solid
+  border-bottom: 1px solid
     color-mix(in srgb, var(--panel-accent), black var(--bevel-sink));
+}
+
+/* Stays in view while the grid scrolls sideways */
+.class-panel-title {
+  position: sticky;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .class-panel-badge {
@@ -557,27 +560,20 @@ button {
   align-items: center;
   justify-content: center;
   min-width: 0;
-  max-height: 100%;
-  padding: 8px 6px;
+  padding: 3px 12px;
   border-radius: 999px;
   background: var(--panel-accent);
   color: #e8fffa;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
   text-align: center;
+  white-space: nowrap;
 }
 
 .class-panel-teacher {
-  max-height: 60%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #e8fffa;
@@ -585,13 +581,8 @@ button {
 }
 
 .class-panel-badge.is-teacher {
-  font-size: 11px;
   letter-spacing: 0.02em;
   text-transform: none;
-  max-height: calc(100% - 12px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .class-panel-body {
@@ -680,14 +671,26 @@ button {
 .day-head:has(.day-head-day) {
   position: relative;
   display: block;
-  background: linear-gradient(
+  /* A raised ridge along the diagonal: each face fades darker towards its corner */
+  background:
+    linear-gradient(
       to top right,
-      transparent calc(50% - 0.6px),
-      color-mix(in srgb, var(--day-ink), transparent 55%) 50%,
-      transparent calc(50% + 0.6px)
+      transparent calc(50% - 0.7px),
+      color-mix(in srgb, var(--day-ink), transparent 35%) 50%,
+      transparent calc(50% + 0.7px)
     ),
-    var(--day-fill);
+    linear-gradient(
+      to top right,
+      color-mix(in srgb, var(--day-fill), black 30%) 0%,
+      color-mix(in srgb, var(--day-fill), white 4%) 50%,
+      color-mix(in srgb, var(--day-fill), white 18%) 50%,
+      color-mix(in srgb, var(--day-fill), black 10%) 100%
+    );
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--day-fill), white 22%),
+    inset -1px -1px 0 color-mix(in srgb, var(--day-fill), black 30%);
   font-size: 11px;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
 }
 
 .day-head-time,

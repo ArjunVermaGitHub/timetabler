@@ -115,17 +115,19 @@ export function TimetableGrid({
               aria-hidden={dimmed ? true : undefined}
               style={{ '--panel-accent': panelAccent() }}
             >
-              <aside className="class-panel-side" aria-label={classroom}>
-                <span className="class-panel-badge">{classroom}</span>
-                {CLASS_TEACHERS[classroom] ? (
-                  <span
-                    className="class-panel-teacher"
-                    title={`Class teacher: ${CLASS_TEACHERS[classroom].join(' & ')}`}
-                  >
-                    {CLASS_TEACHERS[classroom].join(' & ')}
-                  </span>
-                ) : null}
-              </aside>
+              <header className="class-panel-head" aria-label={classroom}>
+                <span className="class-panel-title">
+                  <span className="class-panel-badge">{classroom}</span>
+                  {CLASS_TEACHERS[classroom] ? (
+                    <span
+                      className="class-panel-teacher"
+                      title={`Class teacher: ${CLASS_TEACHERS[classroom].join(' & ')}`}
+                    >
+                      {CLASS_TEACHERS[classroom].join(' & ')}
+                    </span>
+                  ) : null}
+                </span>
+              </header>
               <div className="class-panel-body">
                 <table className="timetable">
                   <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />
