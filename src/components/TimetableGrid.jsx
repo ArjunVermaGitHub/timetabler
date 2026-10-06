@@ -117,7 +117,7 @@ export function TimetableGrid({
             >
               <header className="class-panel-head" aria-label={classroom}>
                 <span className="class-panel-title">
-                  <span className="class-panel-badge">{classroom}</span>
+                  <span className="class-panel-badge">Class {classroom}</span>
                   {CLASS_TEACHERS[classroom] ? (
                     <span
                       className="class-panel-teacher"

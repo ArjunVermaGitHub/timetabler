@@ -158,7 +158,6 @@ button {
 .clear-schedule,
 .filter-check,
 .class-panel,
-.class-panel-badge,
 .tray-rail,
 .tray-grip {
   border-style: solid;
@@ -555,26 +554,21 @@ button {
 }
 
 .class-panel-badge {
-  --surface: var(--panel-accent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  padding: 5px 16px;
-  border-radius: 999px;
-  background: var(--panel-accent);
-  color: #e8fffa;
-  font-size: 17px;
+  color: #ffffff;
+  font-size: 24px;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  text-align: center;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
   white-space: nowrap;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
 }
 
 .class-panel-teacher {
+  padding-left: 14px;
+  border-left: 1px solid rgb(255 255 255 / 0.3);
   white-space: nowrap;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
   color: #e8fffa;
 }
@@ -754,7 +748,7 @@ button {
 /* Zebra rows (Tue, Thu, Sat); Saturday is the only row of its own tbody */
 .timetable tbody:not(.is-saturday) tr:nth-child(even) > td,
 .timetable tbody.is-saturday tr:nth-child(odd) > td {
-  background: color-mix(in srgb, var(--panel-fill), black 3%);
+  background: color-mix(in srgb, var(--panel-fill), black 7%);
 }
 
 .timetable tbody:last-child tr:last-child .day-col {
