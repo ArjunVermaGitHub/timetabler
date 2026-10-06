@@ -538,7 +538,7 @@ button {
 .class-panel-head {
   display: flex;
   align-items: center;
-  padding: 7px 12px;
+  padding: 10px 14px;
   background: color-mix(in srgb, var(--panel-accent) 55%, var(--panel-head-base));
   border-bottom: 1px solid
     color-mix(in srgb, var(--panel-accent), black var(--bevel-sink));
@@ -547,10 +547,10 @@ button {
 /* Stays in view while the grid scrolls sideways */
 .class-panel-title {
   position: sticky;
-  left: 12px;
+  left: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -560,24 +560,23 @@ button {
   align-items: center;
   justify-content: center;
   min-width: 0;
-  padding: 3px 12px;
+  padding: 5px 16px;
   border-radius: 999px;
   background: var(--panel-accent);
   color: #e8fffa;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-align: center;
   white-space: nowrap;
 }
 
 .class-panel-teacher {
   white-space: nowrap;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   color: #e8fffa;
-  opacity: 0.85;
 }
 
 .class-panel-badge.is-teacher {
@@ -669,33 +668,43 @@ button {
 }
 
 .day-head:has(.day-head-day) {
+  --diagonal: linear-gradient(
+    to top right,
+    transparent calc(50% - 0.6px),
+    color-mix(in srgb, var(--day-ink), transparent 55%) 50%,
+    transparent calc(50% + 0.6px)
+  );
   position: relative;
   display: block;
-  /* A raised ridge along the diagonal: each face fades darker towards its corner */
-  background:
-    linear-gradient(
-      to top right,
-      transparent calc(50% - 0.7px),
-      color-mix(in srgb, var(--day-ink), transparent 35%) 50%,
-      transparent calc(50% + 0.7px)
-    ),
-    linear-gradient(
-      to top right,
-      color-mix(in srgb, var(--day-fill), black 30%) 0%,
-      color-mix(in srgb, var(--day-fill), white 4%) 50%,
-      color-mix(in srgb, var(--day-fill), white 18%) 50%,
-      color-mix(in srgb, var(--day-fill), black 10%) 100%
-    );
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--day-fill), white 22%),
-    inset -1px -1px 0 color-mix(in srgb, var(--day-fill), black 30%);
   font-size: 11px;
-  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+
+/* Each half fades out into the strip it labels: Time into the header row, Day into the day column */
+.day-head:has(.day-head-day)::before,
+.day-head:has(.day-head-day)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.day-head:has(.day-head-day)::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  background:
+    var(--diagonal),
+    linear-gradient(to right, color-mix(in srgb, var(--head-fill), white 12%), var(--head-fill));
+}
+
+.day-head:has(.day-head-day)::after {
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+  background:
+    var(--diagonal),
+    linear-gradient(to bottom, color-mix(in srgb, var(--day-fill), white 12%), var(--day-fill));
 }
 
 .day-head-time,
 .day-head-day {
   position: absolute;
+  z-index: 1;
   line-height: 1;
 }
 
