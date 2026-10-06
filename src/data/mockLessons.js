@@ -79,33 +79,8 @@ function shiftHex(hex, amount) {
   return `#${[r, g, b].map((c) => c.toString(16).padStart(2, '0')).join('')}`
 }
 
-/** Distinct greys (cool, warm, green, violet tints) for subjects without a colour; all dark enough for white text. */
-const GREY_SHADES = [
-  '#4a6570',
-  '#6b625a',
-  '#556b5c',
-  '#625a70',
-  '#3d4a57',
-  '#7a6f66',
-  '#5f7376',
-  '#4f4a52',
-  '#707a6a',
-  '#6a5f66',
-]
-
-let greyBySubject = new Map()
-
-function assignGreys(subjects) {
-  const unknown = [...new Set(subjects)]
-    .filter((s) => !COLOR_BY_SUBJECT[s])
-    .sort((a, b) => a.localeCompare(b))
-  greyBySubject = new Map(
-    unknown.map((s, i) => [s, GREY_SHADES[i % GREY_SHADES.length]]),
-  )
-}
-
 export function colorFor(subject, teacher) {
-  const base = COLOR_BY_SUBJECT[subject] ?? greyBySubject.get(subject) ?? '#4a6570'
+  const base = COLOR_BY_SUBJECT[subject] ?? '#4a6570'
   const shift = TEACHER_SHIFT[teacher] ?? 0
   return shift === 0 ? base : shiftHex(base, shift)
 }
@@ -129,7 +104,6 @@ export function applyCatalog({ classrooms, teachers, lessons, abbreviations = {}
       .filter((c) => c.classTeachers?.length)
       .map((c) => [c.name, c.classTeachers]),
   )
-  assignGreys(lessons.map((l) => l.subject))
   UNSCHEDULED_LESSONS = lessons.map((lesson) => ({
     ...lesson,
     color: colorFor(lesson.subject, lesson.teacher),
