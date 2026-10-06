@@ -748,7 +748,7 @@ button {
 /* Zebra rows (Tue, Thu, Sat); Saturday is the only row of its own tbody */
 .timetable tbody:not(.is-saturday) tr:nth-child(even) > td,
 .timetable tbody.is-saturday tr:nth-child(odd) > td {
-  background: color-mix(in srgb, var(--panel-fill), black 12%);
+  background: color-mix(in srgb, var(--panel-fill), black 10%);
 }
 
 .timetable tbody:last-child tr:last-child .day-col {
