@@ -751,6 +751,12 @@ button {
   vertical-align: stretch;
 }
 
+/* Zebra rows (Tue, Thu, Sat); Saturday is the only row of its own tbody */
+.timetable tbody:not(.is-saturday) tr:nth-child(even) > td,
+.timetable tbody.is-saturday tr:nth-child(odd) > td {
+  background: color-mix(in srgb, var(--panel-fill), black 3%);
+}
+
 .timetable tbody:last-child tr:last-child .day-col {
   border-bottom: 0;
 }
