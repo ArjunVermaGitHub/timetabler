@@ -742,7 +742,7 @@ button {
 }
 
 .timetable tbody td.slot {
-  vertical-align: stretch;
+  vertical-align: middle;
 }
 
 /* Zebra rows (Tue, Thu, Sat); Saturday is the only row of its own tbody */
@@ -885,7 +885,7 @@ button {
   width: var(--period-min);
   min-width: var(--period-min);
   max-width: var(--period-min);
-  vertical-align: stretch;
+  vertical-align: middle;
 }
 
 .slot.is-break {
@@ -1326,7 +1326,7 @@ button {
 
 .slot.has-lesson {
   padding: 0;
-  vertical-align: stretch;
+  vertical-align: middle;
   max-width: none;
   height: auto;
   min-height: var(--slot-row-min);
@@ -1338,7 +1338,7 @@ button {
 
 /* Class 11–12 option streams share a clock cell */
 .slot.has-lesson.is-stack {
-  vertical-align: stretch;
+  vertical-align: middle;
 }
 
 .lesson-stack {
