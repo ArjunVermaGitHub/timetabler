@@ -567,7 +567,8 @@ function repairWithEjections(board, units, listUnitSlots, placeUnit, options) {
         if (!hit) return null
         for (const id of hit) {
           const owner = unitOf.get(id)
-          if (owner && owner !== unit) blockers.add(owner)
+          if (!owner) return null
+          if (owner !== unit) blockers.add(owner)
         }
       }
       return blockers
@@ -651,8 +652,19 @@ function teachingPeriods(classroom, day) {
  * Free periods may only fall at the end of a class's day: reserve each
  * class's spare capacity as the last periods of its days. `rotation`
  * shifts which days give up their tail first, so retries try other layouts.
+ * A day never gives up a period at or before one held by a locked lesson.
  */
-function reserveTrailingFree(lessons, rotation = 0) {
+function reserveTrailingFree(lessons, rotation = 0, locked = {}) {
+  const lockedSlots = new Set()
+  for (const lesson of lessons) {
+    const spot = locked[lesson.id]
+    if (!spot) continue
+    lockedSlots.add(`${lesson.classroom}|${spot.day}|${spot.slotId}`)
+    if (lesson.span === 2) {
+      const next = nextPeriodId(spot.slotId, lesson.classroom, spot.day)
+      if (next) lockedSlots.add(`${lesson.classroom}|${spot.day}|${next}`)
+    }
+  }
   const overflow = lateOverflowClassrooms(lessons)
   /** Juniors without overflow keep P-8 for extras: size free time on regular load only. */
   const lateKept = (classroom) =>
@@ -677,18 +689,22 @@ function reserveTrailingFree(lessons, rotation = 0) {
   const reserved = new Set()
   for (const [classroom, periods] of load) {
     const keepLate = lateKept(classroom)
-    const remaining = ALL_DAYS.map((day) => ({
-      day,
-      ids: teachingPeriods(classroom, day).filter(
+    const remaining = ALL_DAYS.map((day) => {
+      const ids = teachingPeriods(classroom, day).filter(
         (id) => !(keepLate && isLateSlot(classroom, id)),
-      ),
-    }))
+      )
+      const lastLocked = ids.findLastIndex((id) =>
+        lockedSlots.has(`${classroom}|${day}|${id}`),
+      )
+      return { day, ids, floor: lastLocked + 1 }
+    })
     let spare = remaining.reduce((sum, d) => sum + d.ids.length, 0) - periods
     // A double needs two periods in one day: trimming must leave enough such days
     const doublesNeeded = doubles.get(classroom) ?? 0
     const canTrim = (d) =>
-      d.ids.length !== 2 ||
-      remaining.filter((r) => r.ids.length >= 2).length > doublesNeeded
+      d.ids.length > d.floor &&
+      (d.ids.length !== 2 ||
+        remaining.filter((r) => r.ids.length >= 2).length > doublesNeeded)
     // Saturday goes first (a free Saturday is the tail of the week)
     for (const d of remaining) {
       if (!WEEKEND_DAYS.includes(d.day)) continue
@@ -721,7 +737,11 @@ function reserveTrailingFree(lessons, rotation = 0) {
         const cut = teachingPeriods(classroom, day).some((id) =>
           reserved.has(`${classroom}|${day}|${id}`),
         )
-        if (cut && teachingPeriods(classroom, day).includes(LATE_SLOT_ID)) {
+        if (
+          cut &&
+          teachingPeriods(classroom, day).includes(LATE_SLOT_ID) &&
+          !lockedSlots.has(`${classroom}|${day}|${LATE_SLOT_ID}`)
+        ) {
           reserved.add(`${classroom}|${day}|${LATE_SLOT_ID}`)
         }
       }
@@ -734,17 +754,30 @@ function reserveTrailingFree(lessons, rotation = 0) {
  * Fast bundle-aware scheduler.
  * Places sync groups atomically (HS electives / co-teach), then singles.
  * Greedy pass + ejection repair; retries other end-of-day free layouts.
+ * `locked` placements are kept exactly where they are and scheduled around.
  */
 export function autoSchedule(lessons, options = {}) {
   const started = performance.now()
-  const attempts = options.clearExisting === false ? 1 : (options.attempts ?? 3)
+  const attempts = options.attempts ?? 3
   const first = options.firstRotation ?? 0
+  const ids = new Set(lessons.map((lesson) => lesson.id))
+  const locked = Object.fromEntries(
+    Object.entries(options.locked ?? {}).filter(([id]) => ids.has(id)),
+  )
+  const deadline = started + (options.totalBudgetMs ?? 8000)
   let best = null
   for (let rotation = first; rotation < first + attempts; rotation += 1) {
+    const left = deadline - performance.now()
+    if (best && left <= 0) break
     const result = scheduleOnce(
       lessons,
-      { ...options, seed: (options.seed ?? 7) + rotation * 4 },
-      reserveTrailingFree(lessons, rotation),
+      {
+        ...options,
+        seed: (options.seed ?? 7) + rotation * 4,
+        timeBudgetMs: Math.max(500, Math.min(options.timeBudgetMs ?? 5000, left)),
+      },
+      locked,
+      reserveTrailingFree(lessons, rotation, locked),
     )
     if (!best || result.remaining < best.remaining) best = result
     if (best.remaining === 0) break
@@ -752,23 +785,9 @@ export function autoSchedule(lessons, options = {}) {
   return { ...best, ms: Math.round(performance.now() - started) }
 }
 
-function scheduleOnce(lessons, options, reservedFree) {
-  const { clearExisting = true } = options
+function scheduleOnce(lessons, options, locked, reservedFree) {
   const started = performance.now()
-
-  const seed = clearExisting
-    ? {}
-    : Object.fromEntries(
-        Object.entries(options.existingPlacements ?? {}).filter(([id]) =>
-          lessons.some((lesson) => lesson.id === id),
-        ),
-      )
-
-  const board = createBoard(
-    lessons,
-    seed,
-    clearExisting ? reservedFree : new Set(),
-  )
+  const board = createBoard(lessons, locked, reservedFree)
   const loads = teacherLoadMap(lessons)
 
   /** @type {Map<string, typeof lessons>} */

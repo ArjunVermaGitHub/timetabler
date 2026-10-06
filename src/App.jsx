@@ -222,7 +222,9 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   }, [dragLessonId])
 
   function handleAutoSchedule() {
-    const result = autoSchedule(UNSCHEDULED_LESSONS, { clearExisting: true })
+    const result = autoSchedule(UNSCHEDULED_LESSONS, { locked: placements })
+    const kept = Object.keys(placements).length
+    const keptNote = kept ? `, keeping the ${kept} already placed` : ''
     setDragLessonId(null)
     setPlacements(result.placements)
     setSelectedClassrooms([...CLASSROOMS])
@@ -230,12 +232,12 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     if (result.remaining === 0) {
       setPlacementError(null)
       setScheduleNote(
-        `Scheduled all ${result.scheduled} lessons in ${result.ms}ms.`,
+        `Scheduled all ${result.scheduled} lessons in ${result.ms}ms${keptNote}.`,
       )
     } else {
       setScheduleNote(null)
       setPlacementError(
-        `Scheduled ${result.scheduled}/${UNSCHEDULED_LESSONS.length} in ${result.ms}ms — ${result.remaining} still need a slot.`,
+        `Scheduled ${result.scheduled}/${UNSCHEDULED_LESSONS.length} in ${result.ms}ms${keptNote} — ${result.remaining} still need a slot.`,
       )
     }
   }
