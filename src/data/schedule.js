@@ -245,8 +245,8 @@ export const SATURDAY_SLOTS = [
   {
     id: 'sa_1310',
     start: '13:10',
-    end: '13:55',
-    minutes: 45,
+    end: '13:50',
+    minutes: 40,
     junior: { kind: 'break', label: 'End' },
     senior: { kind: 'break', label: 'Sr Lunch' },
   },
