@@ -1,0 +1,18 @@
+{
+  "appId": "org.rajghatbesantschool.timetable",
+  "appName": "RBS Timetable",
+  "webDir": "dist",
+  "server": {
+    "url": "https://timetabler-alpha.vercel.app",
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#1a6b66"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "DARK"
+    }
+  }
+}
