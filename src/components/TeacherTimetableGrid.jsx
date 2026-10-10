@@ -302,7 +302,7 @@ function DayRow({
     const lesson = lessons.find((item) => item.id === lessonId)
     if (!lesson || lesson.teacher !== teacher) return
     // Schedule into the lesson's own classroom at this day/slot.
-    onDropLesson(lessonId, lesson.classroom, target.day, target.slotId)
+    onDropLesson?.(lessonId, lesson.classroom, target.day, target.slotId)
   }
 
   return (

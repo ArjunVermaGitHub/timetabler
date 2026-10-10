@@ -1,4 +1,5 @@
 import { allowedDomain, currentUser } from '../_lib/auth.js'
+import { getDb } from '../_lib/db.js'
 import { handle } from '../_lib/http.js'
 
 export default handle({
@@ -7,6 +8,12 @@ export default handle({
     if (user && !user.allowed) {
       return { user: null, blocked: { email: user.email, domain: allowedDomain() } }
     }
-    return { user: user && { email: user.email, admin: user.admin } }
+    if (!user) return { user: null }
+    const db = await getDb()
+    const teacher = await db.collection('teachers').findOne(
+      { email: user.email },
+      { projection: { name: 1 } },
+    )
+    return { user: { email: user.email, admin: user.admin, teacher: teacher?.name ?? null } }
   },
 })

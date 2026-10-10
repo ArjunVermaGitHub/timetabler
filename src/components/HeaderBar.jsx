@@ -21,6 +21,7 @@ export function HeaderBar({
   user,
   onSignOut,
   manageMode = false,
+  readOnly = false,
 }) {
   const ref = useRef(null)
   const { openUserProfile } = useClerk()
@@ -54,21 +55,29 @@ export function HeaderBar({
                 {SAVE_LABELS[saveStatus]}
               </span>
             ) : null}
-            <button
-              type="button"
-              className="hb-btn is-ghost is-danger"
-              onClick={onClearSchedule}
-              disabled={scheduledCount === 0}
-              title="Move every scheduled lesson back to the tray"
-            >
-              <Icon name="clear" />
-              Clear
-            </button>
-            <PdfMenu onDownload={onDownloadPdf} disabled={pdfDisabled} />
-            <button type="button" className="hb-btn is-primary" onClick={onAutoSchedule}>
-              <Icon name="spark" />
-              Auto-schedule
-            </button>
+            {readOnly ? null : (
+              <button
+                type="button"
+                className="hb-btn is-ghost is-danger"
+                onClick={onClearSchedule}
+                disabled={scheduledCount === 0}
+                title="Move every scheduled lesson back to the tray"
+              >
+                <Icon name="clear" />
+                Clear
+              </button>
+            )}
+            <PdfMenu
+              onDownload={onDownloadPdf}
+              disabled={pdfDisabled}
+              ownTeacher={user?.teacher}
+            />
+            {readOnly ? null : (
+              <button type="button" className="hb-btn is-primary" onClick={onAutoSchedule}>
+                <Icon name="spark" />
+                Auto-schedule
+              </button>
+            )}
           </div>
         )}
         <div className="header-group is-utility">
@@ -92,7 +101,7 @@ export function HeaderBar({
               <span className="hb-avatar" aria-hidden="true">
                 {user.email[0].toUpperCase()}
               </span>
-              <span className="hb-user-name">{user.email.split('@')[0]}</span>
+              <span className="hb-user-name">{user.teacher ?? user.email.split('@')[0]}</span>
               {user.admin ? <span className="header-role">admin</span> : null}
             </button>
           ) : null}
@@ -140,7 +149,7 @@ function Icon({ name, className = '' }) {
   )
 }
 
-function PdfMenu({ onDownload, disabled }) {
+function PdfMenu({ onDownload, disabled, ownTeacher }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -159,9 +168,9 @@ function PdfMenu({ onDownload, disabled }) {
     }
   }, [open])
 
-  function pick(colour) {
+  function pick(colour, onlyOwn = false) {
     setOpen(false)
-    onDownload(colour)
+    onDownload(colour, onlyOwn)
   }
 
   return (
@@ -181,6 +190,12 @@ function PdfMenu({ onDownload, disabled }) {
       </button>
       {open ? (
         <div className="pdf-menu-list" role="menu">
+          {ownTeacher ? (
+            <button type="button" role="menuitem" onClick={() => pick(true, true)}>
+              My timetable
+              <span>{ownTeacher}, in colour</span>
+            </button>
+          ) : null}
           <button type="button" role="menuitem" onClick={() => pick(true)}>
             Colour
           </button>

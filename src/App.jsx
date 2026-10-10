@@ -9,7 +9,7 @@ import { TeacherTimetableGrid } from './components/TeacherTimetableGrid'
 import { TimetableGrid } from './components/TimetableGrid'
 import { UnscheduledTray } from './components/UnscheduledTray'
 import { ViewTabs } from './components/ViewTabs'
-import { TEACHERS, UNSCHEDULED_LESSONS } from './data/mockLessons'
+import { CLASS_TEACHERS, TEACHERS, UNSCHEDULED_LESSONS } from './data/mockLessons'
 import { evaluatePlacement } from './data/placement'
 import { autoSchedule } from './data/scheduler'
 import { CLASSROOMS, classroomDayEnd } from './data/schedule'
@@ -25,11 +25,16 @@ const lazyManagePanel = () =>
 const MANAGE_TABS = ['teachers', 'classes', 'subjects', 'links']
 const TITLES = { classes: 'Class view', teachers: 'Teacher view', manage: 'Manage' }
 
-/** `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route. */
-function routeFor(path) {
+/**
+ * `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route.
+ * Teachers land on their own timetable; only admins can reach Manage.
+ */
+function routeFor(path, { admin, teacher }) {
   const [first, second] = path.split('/').filter(Boolean)
-  if (first === 'teachers') return { view: 'teachers', path: '/teachers' }
-  if (first === 'manage') {
+  if (first === 'teachers' || (!first && teacher)) {
+    return { view: 'teachers', path: '/teachers' }
+  }
+  if (first === 'manage' && admin) {
     const tab = MANAGE_TABS.includes(second) ? second : MANAGE_TABS[0]
     return { view: 'manage', tab, path: `/manage/${tab}` }
   }
@@ -57,7 +62,9 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   const online = useOnline()
   const [manageAttempt, setManageAttempt] = useState(0)
   const ManagePanel = useMemo(lazyManagePanel, [manageAttempt])
-  const route = routeFor(path)
+  const readOnly = !user?.admin
+  const ownTeacher = user?.teacher ?? null
+  const route = routeFor(path, { admin: !readOnly, teacher: ownTeacher })
   const { view } = route
 
   useEffect(preloadLazyModules, [])
@@ -98,6 +105,17 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   useEffect(() => {
     document.title = `${TITLES[view]} · Timetabler`
   }, [view])
+
+  // A signed-in teacher opens each view on their own timetable / home class
+  const homed = useRef(new Set())
+  useEffect(() => {
+    if (!ownTeacher || view === 'manage' || homed.current.has(view)) return
+    const home = view === 'teachers' ? ownTeacher : homeClassroom(ownTeacher, placements)
+    if (!home) return
+    const selector = `[data-${view === 'teachers' ? 'teacher' : 'classroom'}="${cssEscape(home)}"]`
+    homed.current.add(view)
+    alignPanel(selector)
+  }, [view, ownTeacher, placements])
 
   // A reloaded catalog may add or drop classes, teachers and lessons
   useEffect(() => {
@@ -244,13 +262,18 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
 
   const [exportingPdf, setExportingPdf] = useState(false)
 
-  async function handleDownloadPdf(colour = true) {
+  async function handleDownloadPdf(colour = true, onlyOwn = false) {
     setExportingPdf(true)
     try {
       const { downloadTimetablePdf } = await loadModule('pdf')
+      const teacherMode = onlyOwn || view === 'teachers'
       downloadTimetablePdf({
-        mode: view === 'teachers' ? 'teacher' : 'classroom',
-        groups: view === 'teachers' ? visibleTeachers : visibleClassrooms,
+        mode: teacherMode ? 'teacher' : 'classroom',
+        groups: onlyOwn
+          ? [ownTeacher]
+          : teacherMode
+            ? visibleTeachers
+            : visibleClassrooms,
         lessons: UNSCHEDULED_LESSONS,
         placements,
         colour,
@@ -371,6 +394,15 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     })
   }
 
+  const editing = readOnly
+    ? {}
+    : {
+        dragLessonId,
+        onDragStartLesson: handleDragStartLesson,
+        onDragEndLesson: handleDragEndLesson,
+        onDropLesson: handleDropLesson,
+      }
+
   return (
     <div className="app">
       <HeaderBar
@@ -385,10 +417,11 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         }
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode((value) => !value)}
-        viewTabs={<ViewTabs view={view} />}
+        viewTabs={<ViewTabs view={view} showManage={!readOnly} />}
         user={user}
         onSignOut={onSignOut}
         manageMode={view === 'manage'}
+        readOnly={readOnly}
       />
       {online ? null : (
         <div className="offline-banner" role="status">
@@ -454,30 +487,26 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
               classrooms={visibleClassrooms}
               lessons={UNSCHEDULED_LESSONS}
               placements={placements}
-              dragLessonId={dragLessonId}
-              onDragStartLesson={handleDragStartLesson}
-              onDragEndLesson={handleDragEndLesson}
-              onDropLesson={handleDropLesson}
+              {...editing}
             />
           ) : (
             <TeacherTimetableGrid
               teachers={visibleTeachers}
               lessons={UNSCHEDULED_LESSONS}
               placements={placements}
-              dragLessonId={dragLessonId}
-              onDragStartLesson={handleDragStartLesson}
-              onDragEndLesson={handleDragEndLesson}
-              onDropLesson={handleDropLesson}
+              {...editing}
             />
           )}
-          <UnscheduledTray
-            groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
-            groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
-            lessons={trayLessons}
-            onDragStartLesson={handleDragStartLesson}
-            onDragEndLesson={handleDragEndLesson}
-            onDropUnschedule={handleUnschedule}
-          />
+          {readOnly ? null : (
+            <UnscheduledTray
+              groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
+              groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
+              lessons={trayLessons}
+              onDragStartLesson={handleDragStartLesson}
+              onDragEndLesson={handleDragEndLesson}
+              onDropUnschedule={handleUnschedule}
+            />
+          )}
         </div>
       </AbbreviateContext.Provider>
     </div>
@@ -554,6 +583,61 @@ function autoScrollNearEdges(el, clientX, clientY) {
 
   if (dy) el.scrollTop += dy
   if (dx) el.scrollLeft += dx
+}
+
+/**
+ * Panels use content-visibility, so ones skipped over change height once laid
+ * out: keep re-aligning until the target holds still (or the user scrolls).
+ */
+function alignPanel(selector) {
+  let frame = 0
+  let steady = 0
+  let rafId = 0
+  const stop = () => window.cancelAnimationFrame(rafId)
+  const tick = () => {
+    const root = document.querySelector('.grid-scroll')
+    const panel = root?.querySelector(selector)
+    if (panel) {
+      const offset =
+        panel.getBoundingClientRect().top - root.getBoundingClientRect().top
+      if (Math.abs(offset) > 2) {
+        steady = 0
+        panel.scrollIntoView({ block: 'start', inline: 'nearest' })
+      } else {
+        steady += 1
+      }
+    }
+    frame += 1
+    if (steady < 5 && frame < 90) rafId = window.requestAnimationFrame(tick)
+    else cleanup()
+  }
+  const cleanup = () => {
+    stop()
+    window.removeEventListener('wheel', cleanup, true)
+    window.removeEventListener('touchstart', cleanup, true)
+    window.removeEventListener('keydown', cleanup, true)
+  }
+  window.addEventListener('wheel', cleanup, true)
+  window.addEventListener('touchstart', cleanup, true)
+  window.addEventListener('keydown', cleanup, true)
+  rafId = window.requestAnimationFrame(tick)
+}
+
+/** The class a teacher is class teacher of, else the one they teach most periods in. */
+function homeClassroom(teacher, placements) {
+  const own = CLASSROOMS.find((c) => CLASS_TEACHERS[c]?.includes(teacher))
+  if (own) return own
+  const load = new Map()
+  for (const lesson of UNSCHEDULED_LESSONS) {
+    if (lesson.teacher !== teacher) continue
+    const weight = placements[lesson.id] ? lesson.span * 100 : lesson.span
+    load.set(lesson.classroom, (load.get(lesson.classroom) ?? 0) + weight)
+  }
+  let best = null
+  for (const classroom of CLASSROOMS) {
+    if ((load.get(classroom) ?? 0) > (load.get(best) ?? 0)) best = classroom
+  }
+  return best
 }
 
 function cssEscape(value) {

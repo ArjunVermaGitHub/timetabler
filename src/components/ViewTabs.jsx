@@ -6,10 +6,10 @@ const VIEWS = [
   ['manage', 'Manage', '/manage'],
 ]
 
-export function ViewTabs({ view }) {
+export function ViewTabs({ view, showManage = true }) {
   return (
     <nav className="view-tabs" aria-label="Timetable view">
-      {VIEWS.map(([id, label, to]) => (
+      {VIEWS.filter(([id]) => showManage || id !== 'manage').map(([id, label, to]) => (
         <Link
           key={id}
           to={to}

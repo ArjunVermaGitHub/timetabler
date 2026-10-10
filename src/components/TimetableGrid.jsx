@@ -271,7 +271,7 @@ function DayRow({
       event.dataTransfer.getData(LESSON_MIME) ||
       event.dataTransfer.getData('text/plain')
     if (!lessonId || !target) return
-    onDropLesson(lessonId, target.classroom, target.day, target.slotId)
+    onDropLesson?.(lessonId, target.classroom, target.day, target.slotId)
   }
 
   return (

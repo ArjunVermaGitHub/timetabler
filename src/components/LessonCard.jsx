@@ -39,7 +39,7 @@ export function LessonCard({
       title={`${lesson.classroom} · ${lesson.subject} · ${lesson.teacher}${
         lesson.span === 2 ? ' · double period' : ''
       }${lesson.stream ? ` · ${lesson.stream}` : ''}`}
-      draggable
+      draggable={Boolean(onDragStartLesson)}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -91,7 +91,7 @@ export function CoteachCard({
       className={`lesson-card is-grid is-coteach${names.abbreviate ? ' is-abbr' : ''}`}
       style={{ background: lead.color }}
       title={`${lead.classroom} · ${lead.subject} · ${teachers.join(', ')}`}
-      draggable
+      draggable={Boolean(onDragStartLesson)}
       onDragStart={handleDragStart}
       onDragEnd={() => onDragEndLesson?.()}
     >
@@ -171,7 +171,7 @@ export function TrayUnitCard({ lessons, onDragStartLesson, onDragEndLesson }) {
       ]
         .filter(Boolean)
         .join('\n')}
-      draggable
+      draggable={Boolean(onDragStartLesson)}
       onDragStart={handleDragStart}
       onDragEnd={() => onDragEndLesson?.()}
     >

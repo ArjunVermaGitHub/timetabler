@@ -1395,7 +1395,11 @@ button {
     inset -0.55px -0.55px 0 color-mix(in srgb, black 8%, transparent);
 }
 
-.lesson-card:active {
+.lesson-card[draggable='false'] {
+  cursor: default;
+}
+
+.lesson-card[draggable='true']:active {
   cursor: grabbing;
   box-shadow:
     inset 0.55px 0.55px 0 color-mix(in srgb, black 10%, transparent),
