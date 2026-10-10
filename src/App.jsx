@@ -10,9 +10,9 @@ import { TimetableGrid } from './components/TimetableGrid'
 import { UnscheduledTray } from './components/UnscheduledTray'
 import { ViewTabs } from './components/ViewTabs'
 import { CLASS_TEACHERS, TEACHERS, UNSCHEDULED_LESSONS } from './data/mockLessons'
-import { evaluatePlacement } from './data/placement'
+import { evaluatePlacement, lessonAtTeacher } from './data/placement'
 import { autoSchedule } from './data/scheduler'
-import { CLASSROOMS, classroomDayEnd } from './data/schedule'
+import { CLASSROOMS, classroomDayEnd, fixedDutyFor } from './data/schedule'
 import { loadModule, preloadLazyModules } from './lazyModules'
 import { knownPlacements, useScheduleSync } from './useScheduleSync'
 import { navigate, usePath } from './router'
@@ -92,6 +92,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     ...CLASSROOMS,
   ])
   const [selectedTeachers, setSelectedTeachers] = useState(() => [...TEACHERS])
+  const [freeSlots, setFreeSlots] = useState([])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
   const [abbreviate, setAbbreviate] = useState(readStoredAbbreviate)
   const boxesBefore = useRef(null)
@@ -154,23 +155,31 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     [selectedClassrooms, catalogVersion],
   )
 
-  const visibleTeachers = useMemo(
-    () => TEACHERS.filter((name) => selectedTeachers.includes(name)),
-    [selectedTeachers, catalogVersion],
-  )
+  const visibleTeachers = useMemo(() => {
+    const wanted = freeSlots.map((key) => key.split('|'))
+    return TEACHERS.filter(
+      (name) =>
+        selectedTeachers.includes(name) &&
+        wanted.every(
+          ([day, slotId]) =>
+            !fixedDutyFor(name, day, slotId) &&
+            !lessonAtTeacher(name, day, slotId, UNSCHEDULED_LESSONS, placements),
+        ),
+    )
+  }, [selectedTeachers, freeSlots, placements, catalogVersion])
 
   const trayLessons = useMemo(() => {
     if (view === 'teachers') {
       return UNSCHEDULED_LESSONS.filter(
         (lesson) =>
-          selectedTeachers.includes(lesson.teacher) && !placements[lesson.id],
+          visibleTeachers.includes(lesson.teacher) && !placements[lesson.id],
       )
     }
     return UNSCHEDULED_LESSONS.filter(
       (lesson) =>
         selectedClassrooms.includes(lesson.classroom) && !placements[lesson.id],
     )
-  }, [view, selectedClassrooms, selectedTeachers, placements, catalogVersion])
+  }, [view, selectedClassrooms, visibleTeachers, placements, catalogVersion])
 
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? 'dark' : 'light'
@@ -530,6 +539,8 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         <TeacherFilter
           selected={selectedTeachers}
           onChange={setSelectedTeachers}
+          freeSlots={freeSlots}
+          onFreeSlotsChange={setFreeSlots}
           abbreviate={abbreviate}
           onAbbreviateChange={changeAbbreviate}
         />
@@ -559,6 +570,11 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
               teachers={visibleTeachers}
               lessons={UNSCHEDULED_LESSONS}
               placements={placements}
+              emptyMessage={
+                freeSlots.length && selectedTeachers.length
+                  ? 'No selected teacher is free in all of the picked periods.'
+                  : undefined
+              }
               {...editing}
             />
           )}

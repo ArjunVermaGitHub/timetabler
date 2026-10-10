@@ -28,6 +28,7 @@ export function TeacherTimetableGrid({
   onDragStartLesson,
   onDragEndLesson,
   onDropLesson,
+  emptyMessage = 'Select at least one teacher to show their week grid.',
 }) {
   const [hoverTarget, setHoverTarget] = useState(null)
 
@@ -100,7 +101,7 @@ export function TeacherTimetableGrid({
   if (teachers.length === 0) {
     return (
       <div className="grid-empty">
-        <p>Select at least one teacher to show their week grid.</p>
+        <p>{emptyMessage}</p>
       </div>
     )
   }
