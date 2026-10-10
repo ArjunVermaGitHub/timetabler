@@ -52,7 +52,7 @@
   --bevel-lift: 18%;
   --bevel-sink: 14%;
   --day-w: 72px;
-  --period-min: 140px;
+  --period-min: clamp(140px, calc((100vw - 600px) / 8), 200px);
   /* Wide enough for stacked mono times (12:30 / 13:10) with padding inside the chip */
   --break-w: 120px;
   /* day + up to 8 periods + 3 breaks (flush headers; gaps live in cell padding) */
@@ -106,7 +106,7 @@
   --bevel-lift: 14%;
   --bevel-sink: 20%;
   --day-w: 72px;
-  --period-min: 140px;
+  --period-min: clamp(140px, calc((100vw - 600px) / 8), 200px);
   --break-w: 120px;
   --grid-table-width: calc(
     var(--day-w) + (8 * var(--period-min)) + (3 * var(--break-w))
@@ -1428,6 +1428,14 @@ button {
 
 .lesson-card.is-grid:not(.is-abbr) > .lesson-card-teacher {
   flex-basis: 100%;
+}
+
+/* Long names wrap inside the card instead of spilling past its edge */
+.lesson-card.is-grid > .lesson-card-subject,
+.lesson-card.is-grid > .lesson-card-teacher {
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .lesson-card-top {
