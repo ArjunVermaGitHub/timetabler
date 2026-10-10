@@ -14,6 +14,9 @@ export default handle({
       { email: user.email },
       { projection: { name: 1 } },
     )
-    return { user: { email: user.email, admin: user.admin, teacher: teacher?.name ?? null } }
+    const chat = Boolean(process.env.STREAM_API_KEY && process.env.STREAM_API_SECRET)
+    return {
+      user: { email: user.email, admin: user.admin, teacher: teacher?.name ?? null, chat },
+    }
   },
 })

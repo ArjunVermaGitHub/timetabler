@@ -1,6 +1,8 @@
 const loaders = {
   pdf: () => import('./data/timetablePdf'),
   manage: () => import('./components/ManagePanel'),
+  chat: () => import('./chat/ChatPanel'),
+  chatClient: () => import('./chat/client'),
 }
 
 const cache = {}
@@ -44,8 +46,8 @@ export function loadModule(name) {
   return cache[name]
 }
 
-export function preloadLazyModules() {
-  const run = () => Object.keys(loaders).forEach((name) => loadModule(name).catch(() => {}))
+export function preloadLazyModules(names = ['pdf', 'manage']) {
+  const run = () => names.forEach((name) => loadModule(name).catch(() => {}))
   if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 4000 })
   else setTimeout(run, 1500)
 }

@@ -2453,3 +2453,66 @@ button {
   gap: 10px;
   margin-top: 1.4rem;
 }
+
+.view-tab-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--action);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  vertical-align: 2px;
+}
+
+.chat-panel {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  padding: 12px 16px 16px;
+}
+
+.chat-panel .str-chat {
+  --str-chat__accent-primary: var(--action);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px color-mix(in srgb, black 14%, transparent);
+}
+
+.chat-panel .str-chat__channel {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-panel .str-chat__main-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-panel .str-chat__thread {
+  flex: 0 0 40%;
+  max-width: 40%;
+}
+
+.chat-notify {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--paper), white 30%);
+  color: var(--ink);
+  font-size: 14px;
+}

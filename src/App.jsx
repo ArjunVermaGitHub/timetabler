@@ -16,23 +16,35 @@ import { CLASSROOMS, classroomDayEnd } from './data/schedule'
 import { loadModule, preloadLazyModules } from './lazyModules'
 import { knownPlacements, useScheduleSync } from './useScheduleSync'
 import { navigate, usePath } from './router'
+import { useStaffChat } from './chat/useStaffChat'
 
 // Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open.
 // A failed lazy() import is cached for good, so each retry needs a fresh one.
 const lazyManagePanel = () =>
   lazy(() => loadModule('manage').then((m) => ({ default: m.ManagePanel })))
+const lazyChatPanel = () =>
+  lazy(() => loadModule('chat').then((m) => ({ default: m.ChatPanel })))
 
 const MANAGE_TABS = ['teachers', 'classes', 'subjects', 'links']
-const TITLES = { classes: 'Class view', teachers: 'Teacher view', manage: 'Manage' }
+const TITLES = {
+  classes: 'Class view',
+  teachers: 'Teacher view',
+  manage: 'Manage',
+  chat: 'Staff room',
+}
 
 /**
- * `/classes`, `/teachers` or `/manage/<tab>`; anything else maps to its nearest route.
- * Teachers land on their own timetable; only admins can reach Manage.
+ * `/classes`, `/teachers`, `/chat` or `/manage/<tab>`; anything else maps to its nearest route.
+ * Teachers land on their own timetable; only admins can reach Manage, only staff the chat
+ * (once it's configured).
  */
-function routeFor(path, { admin, teacher }) {
+function routeFor(path, { admin, teacher, chat }) {
   const [first, second] = path.split('/').filter(Boolean)
   if (first === 'teachers' || (!first && teacher)) {
     return { view: 'teachers', path: '/teachers' }
+  }
+  if (first === 'chat' && chat) {
+    return { view: 'chat', path: '/chat' }
   }
   if (first === 'manage' && admin) {
     const tab = MANAGE_TABS.includes(second) ? second : MANAGE_TABS[0]
@@ -40,6 +52,8 @@ function routeFor(path, { admin, teacher }) {
   }
   return { view: 'classes', path: '/classes' }
 }
+
+const GRID_VIEWS = new Set(['classes', 'teachers'])
 
 function readStoredTheme() {
   try {
@@ -64,10 +78,16 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   const ManagePanel = useMemo(lazyManagePanel, [manageAttempt])
   const readOnly = !user?.admin
   const ownTeacher = user?.teacher ?? null
-  const route = routeFor(path, { admin: !readOnly, teacher: ownTeacher })
+  const canChat = Boolean(user?.chat && (ownTeacher || user?.admin))
+  const route = routeFor(path, { admin: !readOnly, teacher: ownTeacher, chat: canChat })
   const { view } = route
+  const staffChat = useStaffChat(canChat, view === 'chat')
+  const [chatAttempt, setChatAttempt] = useState(0)
+  const ChatPanel = useMemo(lazyChatPanel, [chatAttempt])
 
-  useEffect(preloadLazyModules, [])
+  useEffect(() => {
+    preloadLazyModules(canChat ? ['pdf', 'manage', 'chat'] : ['pdf', 'manage'])
+  }, [canChat])
   const [selectedClassrooms, setSelectedClassrooms] = useState(() => [
     ...CLASSROOMS,
   ])
@@ -109,7 +129,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   // A signed-in teacher opens each view on their own timetable / home class
   const homed = useRef(new Set())
   useEffect(() => {
-    if (!ownTeacher || view === 'manage' || homed.current.has(view)) return
+    if (!ownTeacher || !GRID_VIEWS.has(view) || homed.current.has(view)) return
     const home = view === 'teachers' ? ownTeacher : homeClassroom(ownTeacher, placements)
     if (!home) return
     const selector = `[data-${view === 'teachers' ? 'teacher' : 'classroom'}="${cssEscape(home)}"]`
@@ -394,6 +414,11 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     })
   }
 
+  function signOut() {
+    if (canChat) loadModule('chatClient').then((m) => m.disconnectStaffChat(), () => {})
+    onSignOut()
+  }
+
   const editing = readOnly
     ? {}
     : {
@@ -417,10 +442,17 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         }
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode((value) => !value)}
-        viewTabs={<ViewTabs view={view} showManage={!readOnly} />}
+        viewTabs={
+          <ViewTabs
+            view={view}
+            showManage={!readOnly}
+            showChat={canChat}
+            chatUnread={staffChat.unread}
+          />
+        }
         user={user}
-        onSignOut={onSignOut}
-        manageMode={view === 'manage'}
+        onSignOut={signOut}
+        manageMode={!GRID_VIEWS.has(view)}
         readOnly={readOnly}
       />
       {online ? null : (
@@ -454,6 +486,32 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
             <ManagePanel user={user} tab={route.tab} onChanged={onCatalogChange} />
           </Suspense>
         </ErrorBoundary>
+      ) : view === 'chat' ? (
+        staffChat.status === 'ready' ? (
+          <ErrorBoundary
+            key={chatAttempt}
+            fallback={() => (
+              <div className="manage-empty manage section-error" role="alert">
+                <p>The staff room couldn&apos;t be loaded.</p>
+                <button
+                  type="button"
+                  className="primary-button"
+                  onClick={() => setChatAttempt((n) => n + 1)}
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+          >
+            <Suspense fallback={<p className="manage-empty manage">Loading…</p>}>
+              <ChatPanel chat={staffChat} darkMode={darkMode} />
+            </Suspense>
+          </ErrorBoundary>
+        ) : (
+          <p className="manage-empty manage" role={staffChat.status === 'error' ? 'alert' : 'status'}>
+            {staffChat.status === 'error' ? staffChat.error : 'Connecting to the staff room…'}
+          </p>
+        )
       ) : view === 'classes' ? (
         <ClassroomFilter
           selected={selectedClassrooms}
@@ -481,7 +539,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
       ) : null}
       {/* Stays mounted under Manage so returning to the grids is instant */}
       <AbbreviateContext.Provider value={abbreviate}>
-        <div className="workspace" hidden={view === 'manage'}>
+        <div className="workspace" hidden={!GRID_VIEWS.has(view)}>
           {view !== 'teachers' ? (
             <TimetableGrid
               classrooms={visibleClassrooms}
