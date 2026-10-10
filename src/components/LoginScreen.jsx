@@ -10,6 +10,11 @@ const APPEARANCE = {
   elements: {
     socialButtonsRoot: { display: 'none' },
     dividerRow: { display: 'none' },
+    formResendCodeLink: {
+      fontWeight: 600,
+      opacity: 1,
+      '&:disabled': { color: '#4b5563', opacity: 1 },
+    },
   },
 }
 
