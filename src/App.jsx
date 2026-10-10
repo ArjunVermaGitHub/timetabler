@@ -228,8 +228,10 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   }, [dragLessonId])
 
   // While dragging, scroll grid (and tray) when the pointer hugs an edge.
+  // The grid only scrolls to reveal the dragged lesson's own panel.
   useEffect(() => {
     if (!dragLessonId) return undefined
+    const lesson = UNSCHEDULED_LESSONS.find((item) => item.id === dragLessonId)
 
     let pointer = { x: 0, y: 0 }
     let hasPointer = false
@@ -243,9 +245,14 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     function frame() {
       if (hasPointer) {
         const grid = document.querySelector('.grid-scroll')
-        if (grid) autoScrollNearEdges(grid, pointer.x, pointer.y)
-        const tray = document.querySelector('.tray-body')
-        if (tray) autoScrollNearEdges(tray, pointer.x, pointer.y)
+        const tray = document.querySelector('.tray')
+        const overTray = tray && pointInRect(pointer, tray.getBoundingClientRect())
+        const panel = lesson && panelFor(view, lesson)
+        if (grid && panel && !overTray) {
+          autoScrollNearEdges(grid, pointer.x, pointer.y, panel)
+        }
+        const trayBody = document.querySelector('.tray-body')
+        if (trayBody) autoScrollNearEdges(trayBody, pointer.x, pointer.y)
       }
       rafId = window.requestAnimationFrame(frame)
     }
@@ -257,7 +264,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
       window.cancelAnimationFrame(rafId)
       document.removeEventListener('dragover', onDragOver, true)
     }
-  }, [dragLessonId])
+  }, [dragLessonId, view])
 
   function handleAutoSchedule() {
     const result = autoSchedule(UNSCHEDULED_LESSONS, { locked: placements })
@@ -573,21 +580,21 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
 
 export default App
 
+/** The class (or teacher) panel a dragged lesson can be dropped into. */
+function panelFor(view, lesson) {
+  return document
+    .querySelector('.grid-scroll')
+    ?.querySelector(
+      view === 'classes'
+        ? `[data-classroom="${cssEscape(lesson.classroom)}"]`
+        : `[data-teacher="${cssEscape(lesson.teacher)}"]`,
+    )
+}
+
 function scrollSchedulePanelIntoView(view, lesson) {
   const scrollRoot = document.querySelector('.grid-scroll')
-  if (!scrollRoot) return
-
-  let panel = null
-  if (view === 'classes') {
-    panel = scrollRoot.querySelector(
-      `[data-classroom="${cssEscape(lesson.classroom)}"]`,
-    )
-  } else {
-    panel = scrollRoot.querySelector(
-      `[data-teacher="${cssEscape(lesson.teacher)}"]`,
-    )
-  }
-  if (!panel) return
+  const panel = panelFor(view, lesson)
+  if (!scrollRoot || !panel) return
 
   const rootRect = scrollRoot.getBoundingClientRect()
   const panelRect = panel.getBoundingClientRect()
@@ -603,11 +610,19 @@ function scrollSchedulePanelIntoView(view, lesson) {
   })
 }
 
+function pointInRect({ x, y }, rect) {
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+}
+
 const DRAG_SCROLL_EDGE = 72
 const DRAG_SCROLL_MAX = 32
 
-/** Scroll a container when the drag pointer is near its edges. */
-function autoScrollNearEdges(el, clientX, clientY) {
+/**
+ * Scroll a container when the drag pointer is near its edges. With `target`,
+ * only scroll towards a side where that element is cut off, and no further
+ * than it takes to bring that side into view.
+ */
+function autoScrollNearEdges(el, clientX, clientY, target = null) {
   const rect = el.getBoundingClientRect()
   const pad = DRAG_SCROLL_EDGE
 
@@ -637,6 +652,18 @@ function autoScrollNearEdges(el, clientX, clientY) {
   } else if (clientX > rect.right - pad) {
     const t = Math.min(1, (clientX - (rect.right - pad)) / pad)
     dx = Math.ceil(DRAG_SCROLL_MAX * t * t)
+  }
+
+  if (target) {
+    const box = target.getBoundingClientRect()
+    const hidden = {
+      up: Math.max(0, rect.top - box.top),
+      down: Math.max(0, box.bottom - rect.bottom),
+      left: Math.max(0, rect.left - box.left),
+      right: Math.max(0, box.right - rect.right),
+    }
+    dy = dy < 0 ? -Math.min(-dy, hidden.up) : Math.min(dy, hidden.down)
+    dx = dx < 0 ? -Math.min(-dx, hidden.left) : Math.min(dx, hidden.right)
   }
 
   if (dy) el.scrollTop += dy
