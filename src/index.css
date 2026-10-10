@@ -1417,6 +1417,17 @@ button {
   min-height: var(--card-grid-min);
   box-sizing: border-box;
   overflow: visible;
+  /* Class and subject share a line when they fit; full teacher names get their own */
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  align-content: center;
+  column-gap: 6px;
+  row-gap: 2px;
+}
+
+.lesson-card.is-grid:not(.is-abbr) > .lesson-card-teacher {
+  flex-basis: 100%;
 }
 
 .lesson-card-top {
@@ -1579,7 +1590,7 @@ button {
   row-gap: 2px;
 }
 
-.lesson-card.is-abbr > .lesson-card-top,
+.lesson-card.is-abbr:not(.is-grid) > .lesson-card-top,
 .lesson-card.is-abbr > .lesson-card-stream,
 .lesson-card.is-abbr > .lesson-card-lines {
   flex-basis: 100%;
