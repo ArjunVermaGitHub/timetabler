@@ -16,6 +16,21 @@ export async function setupTouchDrag() {
     // quick pull released over the tray misses it
     iterationInterval: 16,
   })
+  if (!applied) return
   // A non-passive listener lets the polyfill stop the page scrolling mid-drag
-  if (applied) window.addEventListener('touchmove', () => {}, { passive: false })
+  window.addEventListener('touchmove', () => {}, { passive: false })
+  // Unlike browsers, the polyfill only treats an element as a drop zone when
+  // dragenter is cancelled; dragover handlers still decide what accepts a drop
+  document.addEventListener('dragenter', (event) => event.preventDefault())
+  // A refused drop re-fires dragend on every tick of the snap-back animation
+  let dragging = false
+  window.addEventListener('dragstart', () => (dragging = true), true)
+  window.addEventListener(
+    'dragend',
+    (event) => {
+      if (!dragging) event.stopImmediatePropagation()
+      dragging = false
+    },
+    true,
+  )
 }
