@@ -22,6 +22,28 @@ export async function setupTouchDrag() {
   // Unlike browsers, the polyfill only treats an element as a drop zone when
   // dragenter is cancelled; dragover handlers still decide what accepts a drop
   document.addEventListener('dragenter', (event) => event.preventDefault())
+  // Android starts its own drag on a long press, which steals the touch from the
+  // polyfill and never drops; polyfill events are the untrusted ones
+  let pointerType = 'mouse'
+  window.addEventListener('pointerdown', (event) => (pointerType = event.pointerType), true)
+  window.addEventListener(
+    'dragstart',
+    (event) => {
+      if (!event.isTrusted || pointerType !== 'touch') return
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    },
+    true,
+  )
+  window.addEventListener(
+    'contextmenu',
+    (event) => {
+      if (pointerType === 'touch' && event.target.closest?.('[draggable="true"]')) {
+        event.preventDefault()
+      }
+    },
+    true,
+  )
   // A refused drop re-fires dragend on every tick of the snap-back animation
   let dragging = false
   window.addEventListener('dragstart', () => (dragging = true), true)
