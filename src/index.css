@@ -2532,25 +2532,27 @@ button {
 }
 
 /*
- * Phones: a class's whole week fits the screen width, the page is the only
- * scroller (no grid-inside-page scrolling), and names are always abbreviated.
+ * Phones: one slim header row, names always abbreviated, and a smaller grid
+ * that fills a landscape screen with times and break names intact. Portrait
+ * gets the same grid and swipes sideways. The page scrolls vertically, the
+ * grid horizontally, so a swipe never fights a nested scroller.
  * Keep the query in sync with COMPACT_QUERY in App.jsx.
  */
 @media (max-width: 760px), (max-height: 560px) and (pointer: coarse) {
   :root,
   :root[data-theme] {
-    --day-w: 30px;
-    --break-w: 12px;
+    --day-w: 38px;
+    --break-w: 52px;
     /* Horizontal padding around the table: stage + panel body */
     --grid-gutter: 24px;
-    --slot-row-min: 34px;
-    --card-grid-min: 30px;
+    --slot-row-min: 40px;
+    --card-grid-min: 34px;
   }
 
-  /* Each table splits the screen between its own periods and breaks (teachers have more periods) */
+  /* Fill a landscape screen; never narrower than a readable period (teachers have more periods) */
   .timetable {
     --period-min: max(
-      28px,
+      80px,
       calc(
         (100vw - var(--grid-gutter) - var(--day-w) - var(--breaks, 3) * var(--break-w)) /
           var(--periods, 8)
@@ -2559,14 +2561,94 @@ button {
     --grid-table-width: calc(
       var(--day-w) + var(--periods, 8) * var(--period-min) + var(--breaks, 3) * var(--break-w)
     );
-  }
-
-  .header {
-    position: static;
+    font-size: 11px;
   }
 
   .app > * {
     flex-shrink: 0;
+  }
+
+  /* One slim row: tabs, then icon-only actions */
+  .header,
+  .header-left,
+  .header-actions {
+    flex-wrap: nowrap;
+  }
+
+  .header {
+    position: static;
+    gap: 8px;
+    padding: 4px 8px;
+  }
+
+  .header h1 {
+    display: none;
+  }
+
+  .header-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .view-tabs {
+    gap: 14px;
+    margin: 0;
+    padding: 0 2px 6px;
+  }
+
+  .view-tab {
+    padding: 6px 0 2px;
+    font-size: 14px;
+  }
+
+  .view-tab.is-on::after {
+    top: 100%;
+    height: 3px;
+  }
+
+  .header-actions {
+    width: auto;
+    gap: 6px;
+  }
+
+  .header-group,
+  .header-group.is-utility {
+    gap: 2px;
+  }
+
+  .header-group.is-utility {
+    padding-left: 6px;
+  }
+
+  /* Icon-only buttons: the labels collapse, the icons keep their px size */
+  .hb-btn,
+  .hb-btn.is-primary,
+  .hb-btn.is-ghost,
+  .save-status {
+    gap: 0;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 0;
+  }
+
+  .hb-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hb-user {
+    height: 30px;
+    padding: 0 2px;
+  }
+
+  .hb-avatar {
+    width: 26px;
+    height: 26px;
+  }
+
+  .hb-user-name,
+  .header-role {
+    display: none;
   }
 
   .workspace {
@@ -2576,12 +2658,36 @@ button {
 
   .grid-scroll {
     flex: none;
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .grid-stage {
     gap: 8px;
-    padding: 8px 6px 12px;
+    padding: 6px 6px 12px;
+  }
+
+  /* One swipeable row of chips */
+  .filter-row:not(.is-accordion-panel) {
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 5px 8px;
+  }
+
+  .filter-accordion-bar {
+    gap: 6px;
+    padding: 5px 8px;
+  }
+
+  .filter-check,
+  .filter-accordion-toggle {
+    flex-shrink: 0;
+    padding: 0.2rem 0.55rem;
+    font-size: 12px;
+  }
+
+  .filter-accordion-toggle {
+    flex-shrink: 1;
   }
 
   .filter-check.is-abbreviate {
@@ -2589,14 +2695,15 @@ button {
   }
 
   .class-panel {
-    contain-intrinsic-size: auto 300px;
-    width: auto;
+    contain-intrinsic-size: auto 330px;
     min-width: 0;
     border-radius: 10px;
+    /* clip, not hidden: the day column must stay sticky against the sideways scroller */
+    overflow: clip;
   }
 
   .class-panel-head {
-    padding: 6px 8px;
+    padding: 5px 8px;
   }
 
   .class-panel-title {
@@ -2605,7 +2712,7 @@ button {
   }
 
   .class-panel-badge {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .class-panel-teacher {
@@ -2619,7 +2726,7 @@ button {
   }
 
   .day-head {
-    min-height: 26px;
+    min-height: 0;
   }
 
   .day-head-time,
@@ -2628,136 +2735,108 @@ button {
   }
 
   .day-pill {
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .slot-time {
+    padding: 4px 2px 1px;
     font-size: 10px;
     letter-spacing: 0;
   }
 
-  .slot-time {
-    padding: 5px 1px;
-    font-size: 9px;
+  .slot-label {
+    padding: 0 2px 4px;
+    font-size: 8.5px;
+    white-space: normal;
+  }
+
+  .slot-head.is-break .slot-time,
+  .slot-head.is-fixed .slot-time {
+    padding: 4px 1px 1px;
+    font-size: 8.5px;
+  }
+
+  .slot-head.is-break .slot-label,
+  .slot-head.is-fixed .slot-label {
+    padding: 0 1px 4px;
+    font-size: 8px;
     letter-spacing: 0;
-  }
-
-  .slot-time-end,
-  .slot-label,
-  .slot-head.is-break .slot-time.is-stacked,
-  .slot-head.is-fixed .slot-time.is-stacked {
-    display: none;
-  }
-
-  /* One swipeable row of chips, as on narrow screens */
-  .filter-row:not(.is-accordion-panel) {
-    flex-wrap: nowrap;
-    padding: 6px 8px;
-    gap: 6px;
-  }
-
-  .filter-check {
-    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .slot {
-    padding: 2px 1px;
+    padding: 2px;
   }
 
   .slot-placeholder {
     min-height: calc(var(--slot-row-min) - 4px);
-    border-radius: 6px;
+    border-radius: 8px;
   }
 
   .break-cell,
   .fixed-cell {
     min-height: var(--card-grid-min);
-    border-radius: 5px;
-  }
-
-  /* Weekday breaks are thin colour strips; Saturday's wider ones keep a small label */
-  .timetable tbody:not(.is-saturday) :is(.break-cell, .fixed-cell) > *,
-  .cell-time {
-    display: none;
-  }
-
-  .break-cell,
-  .fixed-cell {
+    border-radius: 8px;
     container-type: inline-size;
   }
 
   .break-label,
-  .fixed-label {
-    font-size: 8px;
-    letter-spacing: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .fixed-label,
+  .cell-time {
     max-width: 100%;
+    overflow: hidden;
+    font-size: 7.5px;
+    letter-spacing: 0;
+    line-height: 1.15;
   }
 
-  /* Too narrow for a readable word: leave the strip of colour */
-  @container (max-width: 34px) {
+  /* Saturday slices too narrow for a readable word stay a strip of colour */
+  @container (max-width: 30px) {
     .break-label,
-    .fixed-label {
+    .fixed-label,
+    .cell-time {
       display: none;
     }
   }
 
   .slot.has-lesson .lesson-card,
-  .lesson-card.is-grid {
-    border-radius: 6px;
-  }
-
   .lesson-card.is-grid,
-  .lesson-card.is-grid.is-abbr {
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
+  .lesson-card.is-coteach {
+    border-radius: 8px;
     min-height: var(--card-grid-min);
-    padding: 2px 1px;
-    text-align: center;
+    padding: 3px 6px;
+    column-gap: 4px;
   }
 
-  .lesson-card.is-grid .lesson-card-subject,
-  .lesson-card.is-grid .lesson-card-teacher {
-    max-width: 100%;
-    line-height: 1.15;
-    overflow-wrap: anywhere;
-  }
-
-  /* Scales with the column so five-letter names (GAMES, DANCE) stay on one line */
   .lesson-card.is-grid .lesson-card-subject {
-    font-size: clamp(7px, calc((var(--period-min) - 4px) / 3.9), 10px);
-    letter-spacing: -0.02em;
+    font-size: 11px;
   }
 
   .lesson-card.is-grid .lesson-card-teacher {
-    font-size: 8px;
+    font-size: 9.5px;
   }
 
   .lesson-card.is-grid .lesson-card-top {
-    font-size: 8px;
-    letter-spacing: 0;
-    gap: 2px;
-  }
-
-  .lesson-card-coteach-count {
-    display: none;
+    font-size: 9px;
+    letter-spacing: 0.02em;
   }
 
   .lesson-stack,
   .lesson-stack.is-elective {
     gap: 2px;
     padding: 2px;
-    border-radius: 6px;
+    border-radius: 8px;
   }
 
   .elective-bundle-label {
-    font-size: 7px;
-    padding: 0 1px 1px;
+    font-size: 8px;
+    padding: 0 2px 1px;
   }
 
   .lesson-stack .lesson-card.is-abbr {
     min-height: 0;
-    padding: 1px 2px;
+    padding: 2px 5px;
   }
 }
 
