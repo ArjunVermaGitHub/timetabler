@@ -35,8 +35,6 @@
   --head-ink: #e8fffa;
   --slot-empty: #dcb090;
   --slot-hover: #c8ddd4;
-  --zebra-well-tint: black;
-
   /* Red is for destructive actions and errors; positive actions use teal */
   --action: #e2553d;
   --action-ink: #fff5f2;
@@ -92,8 +90,6 @@
   --head-ink: #c8f5f0;
   --slot-empty: #3e281c;
   --slot-hover: #2a4a42;
-  --zebra-well-tint: white;
-
   --action: #f06a50;
   --action-ink: #2a1008;
   --positive: #2a9d8f;
@@ -1208,15 +1204,6 @@ button {
   box-shadow:
     inset 0.55px 0.55px 0 color-mix(in srgb, black 12%, transparent),
     inset -0.55px -0.55px 0 color-mix(in srgb, white 36%, transparent);
-}
-
-/* Zebra rows darken the cell behind the well, so the well shifts to stay distinct */
-:where(
-    .timetable tbody:not(.is-saturday) tr:nth-child(even),
-    .timetable tbody.is-saturday tr:nth-child(odd)
-  )
-  .slot-placeholder {
-  --slot-fill: color-mix(in srgb, var(--slot-empty) 90%, var(--zebra-well-tint));
 }
 
 .slot:hover:not(.is-break) .slot-placeholder {
