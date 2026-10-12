@@ -602,7 +602,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
               {...editing}
             />
           )}
-          {readOnly || compact ? null : (
+          {readOnly ? null : (
             <UnscheduledTray
               groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
               groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}

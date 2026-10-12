@@ -6,8 +6,10 @@ import './charismap-theme.css'
 import { Root } from './Root.jsx'
 import { CLERK_LOCALIZATION } from './components/LoginScreen'
 import { setupAndroidShell } from './androidShell'
+import { setupTouchDrag } from './touchDrag'
 
 setupAndroidShell()
+setupTouchDrag()
 
 // Theme before first paint, so the sign-in screen matches the saved choice
 try {

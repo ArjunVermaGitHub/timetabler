@@ -2672,6 +2672,27 @@ button {
     padding: 6px 6px 12px;
   }
 
+  /* The page scrolls, so pin the tray to the bottom of the screen */
+  .tray {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    max-height: 45vh;
+    padding: 0 6px 4px;
+  }
+
+  .tray-rail {
+    padding: 6px 8px 8px;
+  }
+
+  .tray-head p {
+    display: none;
+  }
+
+  .lesson-card[draggable='true'] {
+    -webkit-touch-callout: none;
+  }
+
   /* One swipeable row of chips */
   .filter-row:not(.is-accordion-panel) {
     flex-wrap: nowrap;

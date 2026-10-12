@@ -17,6 +17,7 @@
     "@clerk/react": "^6.17.2",
     "antd": "^6.6.5",
     "dayjs": "^1.11.23",
+    "mobile-drag-drop": "^3.0.0-rc.0",
     "mongodb": "^7.6.0",
     "pdfmake": "^0.3.11",
     "pluralize": "^8.0.0",
