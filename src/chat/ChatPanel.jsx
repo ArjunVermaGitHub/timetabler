@@ -10,6 +10,7 @@ import {
 } from 'stream-chat-react'
 import 'stream-chat-react/dist/css/index.css'
 import { inNativeApp } from '../nativeApp'
+import { orderTypingEvents } from './client'
 
 function NotifyPrompt() {
   const [permission, setPermission] = useState(() =>
@@ -33,7 +34,7 @@ function NotifyPrompt() {
 export function ChatPanel({ chat, darkMode }) {
   const { client, channelRef } = chat
   const channel = useMemo(
-    () => client.channel(channelRef.type, channelRef.id),
+    () => orderTypingEvents(client.channel(channelRef.type, channelRef.id)),
     [client, channelRef.type, channelRef.id],
   )
   return (
