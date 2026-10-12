@@ -19,12 +19,19 @@ export function SlotHead({ slot, colSpan = 1 }) {
         </span>
       ) : (
         <span className="slot-time">
-          {slot.start}–{slot.end}
+          {slot.start}
+          <span className="slot-time-end">–{slot.end}</span>
         </span>
       )}
       <span className="slot-label">{slot.label}</span>
     </th>
   )
+}
+
+/** Period and break counts, so a compact table can split the screen width between them. */
+export function columnCounts(columns) {
+  const periods = columns.filter((column) => column.kind === 'period').length
+  return { '--periods': periods, '--breaks': columns.length - periods }
 }
 
 /** Column widths for a time grid: each piece is its share of the weekday column it sits in. */

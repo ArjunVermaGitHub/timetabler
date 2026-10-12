@@ -8,7 +8,9 @@ export function useNames() {
   const abbreviate = useContext(AbbreviateContext)
   return {
     abbreviate,
-    subject: (name) => (abbreviate && SUBJECT_ABBR.get(name)) || name,
+    // Zero-width space after "/" lets "HIS/POL SCI" wrap there in narrow cells
+    subject: (name) =>
+      ((abbreviate && SUBJECT_ABBR.get(name)) || name).replaceAll('/', '/\u200b'),
     teacher: (name) => (abbreviate && TEACHER_ABBR.get(name)) || name,
   }
 }

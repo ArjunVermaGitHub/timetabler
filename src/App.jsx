@@ -1,4 +1,13 @@
-import { Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { AbbreviateContext } from './abbreviate'
 import { measureBoxes, playBoxes } from './animateBoxes'
 import { ClassroomFilter } from './components/ClassroomFilter'
@@ -63,6 +72,20 @@ function readStoredTheme() {
   }
 }
 
+/** Phones (and short touch screens in landscape) get the compact, fit-to-width grid. Keep in sync with index.css. */
+const COMPACT_QUERY = '(max-width: 760px), (max-height: 560px) and (pointer: coarse)'
+
+function useCompactScreen() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(COMPACT_QUERY)
+      query.addEventListener('change', onChange)
+      return () => query.removeEventListener('change', onChange)
+    },
+    () => window.matchMedia(COMPACT_QUERY).matches,
+  )
+}
+
 function readStoredAbbreviate() {
   try {
     return localStorage.getItem('timetabler-abbreviate') !== 'off'
@@ -95,6 +118,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
   const [freeSlots, setFreeSlots] = useState([])
   const [darkMode, setDarkMode] = useState(readStoredTheme)
   const [abbreviate, setAbbreviate] = useState(readStoredAbbreviate)
+  const compact = useCompactScreen()
   const boxesBefore = useRef(null)
   const changeAbbreviate = (next) => {
     boxesBefore.current = measureBoxes()
@@ -556,7 +580,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         </div>
       ) : null}
       {/* Stays mounted under Manage so returning to the grids is instant */}
-      <AbbreviateContext.Provider value={abbreviate}>
+      <AbbreviateContext.Provider value={abbreviate || compact}>
         <div className="workspace" hidden={!GRID_VIEWS.has(view)}>
           {view !== 'teachers' ? (
             <TimetableGrid
@@ -578,7 +602,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
               {...editing}
             />
           )}
-          {readOnly ? null : (
+          {readOnly || compact ? null : (
             <UnscheduledTray
               groups={view !== 'teachers' ? visibleClassrooms : visibleTeachers}
               groupMode={view !== 'teachers' ? 'classroom' : 'teacher'}
@@ -699,8 +723,10 @@ function alignPanel(selector) {
     const root = document.querySelector('.grid-scroll')
     const panel = root?.querySelector(selector)
     if (panel) {
+      // On phones the whole page scrolls, so the grid's top may sit above the viewport
       const offset =
-        panel.getBoundingClientRect().top - root.getBoundingClientRect().top
+        panel.getBoundingClientRect().top -
+        Math.max(root.getBoundingClientRect().top, 0)
       if (Math.abs(offset) > 2) {
         steady = 0
         panel.scrollIntoView({ block: 'start', inline: 'nearest' })

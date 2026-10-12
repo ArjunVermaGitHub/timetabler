@@ -14,7 +14,7 @@ import {
   occupiedSlots,
 } from '../data/placement'
 import { LessonCard, LESSON_MIME } from './LessonCard'
-import { SlotHead, TimeColumns } from './SlotHead'
+import { SlotHead, TimeColumns, columnCounts } from './SlotHead'
 
 /**
  * Same days/slots as the class view, but each panel is a teacher.
@@ -161,7 +161,7 @@ const TeacherPanel = memo(function TeacherPanel({
         </span>
       </header>
       <div className="class-panel-body">
-        <table className="timetable">
+        <table className="timetable" style={columnCounts(weekdaySlots)}>
           <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />
           <thead>
             <tr>

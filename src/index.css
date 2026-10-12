@@ -2531,6 +2531,225 @@ button {
   }
 }
 
+/*
+ * Phones: a class's whole week fits the screen width, the page is the only
+ * scroller (no grid-inside-page scrolling), and names are always abbreviated.
+ * Keep the query in sync with COMPACT_QUERY in App.jsx.
+ */
+@media (max-width: 760px), (max-height: 560px) and (pointer: coarse) {
+  :root,
+  :root[data-theme] {
+    --day-w: 30px;
+    --break-w: 12px;
+    /* Horizontal padding around the table: stage + panel body */
+    --grid-gutter: 24px;
+    --slot-row-min: 34px;
+    --card-grid-min: 30px;
+  }
+
+  /* Each table splits the screen between its own periods and breaks (teachers have more periods) */
+  .timetable {
+    --period-min: max(
+      28px,
+      calc(
+        (100vw - var(--grid-gutter) - var(--day-w) - var(--breaks, 3) * var(--break-w)) /
+          var(--periods, 8)
+      )
+    );
+    --grid-table-width: calc(
+      var(--day-w) + var(--periods, 8) * var(--period-min) + var(--breaks, 3) * var(--break-w)
+    );
+  }
+
+  .header {
+    position: static;
+  }
+
+  .app > * {
+    flex-shrink: 0;
+  }
+
+  .workspace {
+    flex: none;
+    min-height: 0;
+  }
+
+  .grid-scroll {
+    flex: none;
+    overflow: visible;
+  }
+
+  .grid-stage {
+    gap: 8px;
+    padding: 8px 6px 12px;
+  }
+
+  .filter-check.is-abbreviate {
+    display: none;
+  }
+
+  .class-panel {
+    contain-intrinsic-size: auto 300px;
+    width: auto;
+    min-width: 0;
+    border-radius: 10px;
+  }
+
+  .class-panel-head {
+    padding: 6px 8px;
+  }
+
+  .class-panel-title {
+    left: 8px;
+    gap: 8px;
+  }
+
+  .class-panel-badge {
+    font-size: 17px;
+  }
+
+  .class-panel-teacher {
+    padding-left: 8px;
+    font-size: 12px;
+  }
+
+  .class-panel-body {
+    padding: 4px;
+    overflow: visible;
+  }
+
+  .day-head {
+    min-height: 26px;
+  }
+
+  .day-head-time,
+  .day-head-day {
+    display: none;
+  }
+
+  .day-pill {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+
+  .slot-time {
+    padding: 5px 1px;
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+
+  .slot-time-end,
+  .slot-label,
+  .slot-head.is-break > *,
+  .slot-head.is-fixed > * {
+    display: none;
+  }
+
+  .slot {
+    padding: 2px 1px;
+  }
+
+  .slot-placeholder {
+    min-height: calc(var(--slot-row-min) - 4px);
+    border-radius: 6px;
+  }
+
+  .break-cell,
+  .fixed-cell {
+    min-height: var(--card-grid-min);
+    border-radius: 5px;
+  }
+
+  /* Weekday breaks are thin colour strips; Saturday's wider ones keep a small label */
+  .timetable tbody:not(.is-saturday) :is(.break-cell, .fixed-cell) > *,
+  .cell-time {
+    display: none;
+  }
+
+  .break-cell,
+  .fixed-cell {
+    container-type: inline-size;
+  }
+
+  .break-label,
+  .fixed-label {
+    font-size: 8px;
+    letter-spacing: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* Too narrow for a readable word: leave the strip of colour */
+  @container (max-width: 34px) {
+    .break-label,
+    .fixed-label {
+      display: none;
+    }
+  }
+
+  .slot.has-lesson .lesson-card,
+  .lesson-card.is-grid {
+    border-radius: 6px;
+  }
+
+  .lesson-card.is-grid,
+  .lesson-card.is-grid.is-abbr {
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    min-height: var(--card-grid-min);
+    padding: 2px 1px;
+    text-align: center;
+  }
+
+  .lesson-card.is-grid .lesson-card-subject,
+  .lesson-card.is-grid .lesson-card-teacher {
+    max-width: 100%;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  /* Scales with the column so five-letter names (GAMES, DANCE) stay on one line */
+  .lesson-card.is-grid .lesson-card-subject {
+    font-size: clamp(7px, calc((var(--period-min) - 4px) / 3.9), 10px);
+    letter-spacing: -0.02em;
+  }
+
+  .lesson-card.is-grid .lesson-card-teacher {
+    font-size: 8px;
+  }
+
+  .lesson-card.is-grid .lesson-card-top {
+    font-size: 8px;
+    letter-spacing: 0;
+    gap: 2px;
+  }
+
+  .lesson-card-coteach-count {
+    display: none;
+  }
+
+  .lesson-stack,
+  .lesson-stack.is-elective {
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .elective-bundle-label {
+    font-size: 7px;
+    padding: 0 1px 1px;
+  }
+
+  .lesson-stack .lesson-card.is-abbr {
+    min-height: 0;
+    padding: 1px 2px;
+  }
+}
+
 .confirm-message {
   margin: 0;
   color: var(--ink);

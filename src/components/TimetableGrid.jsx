@@ -10,7 +10,7 @@ import {
 } from '../data/schedule'
 import { evaluatePlacement, lessonsAt, occupiedSlots } from '../data/placement'
 import { LessonCard, LESSON_MIME, CoteachCard } from './LessonCard'
-import { SlotHead, TimeColumns } from './SlotHead'
+import { SlotHead, TimeColumns, columnCounts } from './SlotHead'
 import { CLASS_TEACHERS } from '../data/mockLessons'
 
 export function TimetableGrid({
@@ -129,7 +129,7 @@ export function TimetableGrid({
                 </span>
               </header>
               <div className="class-panel-body">
-                <table className="timetable">
+                <table className="timetable" style={columnCounts(weekdaySlots)}>
                   <TimeColumns columns={weekdaySlots} cells={timeGrid.cells} />
                   <thead>
                     <tr>
