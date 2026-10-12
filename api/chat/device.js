@@ -70,8 +70,9 @@ export default handle({
           m.mentioned_users?.some((u) => u.id === device.chatUserId),
       )
       .map((m) => ({ id: m.id, from: m.user?.name ?? 'Someone', text: m.text ?? '' }))
+    // Stream times carry microseconds, so step past the newest message's millisecond
     const newest = messages.reduce(
-      (latest, m) => Math.max(latest, Date.parse(m.created_at) || 0),
+      (latest, m) => Math.max(latest, (Date.parse(m.created_at) || 0) + 1),
       device.checkedAt.getTime(),
     )
     await collection.updateOne(
