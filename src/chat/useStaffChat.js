@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { api } from '../api'
 import { loadModule } from '../lazyModules'
+import { appChatUser, inNativeApp, postToApp } from '../nativeApp'
 import { navigate } from '../router'
 
 const NEW_MESSAGE = new Set(['message.new', 'notification.message_new'])
@@ -52,11 +54,14 @@ export function useStaffChat(enabled, onChatView) {
       }
       if (!NEW_MESSAGE.has(event.type) || !mentionsMe(event, me)) return
       if (!document.hidden && viewing.current) return
+      const title = `${event.message.user?.name ?? 'Someone'} mentioned you`
+      const body = event.message.text?.slice(0, 160) ?? ''
+      if (inNativeApp()) {
+        postToApp({ type: 'notify', id: event.message.id, title, body })
+        return
+      }
       if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return
-      const note = new Notification(`${event.message.user?.name ?? 'Someone'} mentioned you`, {
-        body: event.message.text?.slice(0, 160) ?? '',
-        tag: event.message.id,
-      })
+      const note = new Notification(title, { body, tag: event.message.id })
       note.onclick = () => {
         window.focus()
         navigate('/chat')
@@ -65,6 +70,14 @@ export function useStaffChat(enabled, onChatView) {
     })
     return () => sub.unsubscribe()
   }, [client, me])
+
+  // In the Android app, hand it a device key so it can check for mentions while closed
+  useEffect(() => {
+    if (!me || !inNativeApp() || appChatUser() === me.id) return
+    api('/api/chat/device', { method: 'POST' })
+      .then(({ key, userId }) => postToApp({ type: 'chat-device', key, userId }))
+      .catch(() => {})
+  }, [me])
 
   return { ...chat, unread }
 }

@@ -12,6 +12,7 @@ import {
 } from './schedule'
 import { lessonAtTeacher, lessonsAt } from './placement'
 import { CLASS_TEACHERS, SUBJECT_ABBR, TEACHER_ABBR } from './mockLessons'
+import { inNativeApp, postToApp } from '../nativeApp'
 
 pdfMake.addVirtualFileSystem(vfs)
 
@@ -50,9 +51,12 @@ const THEMES = {
  * Downloads the grids currently on screen as a PDF: one landscape A4 page per
  * class (or teacher), weekdays then Saturday, built from the same placements.
  */
-export function downloadTimetablePdf(options) {
+export async function downloadTimetablePdf(options) {
   const { definition, fileName } = buildTimetableDoc(options)
-  pdfMake.createPdf(definition).download(fileName)
+  const pdf = pdfMake.createPdf(definition)
+  // Downloads don't work inside the app's WebView, so the app saves it instead
+  if (inNativeApp()) postToApp({ type: 'pdf', fileName, base64: await pdf.getBase64() })
+  else pdf.download(fileName)
 }
 
 export function buildTimetableDoc({

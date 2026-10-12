@@ -9,10 +9,11 @@ import {
   Window,
 } from 'stream-chat-react'
 import 'stream-chat-react/dist/css/index.css'
+import { inNativeApp } from '../nativeApp'
 
 function NotifyPrompt() {
   const [permission, setPermission] = useState(() =>
-    typeof Notification === 'undefined' ? 'unsupported' : Notification.permission,
+    typeof Notification === 'undefined' || inNativeApp() ? 'unsupported' : Notification.permission,
   )
   if (permission !== 'default') return null
   return (

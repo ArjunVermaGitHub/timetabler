@@ -26,6 +26,7 @@ import { loadModule, preloadLazyModules } from './lazyModules'
 import { knownPlacements, useScheduleSync } from './useScheduleSync'
 import { navigate, usePath } from './router'
 import { useStaffChat } from './chat/useStaffChat'
+import { inNativeApp, postToApp } from './nativeApp'
 
 // Manage pulls in charismap's table (antd, pdfmake, xlsx): load it on first open.
 // A failed lazy() import is cached for good, so each retry needs a fresh one.
@@ -327,7 +328,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     try {
       const { downloadTimetablePdf } = await loadModule('pdf')
       const teacherMode = onlyOwn || view === 'teachers'
-      downloadTimetablePdf({
+      await downloadTimetablePdf({
         mode: teacherMode ? 'teacher' : 'classroom',
         groups: onlyOwn
           ? [ownTeacher]
@@ -456,6 +457,7 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
 
   function signOut() {
     if (canChat) loadModule('chatClient').then((m) => m.disconnectStaffChat(), () => {})
+    if (inNativeApp()) postToApp({ type: 'chat-device', key: null })
     onSignOut()
   }
 
