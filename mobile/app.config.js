@@ -2,7 +2,7 @@ module.exports = {
   expo: {
     name: 'RBS Timetable',
     slug: 'rbs-timetable',
-    version: '1.0.0',
+    version: '1.1.0',
     orientation: 'default',
     icon: './assets/icon.png',
     userInterfaceStyle: 'automatic',
@@ -14,7 +14,7 @@ module.exports = {
     },
     android: {
       package: 'org.rajghatbesantschool.timetable',
-      versionCode: 1,
+      versionCode: 2,
       adaptiveIcon: {
         backgroundColor: '#e0b090',
         foregroundImage: './assets/android-icon-foreground.png',
