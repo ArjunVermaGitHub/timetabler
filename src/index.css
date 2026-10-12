@@ -1472,6 +1472,11 @@ button {
   cursor: default;
 }
 
+/* On touch screens a pull on a lesson drags it; scrolling starts from anywhere else */
+.lesson-card[draggable='true'] {
+  touch-action: none;
+}
+
 .lesson-card[draggable='true']:active {
   cursor: grabbing;
   box-shadow:
