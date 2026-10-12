@@ -2925,44 +2925,56 @@ button {
   padding: 12px 16px 16px;
 }
 
-/* Stream's chat in Courtyard colours: sand surfaces, teal structure, your own messages tinted teal */
+/*
+ * Stream's chat in Courtyard colours. The room is a mid sand; other people's
+ * messages separate from it by value (warm near-white paper), yours by hue
+ * (solid teal, the cool complement of the sand).
+ */
 .chat-panel .str-chat {
   --str-chat__font-family: var(--sans);
   --str-chat__accent-primary: var(--positive);
   --str-chat__text-on-accent: var(--positive-ink);
   --str-chat__text-primary: var(--ink);
   --str-chat__text-secondary: var(--ink-soft);
-  --str-chat__text-tertiary: color-mix(in srgb, var(--ink-soft), var(--chat-bg) 25%);
+  --str-chat__text-tertiary: color-mix(in srgb, var(--ink-soft), var(--room-bg) 15%);
   --str-chat__text-link: var(--positive);
-  --str-chat__background-core-app: var(--chat-bg);
-  --str-chat__background-core-elevation-0: var(--chat-bg);
-  --str-chat__background-core-elevation-1: var(--chat-raised);
-  --str-chat__background-core-surface-default: var(--chat-well);
-  --str-chat__background-core-surface-subtle: var(--chat-well);
-  --str-chat__border-core-default: var(--chat-line);
-  --str-chat__chat-bg-incoming: var(--chat-raised);
+  --str-chat__background-core-app: var(--room-bg);
+  --str-chat__background-core-elevation-0: var(--room-bg);
+  --str-chat__background-core-elevation-1: var(--room-theirs);
+  --str-chat__background-core-surface-default: var(--room-well);
+  --str-chat__background-core-surface-subtle: var(--room-well);
+  --str-chat__border-core-default: var(--room-line);
+  --str-chat__chat-bg-incoming: var(--room-theirs);
   --str-chat__chat-text-incoming: var(--ink);
-  --str-chat__chat-bg-outgoing: var(--chat-mine);
-  --str-chat__chat-text-outgoing: var(--chat-mine-ink);
+  --str-chat__chat-border-incoming: var(--room-theirs-edge);
+  --str-chat__chat-bg-attachment-incoming: var(--room-well);
+  --str-chat__chat-bg-outgoing: var(--room-mine);
+  --str-chat__chat-text-outgoing: var(--room-mine-ink);
+  --str-chat__chat-border-outgoing: var(--room-mine-edge);
+  --str-chat__chat-bg-attachment-outgoing: color-mix(in srgb, var(--room-mine), black 18%);
+  --str-chat__chat-reply-indicator-outgoing: var(--positive-bright);
   --str-chat__chat-text-mention: var(--positive);
   --str-chat__input-text-default: var(--ink);
   --str-chat__input-text-placeholder: var(--ink-soft);
-  --str-chat__avatar-palette-bg-1: color-mix(in srgb, var(--positive), var(--chat-bg) 72%);
+  --str-chat__avatar-palette-bg-1: color-mix(in srgb, var(--positive), var(--room-bg) 72%);
   --str-chat__avatar-palette-text-1: color-mix(in srgb, var(--positive), black 45%);
-  --str-chat__avatar-palette-bg-2: color-mix(in srgb, var(--action), var(--chat-bg) 70%);
+  --str-chat__avatar-palette-bg-2: color-mix(in srgb, var(--action), var(--room-bg) 70%);
   --str-chat__avatar-palette-text-2: color-mix(in srgb, var(--action), black 50%);
-  --str-chat__avatar-palette-bg-3: color-mix(in srgb, var(--banner), var(--chat-bg) 60%);
+  --str-chat__avatar-palette-bg-3: color-mix(in srgb, var(--banner), var(--room-bg) 60%);
   --str-chat__avatar-palette-text-3: color-mix(in srgb, var(--banner), black 40%);
   --str-chat__avatar-palette-bg-4: color-mix(in srgb, var(--paper), black 14%);
   --str-chat__avatar-palette-text-4: var(--ink);
-  --str-chat__avatar-palette-bg-5: color-mix(in srgb, var(--positive-bright), var(--chat-bg) 55%);
+  --str-chat__avatar-palette-bg-5: color-mix(in srgb, var(--positive-bright), var(--room-bg) 55%);
   --str-chat__avatar-palette-text-5: color-mix(in srgb, var(--positive), black 50%);
-  --chat-bg: color-mix(in srgb, var(--paper), white 62%);
-  --chat-raised: color-mix(in srgb, var(--paper), white 82%);
-  --chat-well: color-mix(in srgb, var(--paper), white 45%);
-  --chat-line: color-mix(in srgb, var(--paper), black 12%);
-  --chat-mine: color-mix(in srgb, var(--positive), white 78%);
-  --chat-mine-ink: color-mix(in srgb, var(--positive), black 55%);
+  --room-bg: color-mix(in srgb, var(--paper), white 50%);
+  --room-well: color-mix(in srgb, var(--paper), white 35%);
+  --room-line: color-mix(in srgb, var(--paper), black 12%);
+  --room-theirs: #fffaf5;
+  --room-theirs-edge: color-mix(in srgb, var(--paper), black 6%);
+  --room-mine: var(--positive);
+  --room-mine-ink: var(--positive-ink);
+  --room-mine-edge: color-mix(in srgb, var(--positive), black 15%);
+  --room-mine-mention: #c9fff4;
   flex: 1;
   min-height: 0;
   display: flex;
@@ -2972,12 +2984,15 @@ button {
 }
 
 [data-theme='dark'] .chat-panel .str-chat {
-  --chat-bg: var(--sheet);
-  --chat-raised: var(--panel);
-  --chat-well: var(--paper);
-  --chat-line: color-mix(in srgb, var(--panel), white 10%);
-  --chat-mine: color-mix(in srgb, var(--positive), black 45%);
-  --chat-mine-ink: var(--banner-ink);
+  --room-bg: var(--sheet);
+  --room-well: var(--paper);
+  --room-line: color-mix(in srgb, var(--panel), white 10%);
+  --room-theirs: color-mix(in srgb, var(--panel), white 11%);
+  --room-theirs-edge: color-mix(in srgb, var(--panel), white 20%);
+  --room-mine: color-mix(in srgb, var(--positive), black 28%);
+  --room-mine-ink: var(--banner-ink);
+  --room-mine-edge: color-mix(in srgb, var(--positive), black 10%);
+  --room-mine-mention: var(--positive-bright);
   --str-chat__text-link: var(--positive-bright);
   --str-chat__chat-text-mention: var(--positive-bright);
   --str-chat__avatar-palette-text-1: var(--banner-ink);
@@ -2986,6 +3001,17 @@ button {
   --str-chat__avatar-palette-bg-4: color-mix(in srgb, var(--panel), white 12%);
   --str-chat__avatar-palette-text-4: var(--ink);
   --str-chat__avatar-palette-text-5: var(--banner-ink);
+}
+
+.chat-panel .str-chat__message-bubble {
+  box-shadow:
+    0 0 0 1px var(--chat-border),
+    0 1px 2px color-mix(in srgb, black 10%, transparent);
+}
+
+.chat-panel .str-chat__message--me {
+  --str-chat__chat-text-mention: var(--room-mine-mention);
+  --str-chat__chat-text-link: var(--room-mine-mention);
 }
 
 .chat-panel .str-chat__channel {
