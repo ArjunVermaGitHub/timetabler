@@ -2545,8 +2545,13 @@ button {
     --break-w: 52px;
     /* Horizontal padding around the table: stage + panel body */
     --grid-gutter: 24px;
-    --slot-row-min: 40px;
-    --card-grid-min: 34px;
+    --slot-row-min: 30px;
+    --card-grid-min: 26px;
+  }
+
+  .timetable tbody:not(.is-saturday) tr:nth-child(even) > td,
+  .timetable tbody.is-saturday tr:nth-child(odd) > td {
+    background: transparent;
   }
 
   /* Fill a landscape screen; never narrower than a readable period (teachers have more periods) */
@@ -2766,18 +2771,18 @@ button {
   }
 
   .slot {
-    padding: 2px;
+    padding: 1px 2px;
   }
 
   .slot-placeholder {
-    min-height: calc(var(--slot-row-min) - 4px);
-    border-radius: 8px;
+    min-height: calc(var(--slot-row-min) - 2px);
+    border-radius: 6px;
   }
 
   .break-cell,
   .fixed-cell {
     min-height: var(--card-grid-min);
-    border-radius: 8px;
+    border-radius: 6px;
     container-type: inline-size;
   }
 
@@ -2803,23 +2808,27 @@ button {
   .slot.has-lesson .lesson-card,
   .lesson-card.is-grid,
   .lesson-card.is-coteach {
-    border-radius: 8px;
+    border-radius: 6px;
     min-height: var(--card-grid-min);
-    padding: 3px 6px;
+    padding: 1px 5px;
     column-gap: 4px;
+    row-gap: 0;
   }
 
   .lesson-card.is-grid .lesson-card-subject {
-    font-size: 11px;
+    font-size: 10px;
+    line-height: 1.15;
   }
 
   .lesson-card.is-grid .lesson-card-teacher {
-    font-size: 9.5px;
+    font-size: 8.5px;
+    line-height: 1.15;
   }
 
   .lesson-card.is-grid .lesson-card-top {
-    font-size: 9px;
+    font-size: 8px;
     letter-spacing: 0.02em;
+    line-height: 1.15;
   }
 
   .lesson-stack,
@@ -2836,7 +2845,7 @@ button {
 
   .lesson-stack .lesson-card.is-abbr {
     min-height: 0;
-    padding: 2px 5px;
+    padding: 1px 4px;
   }
 }
 
