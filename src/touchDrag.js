@@ -12,6 +12,9 @@ export async function setupTouchDrag() {
   ])
   const applied = polyfill({
     dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
+    // The drop target is only re-checked on this tick; at the default 150ms a
+    // quick pull released over the tray misses it
+    iterationInterval: 16,
   })
   // A non-passive listener lets the polyfill stop the page scrolling mid-drag
   if (applied) window.addEventListener('touchmove', () => {}, { passive: false })
