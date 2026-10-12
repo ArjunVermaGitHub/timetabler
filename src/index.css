@@ -2640,9 +2640,20 @@ button {
 
   .slot-time-end,
   .slot-label,
-  .slot-head.is-break > *,
-  .slot-head.is-fixed > * {
+  .slot-head.is-break .slot-time.is-stacked,
+  .slot-head.is-fixed .slot-time.is-stacked {
     display: none;
+  }
+
+  /* One swipeable row of chips, as on narrow screens */
+  .filter-row:not(.is-accordion-panel) {
+    flex-wrap: nowrap;
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .filter-check {
+    flex-shrink: 0;
   }
 
   .slot {
