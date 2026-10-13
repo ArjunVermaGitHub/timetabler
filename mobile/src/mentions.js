@@ -12,13 +12,19 @@ const KEY = 'chat-device-key'
 const USER = 'chat-device-user'
 const SEEN = 'chat-seen-mentions'
 
+const PUSH = Constants.expoConfig.extra.push
+
+// Only reached while the app is open, where the page already announces new messages itself
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
+  handleNotification: async (notification) => {
+    const show = notification.request.trigger?.type !== 'push'
+    return {
+      shouldShowBanner: show,
+      shouldShowList: show,
+      shouldPlaySound: show,
+      shouldSetBadge: show,
+    }
+  },
 })
 
 // Android wakes the app now and then (15 minutes at the soonest) to run this
@@ -99,13 +105,49 @@ export async function setChatDevice(key, userId) {
   await SecureStore.setItemAsync(KEY, key)
   await SecureStore.setItemAsync(USER, userId)
   await allowNotifications()
-  await BackgroundTask.registerTaskAsync(TASK, { minimumInterval: 15 })
+  await startNotifying()
+}
+
+/** Push when Firebase is set up and reachable, otherwise the slow background checks. */
+export async function startNotifying() {
+  if (!(await SecureStore.getItemAsync(KEY))) return
+  const token = PUSH ? await Notifications.getDevicePushTokenAsync().catch(() => null) : null
+  const pushed = await registerPush(token?.data)
+  // Polling alongside push would show every message twice
+  if (pushed) await stopChecks()
+  else await BackgroundTask.registerTaskAsync(TASK, { minimumInterval: 15 })
+}
+
+/** Hands this phone's Firebase token to the site so Stream can push to it. */
+async function registerPush(token) {
+  const key = await SecureStore.getItemAsync(KEY)
+  if (!PUSH || !key || !token) return false
+  try {
+    const response = await fetch(`${SITE}/api/chat/device`, {
+      method: 'PUT',
+      headers: { Authorization: `Device ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pushToken: token }),
+    })
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
+/** Firebase rotates tokens now and then; keep the site's copy current. */
+export function onPushTokenChange() {
+  const sub = Notifications.addPushTokenListener(({ data }) => registerPush(data))
+  return () => sub.remove()
+}
+
+async function stopChecks() {
+  if (await TaskManager.isTaskRegisteredAsync(TASK)) {
+    await BackgroundTask.unregisterTaskAsync(TASK)
+  }
 }
 
 async function forget() {
   await SecureStore.deleteItemAsync(KEY)
   await SecureStore.deleteItemAsync(USER)
-  if (await TaskManager.isTaskRegisteredAsync(TASK)) {
-    await BackgroundTask.unregisterTaskAsync(TASK)
-  }
+  await stopChecks()
 }

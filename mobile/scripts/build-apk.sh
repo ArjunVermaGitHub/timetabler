@@ -22,6 +22,8 @@ STORE="$(prop storeFile)"
 ALIAS="$(prop keyAlias)"
 export STORE_PASS="$(prop storePassword)" KEY_PASS="$(prop keyPassword)"
 [ -f "$STORE" ] || { echo "Missing $STORE" >&2; exit 1; }
+[ -f "$KEYS/google-services.json" ] ||
+  echo "No $KEYS/google-services.json: this build has no push notifications" >&2
 
 npx expo prebuild --platform android --clean --no-install
 (cd android && ./gradlew assembleRelease --console=plain -q)

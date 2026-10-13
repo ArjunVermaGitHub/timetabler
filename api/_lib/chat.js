@@ -6,6 +6,7 @@ import { HttpError } from './http.js'
 export const STAFF_ROOM = { type: 'team', id: 'staff-room' }
 export const DM_TYPE = 'messaging'
 export const SYSTEM_USER = 'timetabler'
+export const PUSH_PROVIDER = 'timetabler-fcm'
 
 export function streamServer() {
   const key = process.env.STREAM_API_KEY

@@ -1,8 +1,8 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { isAdmin, isAllowedEmail, requireUser } from '../_lib/auth.js'
-import { DM_TYPE, STAFF_ROOM, staffIdentity, streamServer } from '../_lib/chat.js'
+import { DM_TYPE, PUSH_PROVIDER, STAFF_ROOM, staffIdentity, streamServer } from '../_lib/chat.js'
 import { getDb } from '../_lib/db.js'
-import { HttpError, handle } from '../_lib/http.js'
+import { HttpError, handle, readJson } from '../_lib/http.js'
 
 const hash = (key) => createHash('sha256').update(key).digest('hex')
 
@@ -12,6 +12,13 @@ async function devices() {
   globalThis.__chatDeviceIndex ??= collection.createIndex({ hash: 1 }, { unique: true })
   await globalThis.__chatDeviceIndex
   return { db, collection }
+}
+
+/** Stops Stream pushing to a phone that signed out or lost access. */
+async function dropPush(device) {
+  if (!device?.pushToken) return
+  const { server } = streamServer()
+  await server.removeDevice(device.pushToken, device.chatUserId).catch(() => {})
 }
 
 /** The phone behind a `Device <key>` header, or a 401 once it's signed out or lost access. */
@@ -29,15 +36,17 @@ async function deviceFor(req) {
     if (me.id !== device.chatUserId) throw new HttpError(403, 'Chat identity changed')
   } catch (error) {
     await collection.deleteOne({ _id: device._id })
+    await dropPush(device)
     throw new HttpError(401, error.message)
   }
   return { device, collection }
 }
 
 /**
- * Background mention checks for the Android app, which can't use Firebase push.
- * Signing in on the site mints a device key (only its hash is stored); the app
- * polls with it now and then and shows a notification for each new @mention.
+ * Chat notifications for the Android app. Signing in on the site mints a device
+ * key (only its hash is stored). With Firebase the app registers its push token
+ * here and Stream pushes DMs and staff-room @mentions straight to it; the app
+ * also polls now and then as a fallback.
  */
 export default handle({
   async POST(req) {
@@ -54,6 +63,24 @@ export default handle({
       createdAt: now,
     })
     return { key, userId: me.id }
+  },
+
+  async PUT(req) {
+    const { device, collection } = await deviceFor(req)
+    const { pushToken } = await readJson(req)
+    if (typeof pushToken !== 'string' || !pushToken || pushToken.length > 4096) {
+      throw new HttpError(400, 'Missing push token')
+    }
+    const { server } = streamServer()
+    const me = device.chatUserId
+    if (device.pushToken && device.pushToken !== pushToken) await dropPush(device)
+    await server.addDevice(pushToken, 'firebase', me, PUSH_PROVIDER)
+    await server.setPushPreferences([
+      { user_id: me, chat_level: 'all' },
+      { user_id: me, channel_cid: `${STAFF_ROOM.type}:${STAFF_ROOM.id}`, chat_level: 'mentions' },
+    ])
+    await collection.updateOne({ _id: device._id }, { $set: { pushToken } })
+    return { ok: true }
   },
 
   async GET(req) {
@@ -104,7 +131,11 @@ export default handle({
   async DELETE(req) {
     const header = req.headers.authorization ?? ''
     const key = header.startsWith('Device ') ? header.slice(7).trim() : ''
-    if (key) await (await devices()).collection.deleteOne({ hash: hash(key) })
+    if (key) {
+      const { collection } = await devices()
+      const device = await collection.findOneAndDelete({ hash: hash(key) })
+      await dropPush(device)
+    }
     return { ok: true }
   },
 })

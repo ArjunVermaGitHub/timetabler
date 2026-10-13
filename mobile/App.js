@@ -18,7 +18,9 @@ import {
   initialPath,
   notifyMention,
   onNotificationTap,
+  onPushTokenChange,
   setChatDevice,
+  startNotifying,
 } from './src/mentions'
 
 const SITE = Constants.expoConfig.extra.siteUrl
@@ -55,6 +57,11 @@ function Shell() {
     () => onNotificationTap((path) => web.current?.injectJavaScript(navigateScript(path))),
     [],
   )
+
+  useEffect(() => {
+    startNotifying().catch(() => {})
+    return onPushTokenChange()
+  }, [])
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
