@@ -1487,6 +1487,19 @@ button {
   }
 }
 
+/* The card under a finger while dragging by touch (src/touchDrag.js) */
+.touch-drag-ghost {
+  z-index: 2147483000;
+  pointer-events: none;
+  opacity: 0.92;
+  box-shadow: 0 10px 24px -6px color-mix(in srgb, black 45%, transparent);
+  will-change: transform;
+}
+
+.touch-drag-ghost.is-refused {
+  opacity: 0.6;
+}
+
 .lesson-card[draggable='true']:active {
   cursor: grabbing;
   box-shadow:

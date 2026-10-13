@@ -287,10 +287,27 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     let pointer = { x: 0, y: 0 }
     let hasPointer = false
     let rafId = 0
+    // A scroller only follows the edges once the pointer has been well inside it,
+    // so pulling a card up out of the tray doesn't sweep the grid along
+    const armed = new Set()
 
     function onDragOver(event) {
       pointer = { x: event.clientX, y: event.clientY }
       hasPointer = true
+    }
+
+    function edgeScroll(el, area, target) {
+      if (!armed.has(el)) {
+        const inner = {
+          left: area.left + DRAG_SCROLL_EDGE,
+          right: area.right - DRAG_SCROLL_EDGE,
+          top: area.top + DRAG_SCROLL_EDGE,
+          bottom: area.bottom - DRAG_SCROLL_EDGE,
+        }
+        if (!pointInRect(pointer, inner)) return
+        armed.add(el)
+      }
+      autoScrollNearEdges(el, pointer.x, pointer.y, target, area)
     }
 
     function frame() {
@@ -300,7 +317,10 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
         const overTray = tray && pointInRect(pointer, tray.getBoundingClientRect())
         const panel = lesson && panelFor(view, lesson)
         if (grid && panel && !overTray) {
-          autoScrollNearEdges(grid, pointer.x, pointer.y, panel)
+          edgeScroll(grid, gridViewport(grid), panel)
+          // Phones scroll the page instead of the grid
+          const page = verticalScroller(grid.parentElement)
+          if (page) edgeScroll(page, gridViewport(grid), panel)
         }
         const trayBody = document.querySelector('.tray-body')
         if (trayBody) autoScrollNearEdges(trayBody, pointer.x, pointer.y)
@@ -682,15 +702,32 @@ function panelFor(view, lesson) {
     )
 }
 
+/**
+ * The part of the screen the grid shows: on phones the page scrolls and the
+ * pinned tray covers its bottom, on wider screens the grid scrolls itself.
+ */
+function gridViewport(scrollRoot) {
+  const rect = scrollRoot.getBoundingClientRect()
+  const tray = document.querySelector('.tray')
+  const trayTop = tray?.offsetParent ? tray.getBoundingClientRect().top : window.innerHeight
+  return {
+    left: Math.max(rect.left, 0),
+    right: Math.min(rect.right, window.innerWidth),
+    top: Math.max(rect.top, 0),
+    bottom: Math.min(rect.bottom, window.innerHeight, trayTop),
+  }
+}
+
 function scrollSchedulePanelIntoView(view, lesson) {
   const scrollRoot = document.querySelector('.grid-scroll')
   const panel = panelFor(view, lesson)
   if (!scrollRoot || !panel) return
 
-  const rootRect = scrollRoot.getBoundingClientRect()
+  const area = gridViewport(scrollRoot)
   const panelRect = panel.getBoundingClientRect()
-  const alreadyVisible =
-    panelRect.top >= rootRect.top + 8 && panelRect.bottom <= rootRect.bottom - 8
+  const shown = Math.min(panelRect.bottom, area.bottom) - Math.max(panelRect.top, area.top)
+  // A week rarely fits on a tablet, so half the screen's worth of it counts as in view
+  const alreadyVisible = shown >= Math.min(panelRect.height, area.bottom - area.top) / 2
 
   if (alreadyVisible) return
 
@@ -699,6 +736,15 @@ function scrollSchedulePanelIntoView(view, lesson) {
     block: 'start',
     inline: 'nearest',
   })
+}
+
+function verticalScroller(el) {
+  for (; el; el = el.parentElement) {
+    const { overflowY } = getComputedStyle(el)
+    const scrolls = el === document.scrollingElement || /auto|scroll/.test(overflowY)
+    if (scrolls && el.scrollHeight > el.clientHeight + 1) return el
+  }
+  return null
 }
 
 function pointInRect({ x, y }, rect) {
@@ -713,8 +759,7 @@ const DRAG_SCROLL_MAX = 32
  * only scroll towards a side where that element is cut off, and no further
  * than it takes to bring that side into view.
  */
-function autoScrollNearEdges(el, clientX, clientY, target = null) {
-  const rect = el.getBoundingClientRect()
+function autoScrollNearEdges(el, clientX, clientY, target = null, rect = el.getBoundingClientRect()) {
   const pad = DRAG_SCROLL_EDGE
 
   // Ignore when the pointer is clearly away from this scrollport.
