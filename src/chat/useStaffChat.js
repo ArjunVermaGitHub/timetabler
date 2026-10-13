@@ -25,10 +25,14 @@ export function useStaffChat(enabled, onChatView) {
   const [chat, setChat] = useState({ status: enabled ? 'connecting' : 'off' })
   const [unread, setUnread] = useState(0)
   const [mention, setMention] = useState(null)
+  const [wasOnChat, setWasOnChat] = useState(onChatView)
+  if (wasOnChat !== onChatView) {
+    setWasOnChat(onChatView)
+    if (onChatView) setMention(null)
+  }
   const viewing = useRef(onChatView)
   useEffect(() => {
     viewing.current = onChatView
-    if (onChatView) setMention(null)
   }, [onChatView])
 
   useEffect(() => {
