@@ -12,19 +12,48 @@ import 'stream-chat-react/dist/css/index.css'
 import { inNativeApp } from '../nativeApp'
 
 const NOTIFY_DISMISSED = 'timetabler.chat-notify-dismissed'
+const BLOCKED_DISMISSED = 'timetabler.chat-notify-blocked-dismissed'
+
+const BELL = (
+  <svg className="chat-notify-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" />
+    <path d="M10 20.5a2 2 0 0 0 4 0" />
+  </svg>
+)
 
 function NotifyPrompt() {
   const [permission, setPermission] = useState(() =>
     typeof Notification === 'undefined' || inNativeApp() ? 'unsupported' : Notification.permission,
   )
   const [dismissed, setDismissed] = useState(() => localStorage.getItem(NOTIFY_DISMISSED) === '1')
+  const [blockedDismissed, setBlockedDismissed] = useState(
+    () => localStorage.getItem(BLOCKED_DISMISSED) === '1',
+  )
+  if (permission === 'denied' && !blockedDismissed) {
+    return (
+      <div className="chat-notify" role="status">
+        {BELL}
+        <span className="chat-notify-text">
+          <strong>Mention notifications are blocked.</strong> Allow notifications for this site
+          from the icon beside the address bar, then reload.
+        </span>
+        <button
+          type="button"
+          className="chat-notify-later"
+          onClick={() => {
+            localStorage.setItem(BLOCKED_DISMISSED, '1')
+            setBlockedDismissed(true)
+          }}
+        >
+          Got it
+        </button>
+      </div>
+    )
+  }
   if (permission !== 'default' || dismissed) return null
   return (
     <div className="chat-notify" role="status">
-      <svg className="chat-notify-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" />
-        <path d="M10 20.5a2 2 0 0 0 4 0" />
-      </svg>
+      {BELL}
       <span className="chat-notify-text">
         <strong>Know when you&apos;re needed.</strong> Get a desktop notification when someone
         @mentions you.

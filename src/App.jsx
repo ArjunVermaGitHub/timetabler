@@ -148,9 +148,11 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     if (route.path !== path) navigate(route.path, { replace: true })
   }, [route.path, path])
 
+  const chatUnread = staffChat.unread
   useEffect(() => {
-    document.title = `${TITLES[view]} · Timetabler`
-  }, [view])
+    const badge = chatUnread > 0 ? `(${chatUnread}) ` : ''
+    document.title = `${badge}${TITLES[view]} · Timetabler`
+  }, [view, chatUnread])
 
   // A signed-in teacher opens each view on their own timetable / home class
   const homed = useRef(new Set())
