@@ -1,3 +1,15 @@
 {
+  "redirects": [
+    {
+      "source": "/app.apk",
+      "destination": "https://github.com/ArjunVermaGitHub/timetabler/releases/latest/download/rbs-timetable.apk",
+      "permanent": false
+    },
+    {
+      "source": "/downloads/rbs-timetable.apk",
+      "destination": "https://github.com/ArjunVermaGitHub/timetabler/releases/latest/download/rbs-timetable.apk",
+      "permanent": false
+    }
+  ],
   "rewrites": [{ "source": "/((?!api/|assets/).*)", "destination": "/index.html" }]
 }
