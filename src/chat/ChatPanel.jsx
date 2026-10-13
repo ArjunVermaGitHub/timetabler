@@ -50,6 +50,24 @@ function NotifyPrompt() {
       </div>
     )
   }
+  if (permission === 'granted') {
+    return (
+      <div className="chat-notify-on">
+        Desktop notifications are on.
+        <button
+          type="button"
+          className="chat-notify-test"
+          onClick={() =>
+            new Notification('Test notification', {
+              body: 'If you can see this, @mentions will reach you too.',
+            })
+          }
+        >
+          Send a test
+        </button>
+      </div>
+    )
+  }
   if (permission !== 'default' || dismissed) return null
   return (
     <div className="chat-notify" role="status">

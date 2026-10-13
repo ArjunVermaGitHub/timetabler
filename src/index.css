@@ -3108,6 +3108,32 @@ button {
   color: var(--banner-ink);
 }
 
+.chat-notify-on {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 6px;
+  margin: -4px 4px 6px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.chat-notify-test {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--positive);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+[data-theme='dark'] .chat-notify-test {
+  color: var(--positive-bright);
+}
+
 .mention-toast {
   position: fixed;
   right: 18px;
