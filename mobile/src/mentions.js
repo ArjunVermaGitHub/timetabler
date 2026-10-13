@@ -67,7 +67,11 @@ async function checkMentions() {
   if (!response.ok) throw new Error(`Mention check failed (${response.status})`)
   const { mentions } = await response.json()
   for (const mention of mentions) {
-    await notifyMention(mention.id, `${mention.from} mentioned you`, mention.text.slice(0, 160))
+    await notifyMention(
+      mention.id,
+      mention.title ?? `${mention.from} mentioned you`,
+      mention.text.slice(0, 160),
+    )
   }
 }
 

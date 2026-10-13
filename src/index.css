@@ -2966,8 +2966,12 @@ button {
   --str-chat__avatar-palette-text-4: var(--ink);
   --str-chat__avatar-palette-bg-5: color-mix(in srgb, var(--positive-bright), var(--room-bg) 55%);
   --str-chat__avatar-palette-text-5: color-mix(in srgb, var(--positive), black 50%);
+}
+
+.chat-panel {
   --room-bg: color-mix(in srgb, var(--paper), white 50%);
   --room-well: color-mix(in srgb, var(--paper), white 35%);
+  --room-side: color-mix(in srgb, var(--paper), white 30%);
   --room-line: color-mix(in srgb, var(--paper), black 12%);
   --room-theirs: #fffaf5;
   --room-theirs-edge: color-mix(in srgb, var(--paper), black 6%);
@@ -2975,17 +2979,12 @@ button {
   --room-mine-ink: var(--positive-ink);
   --room-mine-edge: color-mix(in srgb, var(--positive), black 15%);
   --room-mine-mention: #c9fff4;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px color-mix(in srgb, black 14%, transparent);
 }
 
-[data-theme='dark'] .chat-panel .str-chat {
+[data-theme='dark'] .chat-panel {
   --room-bg: var(--sheet);
   --room-well: var(--paper);
+  --room-side: color-mix(in srgb, var(--sheet), black 18%);
   --room-line: color-mix(in srgb, var(--panel), white 10%);
   --room-theirs: color-mix(in srgb, var(--panel), white 11%);
   --room-theirs-edge: color-mix(in srgb, var(--panel), white 20%);
@@ -2993,6 +2992,20 @@ button {
   --room-mine-ink: var(--banner-ink);
   --room-mine-edge: color-mix(in srgb, var(--positive), black 10%);
   --room-mine-mention: var(--positive-bright);
+}
+
+.chat-layout {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--room-bg);
+  box-shadow: 0 2px 12px color-mix(in srgb, black 14%, transparent);
+}
+
+[data-theme='dark'] .chat-panel .str-chat {
   --str-chat__text-link: var(--positive-bright);
   --str-chat__chat-text-mention: var(--positive-bright);
   --str-chat__avatar-palette-text-1: var(--banner-ink);
@@ -3031,10 +3044,90 @@ button {
   min-width: 0;
 }
 
-/* Header matches the class panels' teal heads */
+/* Header matches the class panels' teal heads; messages tuck under it as they scroll */
 .chat-panel .str-chat__channel-header {
+  position: relative;
+  z-index: 3;
   background: var(--panel-head-base);
   border-bottom: 1px solid color-mix(in srgb, var(--panel-head-base), black var(--bevel-sink));
+  box-shadow: 0 2px 3px -1px color-mix(in srgb, black 45%, transparent);
+}
+
+/* Names sit above each sender's run of messages instead of under it */
+.chat-panel .str-chat__message-metadata__name {
+  display: none;
+}
+
+.chat-sender {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  color: hsl(var(--sender-hue) 55% 30%);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Runs of messages sit closer together; the time row under each run is slimmer */
+.chat-panel .str-chat__li.str-chat__li--top {
+  padding-block-start: 4px;
+}
+
+.chat-panel .str-chat__li.str-chat__li--bottom {
+  padding-block-end: 2px;
+}
+
+.chat-panel .str-chat__li.str-chat__li--single {
+  padding-block: 4px 2px;
+}
+
+.chat-panel .str-chat__message .str-chat__message-metadata {
+  height: 16px;
+}
+
+.str-chat__li--middle .chat-sender,
+.str-chat__li--bottom .chat-sender {
+  display: none;
+}
+
+[data-theme='dark'] .chat-sender {
+  color: hsl(var(--sender-hue) 70% 74%);
+}
+
+.chat-sender:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chat-panel .str-chat__message .str-chat__message-bubble.chat-deleted {
+  background: transparent;
+  box-shadow: none;
+  border: 1px dashed color-mix(in srgb, var(--ink-soft), transparent 45%);
+  color: var(--ink-soft);
+}
+
+.chat-deleted .str-chat__message-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.chat-deleted svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  opacity: 0.75;
 }
 
 .chat-panel .str-chat__channel-header .str-chat__channel-header__data__title {
@@ -3055,6 +3148,545 @@ button {
 .chat-panel .str-chat__thread {
   flex: 0 0 40%;
   max-width: 40%;
+}
+
+/* Conversation list: staff room pinned on top, DMs below, newest first */
+.chat-side {
+  flex: 0 0 270px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--room-side);
+  border-right: 1px solid var(--room-line);
+}
+
+.chat-side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 10px 8px 16px;
+  background: var(--panel-head-base);
+  color: var(--banner-ink);
+  font-size: 16px;
+  font-weight: 800;
+  border-bottom: 1px solid color-mix(in srgb, var(--panel-head-base), black var(--bevel-sink));
+}
+
+/* Stream slides its list off-screen on phones; here the list has its own turn instead */
+.chat-side .str-chat__channel-list {
+  position: static;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  max-width: none;
+  overflow-y: auto;
+  width: auto;
+  border: 0;
+  background: transparent;
+  visibility: visible;
+  transform: none;
+}
+
+.chat-new-btn {
+  flex: none;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--positive-bright);
+  color: var(--positive-bright-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.chat-new-btn:hover {
+  background: color-mix(in srgb, var(--positive-bright), white 15%);
+}
+
+.chat-side .str-chat__channel-list__header {
+  display: none;
+}
+
+/* Its menu offers Leave/Archive, which would only lose the staff room or a DM; Mute stays */
+.chat-side .str-chat__channel-list-item__action-buttons [aria-label='Open Channel Actions Menu'] {
+  display: none;
+}
+
+.chat-new {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 60%;
+  border-bottom: 1px solid var(--room-line);
+  background: var(--room-bg);
+}
+
+.chat-new-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 56px;
+  padding: 8px 8px 8px 10px;
+  background: var(--panel-head-base);
+}
+
+.chat-new-head .chat-notify-later {
+  color: color-mix(in srgb, var(--banner-ink), transparent 20%);
+}
+
+.chat-new-search {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--room-theirs);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.chat-new-search:focus {
+  outline: 2px solid var(--positive-bright);
+  outline-offset: 1px;
+}
+
+.chat-new-list {
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.chat-new-list button {
+  width: 100%;
+  padding: 9px 16px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chat-new-list button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--positive), transparent 88%);
+}
+
+.chat-new-note {
+  margin: 0;
+  padding: 8px 16px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chat-new-email {
+  display: block;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-layout .str-chat__message .str-chat__avatar,
+.chat-layout .str-chat__message-mention[data-user-id] {
+  cursor: pointer;
+}
+
+.profile-card {
+  position: fixed;
+  z-index: 70;
+  width: min(320px, calc(100vw - 16px));
+  padding: 14px;
+  border: 1px solid var(--room-line);
+  border-radius: 14px;
+  background: var(--room-bg);
+  color: var(--ink);
+  font-size: 13px;
+  box-shadow: 0 10px 32px color-mix(in srgb, black 24%, transparent);
+  animation: profile-card-in 120ms ease-out;
+}
+
+@keyframes profile-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.profile-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-card-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--panel-head-base);
+  color: var(--banner-ink);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.profile-card-who {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.profile-card-who strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-card-who span,
+.profile-card-you {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.profile-card-close {
+  flex: none;
+  align-self: flex-start;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.profile-card-close:hover {
+  background: color-mix(in srgb, var(--ink), transparent 90%);
+  color: var(--ink);
+}
+
+.profile-card-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 7px 8px 7px 10px;
+  border-radius: 10px;
+  background: var(--room-well);
+}
+
+.profile-card-email a {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-card-email button,
+.profile-card-link {
+  flex: none;
+  padding: 4px 10px;
+  border: 1px solid var(--room-line);
+  border-radius: 999px;
+  background: var(--room-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-card-email button:hover,
+.profile-card-link:hover {
+  border-color: var(--positive);
+}
+
+.profile-card-now {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 10px 0 0;
+  line-height: 1.4;
+}
+
+.profile-card-now strong {
+  font-weight: 800;
+}
+
+.profile-card-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--positive-bright);
+  transform: translateY(-1px);
+}
+
+.profile-card-now.is-busy .profile-card-dot {
+  background: #e8833a;
+}
+
+.profile-card-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  margin: 10px 0 0;
+}
+
+.profile-card-facts dt {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.profile-card-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.profile-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.profile-card-link {
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+.chat-new-list .chat-new-note {
+  display: inline;
+  padding: 0;
+}
+
+/* Delete confirmation: over the conversation only, quoting the message */
+.chat-delete {
+  position: absolute;
+  inset: 0 0 0 270px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--room-bg), transparent 30%);
+  backdrop-filter: blur(2px);
+  animation: chat-delete-fade 120ms ease-out;
+}
+
+@keyframes chat-delete-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.chat-delete-card {
+  width: min(360px, 100%);
+  padding: 20px;
+  border: 1px solid var(--room-line);
+  border-radius: 16px;
+  background: var(--room-bg);
+  color: var(--ink);
+  box-shadow: 0 16px 40px color-mix(in srgb, black 26%, transparent);
+  animation: profile-card-in 140ms ease-out;
+}
+
+.chat-delete-card h2 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.chat-delete-preview {
+  display: -webkit-box;
+  margin: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  border-left: 3px solid var(--action);
+  border-radius: 8px;
+  background: var(--room-well);
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.chat-delete-note {
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.chat-delete-error {
+  margin: 10px 0 0;
+  color: var(--action);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.chat-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.chat-delete-cancel,
+.chat-delete-go {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.chat-delete-cancel {
+  border: 1px solid var(--room-line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.chat-delete-cancel:hover {
+  background: color-mix(in srgb, var(--ink), transparent 92%);
+}
+
+.chat-delete-go {
+  border: 0;
+  background: var(--action);
+  color: var(--action-ink);
+}
+
+.chat-delete-go:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--action), black 10%);
+}
+
+.chat-delete-go:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.chat-delete-cancel:focus-visible,
+.chat-delete-go:focus-visible {
+  outline: 2px solid var(--positive);
+  outline-offset: 2px;
+}
+
+/* Covers the conversation area while a new DM is set up */
+.chat-opening {
+  position: absolute;
+  inset: 0 0 0 270px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  background: var(--room-bg);
+}
+
+.chat-opening-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 8px 16px;
+  background: var(--panel-head-base);
+  color: var(--banner-ink);
+  font-size: 16px;
+  font-weight: 800;
+  border-bottom: 1px solid color-mix(in srgb, var(--panel-head-base), black var(--bevel-sink));
+}
+
+.chat-opening-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chat-opening-body p {
+  margin: 0;
+}
+
+.chat-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid color-mix(in srgb, var(--positive), transparent 75%);
+  border-top-color: var(--positive);
+  border-radius: 50%;
+  animation: chat-spin 0.8s linear infinite;
+}
+
+@keyframes chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Only on narrow screens, where the list and conversation take turns */
+.chat-back {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .chat-panel {
+    padding: 8px;
+  }
+
+  .chat-side {
+    display: none;
+    flex-basis: 100%;
+    border-right: 0;
+  }
+
+  .chat-layout.is-list .chat-side {
+    display: flex;
+  }
+
+  .chat-layout.is-list .str-chat__channel {
+    display: none;
+  }
+
+  .chat-opening,
+  .chat-delete {
+    left: 0;
+  }
+
+  .chat-back {
+    display: block;
+    padding: 8px 14px;
+    border: 0;
+    background: var(--panel-head-base);
+    color: var(--banner-ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: left;
+    cursor: pointer;
+  }
 }
 
 /* Sits on teal like the app banner, so its bright button reads as the one action */
@@ -3194,4 +3826,241 @@ button {
 .mention-toast-close:hover {
   color: var(--banner-ink);
   background: color-mix(in srgb, var(--banner-ink), transparent 88%);
+}
+
+/* ---- Staff room: layout and finish ---- */
+
+.chat-panel {
+  --chat-side-w: 300px;
+  --chat-head-h: 64px;
+  width: min(100%, 1280px);
+}
+
+.chat-side {
+  flex-basis: var(--chat-side-w);
+}
+
+.chat-opening,
+.chat-delete {
+  left: var(--chat-side-w);
+}
+
+.chat-side-head,
+.chat-new-head,
+.chat-opening-head,
+.chat-panel .str-chat__channel-header {
+  min-height: var(--chat-head-h);
+  height: var(--chat-head-h);
+  box-sizing: border-box;
+}
+
+/* Header: who you're talking to on the left, like every messaging app */
+.chat-panel .str-chat__channel-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 18px;
+}
+
+.chat-panel .str-chat__channel-header .str-chat__channel-header__start:empty {
+  display: none;
+}
+
+.chat-panel .str-chat__channel-header .str-chat__channel-header__end {
+  order: -1;
+}
+
+.chat-panel .str-chat__channel-header .str-chat__channel-header__data {
+  flex: 1;
+  min-width: 0;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.chat-panel .str-chat__channel-header .str-chat__channel-header__data__title {
+  font-size: 15px;
+}
+
+.chat-panel .str-chat__channel-header .str-chat__channel-header__data__subtitle {
+  font-size: 12px;
+}
+
+/* Conversation list: flat rows, rounded highlight for hover and the open conversation */
+.chat-side .str-chat__channel-list {
+  padding: 6px 0;
+}
+
+.chat-side .str-chat__channel-list-item {
+  width: calc(100% - 12px);
+  margin: 1px 6px;
+  padding: 10px;
+  border-radius: 12px;
+  background: transparent;
+  transition: background-color 120ms;
+}
+
+.chat-side .str-chat__channel-list-item:hover {
+  background: color-mix(in srgb, var(--ink), transparent 93%);
+}
+
+.chat-side .str-chat__channel-list-item[aria-selected='true'] {
+  background: var(--room-theirs);
+  box-shadow:
+    inset 3px 0 0 var(--positive),
+    0 1px 3px color-mix(in srgb, black 10%, transparent);
+}
+
+.chat-side .str-chat__channel-list-item-data__title {
+  font-weight: 700;
+}
+
+.chat-side .str-chat__channel-list-item--unread .str-chat__channel-list-item-data__title,
+.chat-side .str-chat__channel-list-item--unread .str-chat__summarized-message-preview {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.chat-side .str-chat__channel-list-item-timestamp,
+.chat-side .str-chat__summarized-message-preview {
+  font-size: 12px;
+}
+
+/* Quoted replies: a tint of the bubble's own ink, readable in both bubble colours */
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview {
+  --chat-bg-attachment: color-mix(in srgb, currentColor 10%, transparent);
+  --str-chat__chat-bg-incoming: var(--chat-bg-attachment);
+  --str-chat__chat-text-incoming: currentColor;
+  height: auto;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  color: inherit;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-indicator {
+  align-self: stretch;
+  height: auto;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview__content {
+  height: auto;
+  gap: 2px;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview__author {
+  flex-shrink: 0;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview__message {
+  height: auto;
+  opacity: 0.85;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview__message-text {
+  display: -webkit-box;
+  height: auto;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.chat-panel .str-chat__message-bubble .str-chat__quoted-message-preview__message-text * {
+  margin: 0;
+}
+
+/* Hover actions float on a pill instead of sitting loose beside the bubble */
+.chat-panel .str-chat__message-options {
+  padding: 2px;
+  border: 1px solid var(--room-line);
+  border-radius: 999px;
+  background: var(--room-bg);
+  box-shadow: 0 2px 8px color-mix(in srgb, black 14%, transparent);
+}
+
+/* Composer: a raised pill with a focus ring and a filled send button */
+.chat-panel .str-chat__message-composer-container {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--room-line);
+  background: var(--room-bg);
+}
+
+.chat-panel .str-chat__message-composer {
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.chat-panel .str-chat__message-composer-compose-area {
+  border: 1px solid var(--room-line);
+  border-radius: 22px;
+  background: var(--room-theirs);
+  box-shadow: 0 1px 2px color-mix(in srgb, black 8%, transparent);
+  transition:
+    border-color 120ms,
+    box-shadow 120ms;
+}
+
+.chat-panel .str-chat__message-composer-compose-area:focus-within {
+  border-color: var(--positive);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--positive), transparent 80%);
+}
+
+.chat-panel .str-chat__message-composer-compose-area .str-chat__message-composer-controls,
+.chat-panel .str-chat__message-composer-compose-area .str-chat__textarea,
+.chat-panel .str-chat__message-composer-compose-area textarea {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.chat-panel .str-chat__attachment-selector__menu-button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+}
+
+.chat-panel .str-chat__attachment-selector__menu-button:hover {
+  background: color-mix(in srgb, var(--ink), transparent 92%);
+  color: var(--ink);
+}
+
+.chat-panel .str-chat__send-button:not(:disabled) {
+  background: var(--positive);
+  color: var(--positive-ink);
+}
+
+.chat-panel .str-chat__send-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--positive), black 10%);
+}
+
+.chat-panel .str-chat__send-button:disabled {
+  background: transparent;
+  color: color-mix(in srgb, var(--ink-soft), transparent 40%);
+}
+
+/* Date and unread markers read as floating chips */
+.chat-panel .str-chat__date-separator-date,
+.chat-panel .str-chat__unread-messages-separator {
+  border: 1px solid var(--room-line);
+  background: color-mix(in srgb, var(--room-bg), transparent 10%);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 1px 3px color-mix(in srgb, black 10%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .chat-opening,
+  .chat-delete {
+    left: 0;
+  }
+
+  .chat-panel .str-chat__channel-header {
+    padding: 0 12px;
+  }
 }

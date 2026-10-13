@@ -154,8 +154,23 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
     document.title = `${badge}${TITLES[view]} · Timetabler`
   }, [view, chatUnread])
 
-  // A signed-in teacher opens each view on their own timetable / home class
   const homed = useRef(new Set())
+  // A teacher picked from chat: shown in Teacher view even if filtered out, and scrolled to
+  const shownTeacher = useRef(null)
+  const showTeacher = (name) => {
+    setSelectedTeachers((prev) => (prev.includes(name) ? prev : [...prev, name]))
+    setFreeSlots([])
+    shownTeacher.current = name
+    navigate('/teachers')
+  }
+  useEffect(() => {
+    if (!shownTeacher.current || view !== 'teachers') return
+    homed.current.add(view)
+    alignPanel(`[data-teacher="${cssEscape(shownTeacher.current)}"]`)
+    shownTeacher.current = null
+  }, [view])
+
+  // A signed-in teacher opens each view on their own timetable / home class
   useEffect(() => {
     if (!ownTeacher || !GRID_VIEWS.has(view) || homed.current.has(view)) return
     const home = view === 'teachers' ? ownTeacher : homeClassroom(ownTeacher, placements)
@@ -548,7 +563,12 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
             )}
           >
             <Suspense fallback={<p className="manage-empty manage">Loading…</p>}>
-              <ChatPanel chat={staffChat} darkMode={darkMode} />
+              <ChatPanel
+                chat={staffChat}
+                darkMode={darkMode}
+                placements={placements}
+                onShowTimetable={showTeacher}
+              />
             </Suspense>
           </ErrorBoundary>
         ) : (
@@ -593,7 +613,11 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
             <strong>{staffChat.mention.title}</strong>
             <span>{staffChat.mention.body}</span>
           </div>
-          <button type="button" className="hb-btn is-primary" onClick={() => navigate('/chat')}>
+          <button
+            type="button"
+            className="chat-new-btn"
+            onClick={() => staffChat.openConversation(staffChat.mention.cid)}
+          >
             Open
           </button>
           <button

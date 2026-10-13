@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { isAdmin, isAllowedEmail, requireUser } from '../_lib/auth.js'
-import { STAFF_ROOM, staffIdentity, streamServer } from '../_lib/chat.js'
+import { DM_TYPE, STAFF_ROOM, staffIdentity, streamServer } from '../_lib/chat.js'
 import { getDb } from '../_lib/db.js'
 import { HttpError, handle } from '../_lib/http.js'
 
@@ -59,17 +59,36 @@ export default handle({
   async GET(req) {
     const { device, collection } = await deviceFor(req)
     const { server } = streamServer()
-    const state = await server.channel(STAFF_ROOM.type, STAFF_ROOM.id).query({
-      messages: { limit: 50, created_at_after: device.checkedAt.toISOString() },
+    const me = device.chatUserId
+    const since = device.checkedAt.toISOString()
+    const [room, dms] = await Promise.all([
+      server.channel(STAFF_ROOM.type, STAFF_ROOM.id).query({
+        messages: { limit: 50, created_at_after: since },
+      }),
+      // No last_message_at filter: Stream's channel index lags a few seconds behind,
+      // and a DM missed now would never be reported once checkedAt moves past it
+      server.queryChannels(
+        { type: DM_TYPE, members: { $in: [me] } },
+        { last_message_at: -1 },
+        { limit: 20, message_limit: 25, user_id: me },
+      ),
+    ])
+    const fromOthers = (m) => m.user?.id !== me && Date.parse(m.created_at) >= device.checkedAt.getTime()
+    const roomMessages = room.messages ?? []
+    const dmMessages = dms.flatMap((c) => c.state.messages).filter(fromOthers)
+    const item = (m, title) => ({
+      id: m.id,
+      from: m.user?.name ?? 'Someone',
+      title,
+      text: m.text ?? '',
     })
-    const messages = state.messages ?? []
-    const mentions = messages
-      .filter(
-        (m) =>
-          m.user?.id !== device.chatUserId &&
-          m.mentioned_users?.some((u) => u.id === device.chatUserId),
-      )
-      .map((m) => ({ id: m.id, from: m.user?.name ?? 'Someone', text: m.text ?? '' }))
+    const mentions = [
+      ...roomMessages
+        .filter((m) => fromOthers(m) && m.mentioned_users?.some((u) => u.id === me))
+        .map((m) => item(m, `${m.user?.name ?? 'Someone'} mentioned you`)),
+      ...dmMessages.map((m) => item(m, `Message from ${m.user?.name ?? 'someone'}`)),
+    ]
+    const messages = [...roomMessages, ...dmMessages]
     // Stream times carry microseconds, so step past the newest message's millisecond
     const newest = messages.reduce(
       (latest, m) => Math.max(latest, (Date.parse(m.created_at) || 0) + 1),

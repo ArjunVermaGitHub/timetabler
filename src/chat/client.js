@@ -1,6 +1,8 @@
 import { StreamChat } from 'stream-chat'
 import { api } from '../api'
 
+export const DM_TYPE = 'messaging'
+
 let pending = null
 
 async function connect() {
@@ -17,9 +19,16 @@ async function connect() {
   }
   if (client.userID && client.userID !== session.user.id) await client.disconnectUser()
   if (!client.userID) await client.connectUser(session.user, tokenProvider)
-  // Mentions and unread counts only reach the page live for a watched channel,
-  // so watch the staff room from sign-in rather than when it's first opened
-  await client.channel(session.channel.type, session.channel.id).watch()
+  // Mentions, DMs and unread counts only reach the page live for watched
+  // channels, so watch them from sign-in rather than when chat is first opened
+  await Promise.all([
+    client.channel(session.channel.type, session.channel.id).watch(),
+    client.queryChannels(
+      { type: DM_TYPE, members: { $in: [session.user.id] } },
+      { last_message_at: -1 },
+      { watch: true, state: true, limit: 30 },
+    ),
+  ])
   return { client, me: session.user, channelRef: session.channel }
 }
 

@@ -1,11 +1,19 @@
 import { requireUser } from '../_lib/auth.js'
-import { STAFF_ROOM, SYSTEM_USER, staffIdentity, streamServer, teacherChatId } from '../_lib/chat.js'
+import {
+  STAFF_ROOM,
+  SYSTEM_USER,
+  staffDirectory,
+  staffIdentity,
+  streamServer,
+  streamUser,
+} from '../_lib/chat.js'
 import { getDb } from '../_lib/db.js'
 import { handle } from '../_lib/http.js'
 
 /**
- * Signs a staff member into the staff room. Every teacher with an email is
- * registered up front so @mentions can reach people who haven't opened chat yet.
+ * Signs a staff member into the staff room. Everyone who can chat is registered
+ * up front so @mentions and DMs can reach people who haven't opened chat yet.
+ * Nobody gets Stream's admin role, which could read every DM.
  */
 export default handle({
   async GET(req) {
@@ -13,15 +21,11 @@ export default handle({
     const { key, server } = streamServer()
     const db = await getDb()
     const me = await staffIdentity(db, user)
-    const teachers = await db
-      .collection('teachers')
-      .find({ email: { $nin: [null, ''] } }, { projection: { name: 1 } })
-      .toArray()
-    const staff = teachers.map((t) => ({ id: teacherChatId(t), name: t.name }))
+    const staff = await staffDirectory(db)
     await server.upsertUsers([
       { id: SYSTEM_USER, name: 'Timetabler' },
-      ...staff.filter((s) => s.id !== me.id),
-      { ...me, role: user.admin ? 'admin' : 'user' },
+      ...staff.filter((s) => s.id !== me.id).map(streamUser),
+      { ...me, role: 'user' },
     ])
 
     const channel = server.channel(STAFF_ROOM.type, STAFF_ROOM.id, {
