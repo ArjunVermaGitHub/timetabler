@@ -17,14 +17,18 @@ function mentionsMe(event, me) {
 
 /**
  * Staff chat connection, unread count, and a desktop notification when
- * someone @mentions you while you're on another tab or another view.
+ * someone @mentions you while you're on another tab or another view. The
+ * mention is also kept for an in-page toast, which shows even when the
+ * browser or OS silently drops desktop notifications.
  */
 export function useStaffChat(enabled, onChatView) {
   const [chat, setChat] = useState({ status: enabled ? 'connecting' : 'off' })
   const [unread, setUnread] = useState(0)
+  const [mention, setMention] = useState(null)
   const viewing = useRef(onChatView)
   useEffect(() => {
     viewing.current = onChatView
+    if (onChatView) setMention(null)
   }, [onChatView])
 
   useEffect(() => {
@@ -56,6 +60,7 @@ export function useStaffChat(enabled, onChatView) {
       if (!document.hidden && viewing.current) return
       const title = `${event.message.user?.name ?? 'Someone'} mentioned you`
       const body = event.message.text?.slice(0, 160) ?? ''
+      if (!viewing.current) setMention({ id: event.message.id, title, body })
       if (inNativeApp()) {
         postToApp({ type: 'notify', id: event.message.id, title, body })
         return
@@ -79,5 +84,5 @@ export function useStaffChat(enabled, onChatView) {
       .catch(() => {})
   }, [me])
 
-  return { ...chat, unread }
+  return { ...chat, unread, mention, dismissMention: () => setMention(null) }
 }

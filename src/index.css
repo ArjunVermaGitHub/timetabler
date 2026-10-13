@@ -3107,3 +3107,65 @@ button {
 .chat-notify-later:hover {
   color: var(--banner-ink);
 }
+
+.mention-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(380px, calc(100vw - 36px));
+  padding: 12px 8px 12px 14px;
+  border-radius: 14px;
+  background: var(--banner);
+  color: var(--banner-ink);
+  font-size: 14px;
+  box-shadow: 0 8px 28px color-mix(in srgb, black 28%, transparent);
+  animation: mention-toast-in 180ms ease-out;
+}
+
+@keyframes mention-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.mention-toast-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  line-height: 1.35;
+}
+
+.mention-toast-text strong {
+  font-weight: 800;
+}
+
+.mention-toast-text span {
+  overflow: hidden;
+  color: color-mix(in srgb, var(--banner-ink), transparent 20%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mention-toast-close {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: color-mix(in srgb, var(--banner-ink), transparent 25%);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mention-toast-close:hover {
+  color: var(--banner-ink);
+  background: color-mix(in srgb, var(--banner-ink), transparent 88%);
+}

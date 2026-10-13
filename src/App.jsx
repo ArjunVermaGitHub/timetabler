@@ -583,6 +583,29 @@ function App({ user, catalogVersion, savedSchedule, onCatalogChange, onSignOut }
           {scheduleNote}
         </div>
       ) : null}
+      {staffChat.mention ? (
+        <div className="mention-toast" role="alert">
+          <svg className="chat-notify-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" />
+            <path d="M10 20.5a2 2 0 0 0 4 0" />
+          </svg>
+          <div className="mention-toast-text">
+            <strong>{staffChat.mention.title}</strong>
+            <span>{staffChat.mention.body}</span>
+          </div>
+          <button type="button" className="hb-btn is-primary" onClick={() => navigate('/chat')}>
+            Open
+          </button>
+          <button
+            type="button"
+            className="mention-toast-close"
+            aria-label="Dismiss"
+            onClick={staffChat.dismissMention}
+          >
+            ×
+          </button>
+        </div>
+      ) : null}
       {/* Stays mounted under Manage so returning to the grids is instant */}
       <AbbreviateContext.Provider value={abbreviate || compact}>
         <div className="workspace" hidden={!GRID_VIEWS.has(view)}>

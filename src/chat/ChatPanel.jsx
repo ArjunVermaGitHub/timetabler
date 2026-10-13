@@ -71,7 +71,16 @@ function NotifyPrompt() {
       <button
         type="button"
         className="hb-btn is-primary"
-        onClick={() => Notification.requestPermission().then(setPermission)}
+        onClick={() =>
+          Notification.requestPermission().then((result) => {
+            setPermission(result)
+            if (result === 'granted') {
+              new Notification('Notifications are on', {
+                body: "You'll see one like this when someone @mentions you.",
+              })
+            }
+          })
+        }
       >
         Turn on
       </button>
